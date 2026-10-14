@@ -24,6 +24,7 @@ import {
   SidebarRail,
   useSidebar,
 } from "@/components/ui/sidebar"
+import { withBase } from "@/lib/base-path"
 import { LIVE_SITE_URL } from "@/lib/constants"
 import { useProjects } from "@/lib/store"
 import { cn } from "@/lib/utils"
@@ -145,7 +146,7 @@ export function AppSidebar() {
             <SidebarMenuButton asChild size="lg" className="h-10" tooltip="Dashboard">
               <Link href="/dashboard">
                 <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-brand">
-                  <Image src="/brand/gip-roof-white.svg" alt="" width={22} height={9} priority />
+                  <Image src={withBase("/brand/gip-roof-white.svg")} alt="" width={22} height={9} priority />
                 </span>
                 <span className="grid min-w-0 leading-tight">
                   <span className="truncate text-sm font-semibold text-foreground">Greater Infra Projects</span>

@@ -3,7 +3,7 @@
 // mismatch) → debounced writes. Ids and timestamps are minted only inside actions (event time), never in render.
 import { createContext, useContext, useEffect, useMemo, useState, useSyncExternalStore, type ReactNode } from 'react';
 import { toast } from 'sonner';
-import { DEMO_NOW, getProjectType } from './constants';
+import { DEMO_NOW, getProjectType, NEW_PROJECT_IDS } from './constants';
 import { slugify, toIsoDate, toIstIso } from './format';
 import { describeStatusChange } from './inventory';
 import { SEED, SEED_VERSION } from './mock';
@@ -30,6 +30,9 @@ const EMPTY_UNITS: Unit[] = [];
 
 /* Called only from actions (event handlers). crypto.randomUUID needs a secure context, which a LAN demo may lack. */
 const mintId = (prefix: string) => `${prefix}-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
+/* First pre-built id not used by a project or its activity (a reused id would inherit a deleted project's log). */
+const nextProjectId = (s: DemoState) =>
+  NEW_PROJECT_IDS.find((id) => !s.projects.some((p) => p.id === id) && !s.activity.some((a) => a.projectId === id)) ?? mintId('p');
 
 /* ---------- clock: the seed is set at DEMO_NOW; after that the demo runs on real time, never earlier ---------- */
 
@@ -149,7 +152,7 @@ export function createDemoStore() {
 
   const actions: DemoActions = {
     createProject({ name, typeId, lifecycle }) {
-      const id = mintId('p');
+      const id = nextProjectId(get());
       set((s) => {
         const sort = Math.max(0, ...s.projects.map((p) => p.publishing.sortOrder)) + 1;
         const project = blankProject(id, name.trim(), typeId, lifecycle, uniqueSlug(slugify(name), s.projects), sort, todayIso());
@@ -169,7 +172,7 @@ export function createDemoStore() {
     duplicateProject(id) {
       const src = get().projects.find((p) => p.id === id);
       if (!src) return '';
-      const newId = mintId('p');
+      const newId = nextProjectId(get());
       set((s) => {
         const name = `${src.name} (copy)`;
         const sort = Math.max(0, ...s.projects.map((p) => p.publishing.sortOrder)) + 1;

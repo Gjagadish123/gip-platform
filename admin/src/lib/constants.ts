@@ -186,5 +186,9 @@ export const SECTION_META: Record<SectionId, { label: string; group: SectionGrou
 /** Sections that collapse to "Not shown: no detail page" when hasDetailPage(p) is false. */
 export const PAGE_CONTENT_SECTIONS: SectionId[] = ['vision', 'masterplan', 'amenities', 'legal', 'cta'];
 
+/** Ids for projects created in the demo. The static GitHub Pages preview pre-builds a page per id, so new projects get
+ *  one of these instead of a random id. ponytail: 40 per browser, then random ids (fine on any server deploy). */
+export const NEW_PROJECT_IDS = Array.from({ length: 40 }, (_, i) => `new-project-${i + 1}`);
+
 /** Old live site, for "View on live site ↗" (only projects with publishing.legacySlug). */
 export const LIVE_SITE_URL = 'https://www.greaterinfraprojects.in';
