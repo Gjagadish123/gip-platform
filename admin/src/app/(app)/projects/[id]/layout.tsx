@@ -5,8 +5,15 @@ import { Suspense, type ReactNode } from "react"
 
 import { PageContainer } from "@/components/app/page-header"
 import { ProjectFrame, ProjectHeaderSkeleton } from "@/components/projects/project-header"
+import { NEW_PROJECT_IDS } from "@/lib/constants"
+import { SEED } from "@/lib/mock"
 
 type Props = { children: ReactNode; params: Promise<{ id: string }> }
+
+// A page per seed project + per new-project slot, so the static GitHub Pages export has them all.
+export function generateStaticParams() {
+  return [...SEED.projects.map((p) => p.id), ...NEW_PROJECT_IDS].map((id) => ({ id }))
+}
 
 async function Frame({ params, children }: Props) {
   const { id } = await params

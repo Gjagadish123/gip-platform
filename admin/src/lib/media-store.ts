@@ -2,6 +2,7 @@
 // Uploaded files live as Blobs in IndexedDB (keyed by Asset.id) so they survive a refresh; localStorage only
 // holds the 'idb:<id>' reference. No dependency. Remote and /public URLs pass straight through useAssetUrl.
 import { useEffect, useState } from 'react';
+import { withBase } from './base-path';
 import type { Asset } from './types';
 
 const DB = 'gip-admin-media', STORE = 'blobs';
@@ -83,6 +84,6 @@ export function useAssetUrl(asset: Asset | null | undefined): string | null | un
       .catch(() => { if (!cancelled) setLoaded({ id, url: null }); });
     return () => { cancelled = true; if (objectUrl) URL.revokeObjectURL(objectUrl); };
   }, [id]);
-  if (!id) return url;
+  if (!id) return url && withBase(url);
   return loaded?.id === id ? loaded.url : undefined;
 }

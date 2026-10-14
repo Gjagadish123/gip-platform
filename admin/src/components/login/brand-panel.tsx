@@ -1,4 +1,5 @@
 import Image from "next/image"
+import { withBase } from "@/lib/base-path"
 import { cn } from "@/lib/utils"
 
 const LOCKUP = { width: 349, height: 156 } // viewBox of gip-lockup-*.svg
@@ -7,8 +8,8 @@ const LOCKUP = { width: 349, height: 156 } // viewBox of gip-lockup-*.svg
 export function BrandLockup({ className }: { className?: string }) {
   return (
     <div className={className}>
-      <Image src="/brand/gip-lockup-navy.svg" alt="Greater Infra Projects" {...LOCKUP} className="h-10 w-auto dark:hidden" />
-      <Image src="/brand/gip-lockup-white.svg" alt="Greater Infra Projects" {...LOCKUP} className="hidden h-10 w-auto dark:block" />
+      <Image src={withBase("/brand/gip-lockup-navy.svg")} alt="Greater Infra Projects" {...LOCKUP} className="h-10 w-auto dark:hidden" />
+      <Image src={withBase("/brand/gip-lockup-white.svg")} alt="Greater Infra Projects" {...LOCKUP} className="hidden h-10 w-auto dark:block" />
     </div>
   )
 }
@@ -22,10 +23,12 @@ export function BrandPanel({ className }: { className?: string }) {
   return (
     <div className={cn("relative overflow-hidden bg-[oklch(0.24_0.06_252)]", className)}>
       <div aria-hidden className="absolute inset-0 [mask-image:linear-gradient(to_top,transparent,#000_30%)]">
-        <div className="absolute -top-[2%] -right-[4%] aspect-[399.8/584] h-[108%] bg-[oklch(0.9_0.03_245)] opacity-75 [mask:url(/brand/login-plan-fallback.svg)_center/contain_no-repeat]" />
+        <div className="absolute -top-[2%] -right-[4%] aspect-[399.8/584] h-[108%] bg-[oklch(0.9_0.03_245)] opacity-75"
+          style={{ mask: `url(${withBase("/brand/login-plan-fallback.svg")}) center / contain no-repeat` }}
+        />
       </div>
       <Image
-        src="/brand/login-aerial.jpg"
+        src={withBase("/brand/login-aerial.jpg")}
         alt=""
         fill
         preload
@@ -35,7 +38,7 @@ export function BrandPanel({ className }: { className?: string }) {
       <div aria-hidden className="absolute inset-x-0 top-0 h-[28%] bg-linear-to-b from-[oklch(0.2_0.05_252/0.55)] to-transparent" />
       <div aria-hidden className="absolute inset-x-0 bottom-0 h-[40%] bg-linear-to-t from-[oklch(0.2_0.05_252/0.8)] to-transparent" />
       <Image
-        src="/brand/gip-lockup-white.svg"
+        src={withBase("/brand/gip-lockup-white.svg")}
         alt="Greater Infra Projects"
         {...LOCKUP}
         className="absolute top-10 left-10 h-12 w-auto"
