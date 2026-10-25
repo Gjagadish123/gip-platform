@@ -1,0 +1,10 @@
+{
+  "name": "Greater Infra Projects",
+  "short_name": "GIP",
+  "description": "HMDA, DTCP and RERA approved plots in Hyderabad",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#ffffff",
+  "theme_color": "#033967",
+  "icons": [{ "src": "/icon.svg", "type": "image/svg+xml", "sizes": "any" }]
+}

@@ -1,40 +1,37 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
-import { cn } from "cn"
+import { ArrowRight } from "lucide-react"
+import { cn } from "@/lib/utils"
 import { Slot } from "radix-ui"
 
+// Rounded rectangles (10 px), never pills. Navy solid for the one primary action in view, a hairline white button
+// beside it, light and outline versions for navy surfaces. A press nudges the button down by a pixel.
 const buttonVariants = cva(
-  "group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent font-sans font-medium tracking-[-0.01em] whitespace-nowrap transition-[background-color,border-color,color,box-shadow] duration-300 ease-(--ease-out) outline-hidden select-none active:translate-y-px focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-offset-2 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/80",
-        outline:
-          "border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
-        secondary:
-          "bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
-        ghost:
-          "hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50",
-        destructive:
-          "bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40",
-        link: "text-primary underline-offset-4 hover:underline",
+        primary:
+          "bg-brand text-white shadow-[0_1px_2px_rgb(1_34_63/0.22),inset_0_1px_0_rgb(255_255_255/0.1)] hover:bg-navy-deep",
+        secondary: "border-line-strong bg-white text-navy hover:border-navy/35 hover:bg-mist",
+        light: "bg-white text-brand hover:bg-mist",
+        // Teal: the one primary action on navy surfaces (hero, closes).
+        teal: "bg-teal text-navy-deep shadow-[0_1px_2px_rgb(1_20_38/0.3),inset_0_1px_0_rgb(255_255_255/0.25)] hover:bg-[#4fd3c6]",
+        "outline-light": "border-white/30 bg-transparent text-white hover:border-white/60 hover:bg-white/8",
+        ghost: "text-navy hover:bg-mist",
+        link: "h-auto rounded-none border-0 px-0 text-navy link-draw",
       },
       size: {
-        default:
-          "h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
-        xs: "h-6 gap-1 rounded-[min(var(--radius-md),10px)] px-2 text-xs in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",
-        sm: "h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5",
-        lg: "h-9 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
-        icon: "size-8",
-        "icon-xs":
-          "size-6 rounded-[min(var(--radius-md),10px)] in-data-[slot=button-group]:rounded-lg [&_svg:not([class*='size-'])]:size-3",
-        "icon-sm":
-          "size-7 rounded-[min(var(--radius-md),12px)] in-data-[slot=button-group]:rounded-lg",
-        "icon-lg": "size-9",
+        default: "h-12 gap-2.5 px-5 text-ui",
+        sm: "h-10 gap-2 px-4 text-sm",
+        lg: "h-14 gap-3 px-6 text-base",
+        icon: "size-11",
+        "icon-sm": "size-9",
       },
     },
+    compoundVariants: [{ variant: "link", class: "h-auto px-0" }],
     defaultVariants: {
-      variant: "default",
+      variant: "primary",
       size: "default",
     },
   }
@@ -42,7 +39,7 @@ const buttonVariants = cva(
 
 function Button({
   className,
-  variant = "default",
+  variant = "primary",
   size = "default",
   asChild = false,
   ...props
@@ -63,4 +60,14 @@ function Button({
   )
 }
 
-export { Button, buttonVariants }
+/** The arrow inside a button or link: on hover it leaves to the right and a second one enters from the left. */
+function Arrow({ className }: { className?: string }) {
+  return (
+    <span aria-hidden className={cn("relative inline-flex size-4 shrink-0 overflow-hidden", className)}>
+      <ArrowRight className="absolute inset-0 size-4 transition-transform duration-500 ease-(--ease-out) group-hover/button:translate-x-[140%] group-hover/link:translate-x-[140%]" />
+      <ArrowRight className="absolute inset-0 size-4 -translate-x-[140%] transition-transform duration-500 ease-(--ease-out) group-hover/button:translate-x-0 group-hover/link:translate-x-0" />
+    </span>
+  )
+}
+
+export { Arrow, Button, buttonVariants }
