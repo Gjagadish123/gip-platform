@@ -3,7 +3,7 @@
 "use client"
 
 import { Suspense, useEffect, useRef } from "react"
-import { ArrowUpRight, Building2, ChevronRight, Globe, LayoutDashboard } from "lucide-react"
+import { ArrowUpRight, Building2, ChevronRight, Globe, LayoutDashboard, Map as MapIcon } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/sidebar"
 import { withBase } from "@/lib/base-path"
 import { LIVE_SITE_URL } from "@/lib/constants"
+import { LIVE_LAYOUT_IDS } from "@/lib/layouts"
 import { useProjects } from "@/lib/store"
 import { cn } from "@/lib/utils"
 
@@ -119,6 +120,19 @@ function NavMain({ pathname }: { pathname: string | null }) {
             </SidebarMenuItem>
           </Collapsible>
         )}
+
+        {/* The four projects on the website's live layouts page (the screen lists them; one fill, no repeats). */}
+        <SidebarMenuItem>
+          <SidebarMenuButton asChild isActive={pathname === "/live-layouts"} tooltip="Live layouts" className="font-medium">
+            <Link href="/live-layouts" onClick={close}>
+              <MapIcon />
+              <span>Live layouts</span>
+              <span className="ml-auto rounded-md bg-foreground/[0.06] px-1.5 py-0.5 text-xs leading-none font-medium tabular-nums text-muted-foreground">
+                {LIVE_LAYOUT_IDS.length}
+              </span>
+            </Link>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
       </SidebarMenu>
     </SidebarGroup>
   )

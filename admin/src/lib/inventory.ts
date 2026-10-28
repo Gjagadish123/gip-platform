@@ -53,12 +53,13 @@ export function percents(counts: number[]): number[] {
   return out;
 }
 
-// Status words people actually type in spreadsheets -> the four statuses. Unknown -> null (row flagged, never guessed).
+// Status words people actually type in spreadsheets -> the statuses. Unknown -> null (row flagged, never guessed).
 const ALIASES: Record<UnitStatus, string[]> = {
   available: ['available', 'avl', 'avail', 'open', 'vacant', 'unsold', 'for sale', 'a'],
   sold_out: ['sold out', 'sold', 'soldout', 'booked', 's'],
   mortgaged: ['mortgaged', 'mortgage', 'mortgaged to hmda', 'hmda mortgage', 'dtcp mortgage', 'm'],
   registered: ['registered', 'regd', 'reg', 'registration done', 'sale deed done', 'r'],
+  hold: ['hold', 'on hold', 'onhold', 'held', 'blocked', 'reserved', 'h'],
 };
 const LOOKUP = new Map(Object.entries(ALIASES).flatMap(([s, words]) => words.map((w) => [w, s as UnitStatus])));
 export const toStatus = (v: unknown): UnitStatus | null =>
@@ -93,8 +94,11 @@ export function compressRanges(nos: string[]): string {
 
 export type StatusCounts = Record<UnitStatus, number>;
 
+/** Every status at 0, in client order. */
+export const emptyCounts = () => Object.fromEntries(UNIT_STATUSES.map((s) => [s, 0])) as StatusCounts;
+
 export function statusCounts(units: Unit[]): StatusCounts {
-  const c: StatusCounts = { available: 0, sold_out: 0, mortgaged: 0, registered: 0 };
+  const c = emptyCounts();
   for (const u of units) c[u.status]++;
   return c;
 }
@@ -131,7 +135,7 @@ export function canTransition(from: UnitStatus, to: UnitStatus, type?: ProjectTy
   if (from === to) return { ok: false, warn: `Already ${UNIT_STATUS_META[to].label}, unchanged.` };
   if (from === 'registered') return { ok: true, needsNote: true, warn: 'Registration is final. Change this only to correct a mistake.' };
   if (from === 'sold_out' && to === 'available') return { ok: true, needsNote: true, warn: 'This puts a sold unit back on sale (for example, a cancelled booking).' };
-  if (from === 'mortgaged' && (to === 'sold_out' || to === 'registered')) {
+  if (from === 'mortgaged' && (to === 'sold_out' || to === 'registered' || to === 'hold')) {
     return { ok: true, warn: "Mortgaged units can't be sold until the authority releases them.", confirm: 'Mortgage has been released' };
   }
   if (to === 'mortgaged' && (type?.id === 'villas' || type?.id === 'apartments')) {

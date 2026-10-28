@@ -1,12 +1,20 @@
 'use client';
-// Demo store (UI-only build). Seed → hydrate from localStorage once mounted (server snapshot = seed, so no hydration
-// mismatch) → debounced writes. Ids and timestamps are minted only inside actions (event time), never in render.
+// The admin's one store. Every screen reads it synchronously; actions update it at once (optimistic) and:
+// - Supabase mode (BACKEND): queue the same change for the database, strictly in order. A refused write drops the
+//   rest of the queue and reloads the saved data, so the screen never keeps a change the database didn't take.
+//   Data loads after sign-in and again when the tab comes back into view (other admins' changes).
+// - Demo (GitHub Pages preview): seed → hydrate from localStorage once mounted (server snapshot = seed, so no
+//   hydration mismatch) → debounced writes.
+// Ids and timestamps are minted only inside actions (event time), never in render.
 import { createContext, useContext, useEffect, useMemo, useState, useSyncExternalStore, type ReactNode } from 'react';
+import { isAuthRetryableFetchError } from '@supabase/supabase-js';
 import { toast } from 'sonner';
 import { DEMO_NOW, getProjectType, NEW_PROJECT_IDS } from './constants';
 import { slugify, toIsoDate, toIstIso } from './format';
-import { describeStatusChange } from './inventory';
+import { compressRanges, describeStatusChange, naturalCompare } from './inventory';
 import { SEED, SEED_VERSION } from './mock';
+import { BACKEND, createClient, type Db } from './supabase/client';
+import * as remote from './supabase/data';
 import type { ActivityEvent, ID, Lifecycle, MortgagedTo, Project, PublishState, Unit, UnitStatus } from './types';
 
 /** Holds `{ v: SEED_VERSION, state }`. Exported for the error page's "Reset demo data". */
@@ -14,6 +22,7 @@ export const STORAGE_KEY = 'gip-admin-demo:v1';
 const WRITE_DELAY_MS = 300;
 const MAX_ACTIVITY = 500; // ponytail: bounds localStorage size; older entries drop off
 const MAX_UNDO = 20;
+const REFRESH_MIN_MS = 30_000; // tab-focus reloads at most this often
 
 export interface DemoState {
   projects: Project[];
@@ -21,18 +30,24 @@ export interface DemoState {
   activity: ActivityEvent[];
   session: { username: string };
 }
-interface Snapshot { state: DemoState; hydrated: boolean }
+/** signedIn is always true in the demo (any name signs in). loadError: the first load failed (Supabase mode). */
+interface Snapshot { state: DemoState; hydrated: boolean; signedIn: boolean; loadError?: string }
 
 const SEED_STATE: DemoState = { ...SEED, session: { username: 'Admin' } };
-const SERVER_SNAPSHOT: Snapshot = { state: SEED_STATE, hydrated: false };
+const EMPTY_STATE: DemoState = { projects: [], units: {}, activity: [], session: { username: '' } };
+const SERVER_SNAPSHOT: Snapshot = BACKEND
+  ? { state: EMPTY_STATE, hydrated: false, signedIn: false }
+  : { state: SEED_STATE, hydrated: false, signedIn: true };
 const getServerSnapshot = () => SERVER_SNAPSHOT;
 const EMPTY_UNITS: Unit[] = [];
 
 /* Called only from actions (event handlers). crypto.randomUUID needs a secure context, which a LAN demo may lack. */
 const mintId = (prefix: string) => `${prefix}-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
-/* First pre-built id not used by a project or its activity (a reused id would inherit a deleted project's log). */
+/* First pre-built id not used by a project or its activity (a reused id would inherit a deleted project's log).
+   Supabase mode always mints: the store holds only the latest activity, so it can't prove a slot was never used. */
 const nextProjectId = (s: DemoState) =>
-  NEW_PROJECT_IDS.find((id) => !s.projects.some((p) => p.id === id) && !s.activity.some((a) => a.projectId === id)) ?? mintId('p');
+  (BACKEND ? undefined : NEW_PROJECT_IDS.find((id) => !s.projects.some((p) => p.id === id) && !s.activity.some((a) => a.projectId === id)))
+  ?? mintId('p');
 
 /* ---------- clock: the seed is set at DEMO_NOW; after that the demo runs on real time, never earlier ---------- */
 
@@ -67,15 +82,22 @@ export interface DemoActions {
   /** Reverts a batch from setUnitStatuses or replaceUnits made this session. False when it can't (unknown / reset). */
   undoBatch(batchId: string): boolean;
   saveUnit(projectId: ID, unit: Unit): void;
-  /** Generate / import. Returns a batchId usable with undoBatch. */
+  /** Generate / remove: `units` is the new full list, but only the units added or dropped are written (kept units
+   *  are never rewritten; edit those with saveUnit). Returns a batchId usable with undoBatch. */
   replaceUnits(projectId: ID, units: Unit[]): string;
   setSession(username: string): void;
+  /** Supabase mode: email + password, then loads the data. Demo: takes the name. Resolves to an error message or null. */
+  signIn(email: string, password: string): Promise<string | null>;
+  /** Resolves to false when it couldn't (offline with an expired token): still signed in, and told why. */
+  signOut(): Promise<boolean>;
+  /** Supabase mode: load everything again (retry after a failed load). */
+  reload(): void;
   resetDemo(): void;
 }
 
 type UndoRecord =
   | { kind: 'status'; projectId: ID; prev: Map<ID, Unit>; prevProject?: Project }
-  | { kind: 'replace'; projectId: ID; prevList: Unit[]; prevProject?: Project };
+  | { kind: 'replace'; projectId: ID; prevProject?: Project; added: string[]; removed: Unit[] };
 
 interface Persisted { v: number; state: DemoState }
 
@@ -113,6 +135,11 @@ function blankProject(id: ID, name: string, typeId: ID, lifecycle: Lifecycle, sl
 const withInventoryMeta = (p: Project, units: Unit[]): Project =>
   ({ ...p, inventoryUpdatedAt: todayIso(), statusSample: units.some((u) => u.sample) });
 
+const isAdmin = (u: { app_metadata?: Record<string, unknown> }) => u.app_metadata?.role === 'admin';
+const NOT_ADMIN = "This account isn't an admin yet. Ask your administrator to give it access.";
+const displayName = (u: { email?: string; user_metadata?: { name?: unknown } }) =>
+  (typeof u.user_metadata?.name === 'string' && u.user_metadata.name.trim()) || u.email || 'Admin';
+
 /** Exported for the data self-check; the app uses <DemoStoreProvider>. */
 export function createDemoStore() {
   let snap: Snapshot = SERVER_SNAPSHOT;
@@ -121,8 +148,83 @@ export function createDemoStore() {
   let timer: ReturnType<typeof setTimeout> | undefined;
   let warned = false;
 
+  /* ---------- Supabase mode: client, ordered write queue, load ---------- */
+
+  let client: Db | null = null;
+  const db = () => (client ??= createClient()); // lazily: never during the server render
+  let queue: Promise<void> = Promise.resolve();
+  let pending = 0, writes = 0, failed = false, loading: Promise<void> | null = null, loadedAt = 0, started = false;
+  let authGen = 0; // bumped on every sign-out: a load that started before one must not put the data back
+
+  /** Runs `job` after every earlier write. No-op in the demo. */
+  const write = (job: (db: Db) => Promise<unknown>) => {
+    if (!BACKEND) return;
+    pending++;
+    writes++;
+    queue = queue
+      .then(async () => {
+        if (failed) return; // an earlier write failed: the reload below replaces this change too
+        try {
+          await job(db());
+        } catch (e) {
+          failed = true;
+          notify(() => toast.error(`Couldn't save: ${remote.describeError(e)}. Showing the saved data.`));
+        }
+      })
+      .finally(() => {
+        if (--pending === 0 && failed) void load();
+      });
+  };
+
+  /** Session check + full load, one at a time. A failure keeps what's on screen (or shows the error page). */
+  const load = () => (loading ??= (async () => {
+    const gen = authGen;
+    let owed = false; // a write was refused: what's on screen may not be saved until this load lands
+    try {
+      const { data: { session }, error } = await db().auth.getSession();
+      if (error && isAuthRetryableFetchError(error)) throw error; // offline: keep the session, show the error
+      if (!session || !isAdmin(session.user)) {
+        if (session) await db().auth.signOut(); // RLS would hide everything and refuse every write
+        snap = { state: EMPTY_STATE, hydrated: true, signedIn: false };
+        return;
+      }
+      let seen: number, data: Awaited<ReturnType<typeof remote.loadAll>>;
+      do {
+        while (pending) await queue; // read after every queued write has landed (or been dropped after a failure)
+        if (failed) {
+          undo.clear(); // undoing a change that was dropped would replay it
+          owed = true;
+        }
+        failed = false;
+        seen = writes;
+        data = await remote.loadAll(db(), MAX_ACTIVITY);
+      } while (seen !== writes); // a change made while reading: read again, or the old data would wipe it off screen
+      if (gen !== authGen) return;
+      snap = { state: { ...data, session: { username: displayName(session.user) } }, hydrated: true, signedIn: true };
+      loadedAt = Date.now();
+    } catch (e) {
+      if (gen !== authGen) return;
+      const why = remote.describeError(e);
+      if (owed || failed) {
+        owed = true;
+        undo.clear();
+        loadedAt = 0; // the next tab focus reloads too
+      }
+      if (!(snap.hydrated && snap.signedIn && !snap.loadError)) snap = { ...snap, hydrated: true, signedIn: true, loadError: why };
+      else if (!owed) notify(() => toast.error(`Couldn't load the latest data: ${why}`));
+      else notify(() => toast.error(`Couldn't load the saved data: ${why}. Changes on screen may not be saved.`, {
+        duration: Infinity, action: { label: 'Retry', onClick: () => void load() },
+      }));
+    } finally {
+      failed = false; // also after a failed load: later writes must not be dropped
+      loading = null;
+      emit();
+    }
+  })());
+
   const emit = () => listeners.forEach((l) => l());
   const persist = () => {
+    if (BACKEND) return;
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({ v: SEED_VERSION, state: snap.state } satisfies Persisted));
     } catch {
@@ -136,8 +238,9 @@ export function createDemoStore() {
   const set = (fn: (s: DemoState) => DemoState) => {
     const next = fn(snap.state);
     if (next === snap.state) return;
-    snap = { state: next, hydrated: snap.hydrated };
+    snap = { ...snap, state: next };
     emit();
+    if (BACKEND) return;
     clearTimeout(timer);
     timer = setTimeout(() => { timer = undefined; persist(); }, WRITE_DELAY_MS);
   };
@@ -153,47 +256,66 @@ export function createDemoStore() {
   const actions: DemoActions = {
     createProject({ name, typeId, lifecycle }) {
       const id = nextProjectId(get());
+      const message = 'Created as draft';
+      let project!: Project;
       set((s) => {
         const sort = Math.max(0, ...s.projects.map((p) => p.publishing.sortOrder)) + 1;
-        const project = blankProject(id, name.trim(), typeId, lifecycle, uniqueSlug(slugify(name), s.projects), sort, todayIso());
-        return { ...s, projects: [...s.projects, project], activity: log(s, { projectId: id, kind: 'project', message: 'Created as draft' }) };
+        project = blankProject(id, name.trim(), typeId, lifecycle, uniqueSlug(slugify(name), s.projects), sort, todayIso());
+        return { ...s, projects: [...s.projects, project], activity: log(s, { projectId: id, kind: 'project', message }) };
+      });
+      write(async (db) => {
+        await remote.insertProject(db, project);
+        await remote.logActivity(db, { projectId: id, kind: 'project', message });
       });
       return id;
     },
 
     saveProject(project) {
+      const message = 'Edited project details';
       set((s) => ({
         ...s,
         projects: mapProject(s, project.id, () => ({ ...project, publishing: { ...project.publishing, updatedAt: todayIso() } })),
-        activity: log(s, { projectId: project.id, kind: 'project', message: 'Edited project details' }),
+        activity: log(s, { projectId: project.id, kind: 'project', message }),
       }));
+      write(async (db) => {
+        await remote.updateProject(db, project);
+        await remote.logActivity(db, { projectId: project.id, kind: 'project', message });
+      });
     },
 
     duplicateProject(id) {
       const src = get().projects.find((p) => p.id === id);
       if (!src) return '';
       const newId = nextProjectId(get());
+      const message = `Duplicated from ${src.name}`;
+      let copy!: Project;
       set((s) => {
         const name = `${src.name} (copy)`;
         const sort = Math.max(0, ...s.projects.map((p) => p.publishing.sortOrder)) + 1;
         const blank = blankProject(newId, name, src.typeId, src.lifecycle, uniqueSlug(slugify(name), s.projects), sort, todayIso());
         // Identity fields cleared (domain §4 #11): RERA/approvals, media, slug, live links, inventory.
-        const copy: Project = {
+        copy = {
           ...structuredClone(src), id: newId, name, displayName: undefined,
           media: blank.media, publishing: blank.publishing,
           legal: { ...structuredClone(src.legal), approvals: [], documents: src.legal.documents.map((d) => ({ ...d, id: mintId('doc'), file: undefined })) },
-          inventoryUpdatedAt: undefined, statusSample: undefined, sample: undefined,
+          inventoryUpdatedAt: undefined, statusSample: undefined, sample: undefined, rev: undefined,
         };
-        return { ...s, projects: [...s.projects, copy], activity: log(s, { projectId: newId, kind: 'project', message: `Duplicated from ${src.name}` }) };
+        return { ...s, projects: [...s.projects, copy], activity: log(s, { projectId: newId, kind: 'project', message }) };
+      });
+      write(async (db) => {
+        await remote.insertProject(db, copy);
+        await remote.logActivity(db, { projectId: newId, kind: 'project', message });
       });
       return newId;
     },
 
     setPublishState(id, state) {
+      let message = '', before!: Project;
       set((s) => {
         const p = s.projects.find((x) => x.id === id);
         if (!p || p.publishing.state === state) return s;
-        const message = state === 'published' ? 'Published' : state === 'archived' ? 'Archived' : 'Unpublished (moved to draft)';
+        before = p;
+        message = state === 'published' ? 'Published' : state === 'archived' ? 'Archived' : 'Unpublished (moved to draft)';
         const today = todayIso();
         return {
           ...s,
@@ -204,17 +326,27 @@ export function createDemoStore() {
           activity: log(s, { projectId: id, kind: 'project', message }),
         };
       });
+      if (message) write(async (db) => {
+        await remote.setPublishState(db, before, state);
+        await remote.logActivity(db, { projectId: id, kind: 'project', message });
+      });
     },
 
     archiveProject(id) { actions.setPublishState(id, 'archived'); },
 
     deleteProject(id) {
+      let message = '';
       set((s) => {
         const p = s.projects.find((x) => x.id === id);
         if (!p) return s;
+        message = `Deleted ${p.name}`;
         const units = { ...s.units };
         delete units[id];
-        return { ...s, projects: s.projects.filter((x) => x.id !== id), units, activity: log(s, { projectId: id, kind: 'project', message: `Deleted ${p.name}` }) };
+        return { ...s, projects: s.projects.filter((x) => x.id !== id), units, activity: log(s, { projectId: id, kind: 'project', message }) };
+      });
+      if (message) write(async (db) => {
+        await remote.deleteProject(db, id);
+        await remote.logActivity(db, { projectId: id, kind: 'project', message });
       });
     },
 
@@ -222,6 +354,7 @@ export function createDemoStore() {
       const batchId = mintId('batch');
       const at = nowIso(), today = toIsoDate(at);
       const note = opts.note?.trim() || undefined;
+      let numbers: string[] = [], from: UnitStatus[] = [], message = '';
       set((s) => {
         const list = s.units[projectId] ?? EMPTY_UNITS;
         const ids = new Set(unitIds);
@@ -235,23 +368,31 @@ export function createDemoStore() {
             mortgagedTo: to === 'mortgaged' ? (opts.mortgagedTo ?? u.mortgagedTo) : undefined,
             documentNo: to === 'registered' ? (opts.documentNo ?? u.documentNo) : undefined,
             sample: false,
-            history: [...u.history, { from: u.status, to, at, by, ...(note && { note }), batchId }],
+            history: [...u.history, {
+              from: u.status, to, at, by, ...(note && { note }), batchId,
+              prev: { status: u.status, status_date: u.statusDate ?? null, status_note: u.statusNote ?? null,
+                mortgaged_to: u.mortgagedTo ?? null, document_no: u.documentNo ?? null, sample: !!u.sample },
+            }],
           };
         });
         if (!prev.size) return s;
         const project = s.projects.find((p) => p.id === projectId);
         remember(batchId, { kind: 'status', projectId, prev, prevProject: project });
-        const numbers = next.filter((u) => prev.has(u.id)).map((u) => u.number);
+        const changed = next.filter((u) => prev.has(u.id));
+        numbers = changed.map((u) => u.number);
+        from = changed.map((u) => prev.get(u.id)!.status);
+        message = describeStatusChange(getProjectType(project?.typeId ?? ''), numbers, to) + (note ? ` · ${note}` : '');
         return {
           ...s,
           units: { ...s.units, [projectId]: next },
           projects: mapProject(s, projectId, (p) => withInventoryMeta(p, next)),
-          activity: log(s, {
-            projectId, kind: 'status', batchId, unitNumbers: numbers, to,
-            message: describeStatusChange(getProjectType(project?.typeId ?? ''), numbers, to) + (note ? ` · ${note}` : ''),
-          }),
+          activity: log(s, { projectId, kind: 'status', batchId, unitNumbers: numbers, to, message }),
         };
       });
+      if (numbers.length) write((db) => remote.setUnitStatuses(db, {
+        projectId, numbers, from, to, batchId, message, note, date: opts.date ?? today,
+        mortgagedTo: opts.mortgagedTo, documentNo: opts.documentNo,
+      }));
       return batchId;
     },
 
@@ -259,11 +400,26 @@ export function createDemoStore() {
       const rec = undo.get(batchId);
       if (!rec) return false;
       undo.delete(batchId);
+      let inverse: { add: Unit[]; remove: Unit[] } | undefined;
       set((s) => {
         const list = s.units[rec.projectId] ?? EMPTY_UNITS;
-        // Status undo touches only units still sitting on this batch, so later edits survive.
-        const next = rec.kind === 'replace' ? rec.prevList
-          : list.map((u) => { const p = rec.prev.get(u.id); return p && u.history.at(-1)?.batchId === batchId ? p : u; });
+        // Undo touches only what the batch changed, exactly as undo_batch does, so later edits survive: a status batch
+        // reverts the status fields of the units still sitting on it; a replace drops the units it added and puts back
+        // the ones it removed.
+        let next: Unit[];
+        if (rec.kind === 'replace') {
+          const added = new Set(rec.added.map((n) => `${rec.projectId}:${n}`));
+          const now = new Set(list.map((u) => u.id));
+          inverse = { add: rec.removed.filter((u) => !now.has(u.id)), remove: list.filter((u) => added.has(u.id)) };
+          next = [...list.filter((u) => !added.has(u.id)), ...inverse.add].sort((a, b) => naturalCompare(a.number, b.number));
+        } else {
+          next = list.map((u) => {
+            const p = rec.prev.get(u.id);
+            if (!p || u.history.at(-1)?.batchId !== batchId) return u;
+            const { status, statusDate, statusNote, mortgagedTo, documentNo, sample } = p;
+            return { ...u, status, statusDate, statusNote, mortgagedTo, documentNo, sample, history: u.history.slice(0, -1) };
+          });
+        }
         const meta = rec.prevProject;
         return {
           ...s,
@@ -272,10 +428,12 @@ export function createDemoStore() {
           activity: s.activity.filter((a) => a.batchId !== batchId),
         };
       });
+      write((db) => remote.undoBatch(db, batchId, rec.projectId, inverse));
       return true;
     },
 
     saveUnit(projectId, unit) {
+      let saved!: Unit, was: Unit | undefined, message: string | undefined;
       set((s) => {
         const list = s.units[projectId] ?? EMPTY_UNITS;
         const old = list.find((u) => u.id === unit.id);
@@ -294,44 +452,55 @@ export function createDemoStore() {
         }
         const units = old ? list.map((u) => (u.id === unit.id ? next : u)) : [...list, next];
         const type = getProjectType(s.projects.find((p) => p.id === projectId)?.typeId ?? '');
+        saved = next;
+        was = old;
+        message = statusChanged ? describeStatusChange(type, [next.number], next.status) : undefined;
         return {
           ...s,
           units: { ...s.units, [projectId]: units },
           projects: statusChanged ? mapProject(s, projectId, (p) => withInventoryMeta(p, units)) : s.projects,
-          activity: statusChanged
-            ? log(s, { projectId, kind: 'status', unitNumbers: [next.number], to: next.status, message: describeStatusChange(type, [next.number], next.status) })
+          activity: message
+            ? log(s, { projectId, kind: 'status', unitNumbers: [next.number], to: next.status, message })
             : s.activity,
         };
       });
+      write((db) => remote.saveUnit(db, projectId, saved, was, message));
     },
 
     replaceUnits(projectId, units) {
       const batchId = mintId('batch');
       const at = nowIso(), today = toIsoDate(at);
+      let next: Unit[] = [], added: Unit[] = [], removed: Unit[] = [], message = '';
       set((s) => {
         const prevList = s.units[projectId] ?? EMPTY_UNITS;
         const project = s.projects.find((p) => p.id === projectId);
         const by = s.session.username || 'Admin';
         const known = new Set(prevList.map((u) => u.id));
         // New units start with one creation event stamped now (callers can't know the action time).
-        const next = units.map((u): Unit => {
+        next = units.map((u): Unit => {
           const id = `${projectId}:${u.number}`;
           return known.has(id)
             ? { ...u, id, projectId }
             : { ...u, id, projectId, statusDate: today, history: [{ from: null, to: u.status, at, by, batchId }] };
         });
-        remember(batchId, { kind: 'replace', projectId, prevList, prevProject: project });
-        const noun = getProjectType(project?.typeId ?? '').unitNounPlural.toLowerCase();
+        const kept = new Set(next.map((u) => u.id));
+        added = next.filter((u) => !known.has(u.id));
+        removed = prevList.filter((u) => !kept.has(u.id));
+        remember(batchId, { kind: 'replace', projectId, prevProject: project, added: added.map((u) => u.number), removed });
+        const type = getProjectType(project?.typeId ?? '');
+        const count = (n: number) => `${n} ${(n === 1 ? type.unitNoun : type.unitNounPlural).toLowerCase()}`;
+        message = [
+          added.length ? `Added ${count(added.length)}` : '',
+          removed.length ? `Removed ${count(removed.length)}: ${compressRanges(removed.map((u) => u.number))}` : '',
+        ].filter(Boolean).join(' · ') || `No change to the ${type.unitNounPlural.toLowerCase()}`;
         return {
           ...s,
           units: { ...s.units, [projectId]: next },
           projects: mapProject(s, projectId, (p) => withInventoryMeta(p, next)),
-          activity: log(s, {
-            projectId, kind: 'project', batchId,
-            message: prevList.length ? `Replaced inventory with ${next.length} ${noun}` : `Added ${next.length} ${noun}`,
-          }),
+          activity: log(s, { projectId, kind: 'project', batchId, message }),
         };
       });
+      write((db) => remote.replaceUnits(db, projectId, added, removed, batchId, message));
       return batchId;
     },
 
@@ -339,11 +508,51 @@ export function createDemoStore() {
       set((s) => ({ ...s, session: { username: username.trim() || 'Admin' } }));
     },
 
+    async signIn(email, password) {
+      if (!BACKEND) {
+        actions.setSession(email);
+        return null;
+      }
+      const { data, error } = await db().auth.signInWithPassword({ email: email.trim(), password });
+      if (error) return error.message === 'Invalid login credentials' ? 'Wrong email or password.' : error.message;
+      if (!isAdmin(data.user)) {
+        await db().auth.signOut();
+        return NOT_ADMIN;
+      }
+      snap = { ...snap, loadError: undefined };
+      await loading; // a load started before sign-in saw no session: let it finish, then load for real
+      await load();
+      return snap.loadError ? `Signed in, but the data didn't load: ${snap.loadError}` : null;
+    },
+
+    async signOut() {
+      if (!BACKEND) return true;
+      await queue; // queued writes land first
+      // This browser only: the admin's other devices stay signed in. SIGNED_OUT (hydrate) drops the data and stops
+      // any load in flight; offline with an expired token auth-js can't end the session and keeps it.
+      const { error } = await db().auth.signOut({ scope: 'local' });
+      if (error && snap.signedIn) {
+        notify(() => toast.error(`Couldn't sign out: ${remote.describeError(error)}. Check the connection and try again.`));
+        return false;
+      }
+      undo.clear();
+      snap = { state: EMPTY_STATE, hydrated: true, signedIn: false };
+      emit();
+      return true;
+    },
+
+    reload() {
+      if (!BACKEND) return;
+      snap = { ...snap, hydrated: false, loadError: undefined };
+      emit();
+      void load();
+    },
+
     resetDemo() {
       clearTimeout(timer);
       timer = undefined;
       undo.clear();
-      snap = { state: { ...SEED_STATE, session: snap.state.session }, hydrated: true }; // keeps the signed-in name
+      snap = { state: { ...SEED_STATE, session: snap.state.session }, hydrated: true, signedIn: true }; // keeps the signed-in name
       persist();
       emit();
     },
@@ -354,8 +563,28 @@ export function createDemoStore() {
     flush,
     subscribe(l: () => void) { listeners.add(l); return () => { listeners.delete(l); }; },
     getSnapshot: () => snap,
-    /** Load persisted edits once, after mount (the first client render must match the server's seed). */
+    /** Writes still on their way to the database (Supabase mode). */
+    pending: () => pending,
+    /** Tab came back into view: pick up other admins' changes, unless writes are in flight or it just loaded. */
+    refresh() {
+      if (BACKEND && snap.signedIn && !pending && Date.now() - loadedAt > REFRESH_MIN_MS) void load();
+    },
+    /** Supabase mode: load the database. Demo: load persisted edits (the first client render must match the seed). */
     hydrate() {
+      if (BACKEND) {
+        if (started) return;
+        started = true;
+        // Another tab signed out, or the session ended: drop the data; the app gate sends us to /login.
+        db().auth.onAuthStateChange((event) => {
+          if (event === 'SIGNED_OUT') authGen++;
+          if (event !== 'SIGNED_OUT' || !snap.signedIn) return;
+          undo.clear();
+          snap = { state: EMPTY_STATE, hydrated: true, signedIn: false };
+          emit();
+        });
+        void load();
+        return;
+      }
       if (snap.hydrated) return;
       let state = snap.state, outdated = false;
       try {
@@ -369,7 +598,7 @@ export function createDemoStore() {
           outdated = true;
         }
       } catch { /* corrupt or blocked storage: start from the seed */ }
-      snap = { state, hydrated: true };
+      snap = { state, hydrated: true, signedIn: true };
       if (outdated) {
         persist(); // so the notice shows once
         notify(() => toast.info('Demo data was updated; earlier demo edits were reset.'));
@@ -378,10 +607,11 @@ export function createDemoStore() {
     },
     /** Another tab saved: take its state as-is (no write back, so tabs never ping-pong). */
     adopt(raw: string | null) {
+      if (BACKEND) return;
       try {
         const saved = raw ? (JSON.parse(raw) as Partial<Persisted>) : null;
         if (saved?.v !== SEED_VERSION || !isState(saved.state)) return;
-        snap = { state: saved.state, hydrated: true };
+        snap = { state: saved.state, hydrated: true, signedIn: true };
         emit();
       } catch { /* half-written or foreign value: ignore */ }
     },
@@ -389,32 +619,45 @@ export function createDemoStore() {
 }
 
 type DemoStore = ReturnType<typeof createDemoStore>;
-interface DemoContextValue { state: DemoState; hydrated: boolean; actions: DemoActions }
-const DemoContext = createContext<DemoContextValue | null>(null);
+interface DemoContextValue { state: DemoState; hydrated: boolean; signedIn: boolean; loadError?: string; actions: DemoActions }
+const DemoContext = createContext<DemoStore | null>(null);
 
 export function DemoStoreProvider({ children }: { children: ReactNode }) {
   const [store] = useState<DemoStore>(createDemoStore);
-  const snap = useSyncExternalStore(store.subscribe, store.getSnapshot, getServerSnapshot);
   useEffect(() => {
     store.hydrate();
     const flush = () => store.flush();
     const onStorage = (e: StorageEvent) => { if (e.key === STORAGE_KEY) store.adopt(e.newValue); };
+    const onVisible = () => { if (document.visibilityState === 'visible') store.refresh(); };
+    // Closing the tab while a save is still on its way would lose it: ask first.
+    const onBeforeUnload = (e: BeforeUnloadEvent) => { if (store.pending()) e.preventDefault(); };
     window.addEventListener('pagehide', flush);
     window.addEventListener('storage', onStorage);
+    document.addEventListener('visibilitychange', onVisible);
+    window.addEventListener('beforeunload', onBeforeUnload);
     return () => {
       window.removeEventListener('pagehide', flush);
       window.removeEventListener('storage', onStorage);
+      document.removeEventListener('visibilitychange', onVisible);
+      window.removeEventListener('beforeunload', onBeforeUnload);
       flush();
     };
   }, [store]);
-  const value = useMemo(() => ({ state: snap.state, hydrated: snap.hydrated, actions: store.actions }), [snap, store]);
-  return <DemoContext.Provider value={value}>{children}</DemoContext.Provider>;
+  return <DemoContext.Provider value={store}>{children}</DemoContext.Provider>;
 }
 
+/**
+ * Each consumer subscribes itself (the context only carries the store): a Suspense boundary that hydrates after the
+ * data arrived still renders the server snapshot during its own hydration, so it matches the server HTML, then updates.
+ */
 export function useDemo(): DemoContextValue {
-  const v = useContext(DemoContext);
-  if (!v) throw new Error('useDemo() must be used inside <DemoStoreProvider>.');
-  return v;
+  const store = useContext(DemoContext);
+  if (!store) throw new Error('useDemo() must be used inside <DemoStoreProvider>.');
+  const snap = useSyncExternalStore(store.subscribe, store.getSnapshot, getServerSnapshot);
+  return useMemo(
+    () => ({ state: snap.state, hydrated: snap.hydrated, signedIn: snap.signedIn, loadError: snap.loadError, actions: store.actions }),
+    [snap, store],
+  );
 }
 export const useProjects = () => useDemo().state.projects;
 export const useProject = (id: ID) => useDemo().state.projects.find((p) => p.id === id);

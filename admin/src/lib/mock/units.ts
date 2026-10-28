@@ -2,12 +2,22 @@
 // - Global City VI: 288 REAL plots from layout_demo masterplan.json (number, area, facing, road, corner, dimensions).
 //   Sold list REAL (39 plots, pen marks on the brochure scan dated 21 Sep 2026). The Registered/Sold Out split and the
 //   Mortgaged block 229–266 are SAMPLE. Totals 211 Available / 30 Sold Out / 38 Mortgaged / 9 Registered.
-// - Global City V (332 plots), Western County (176 plots), Urban Eden (24 villas): counts REAL, everything else
-//   SAMPLE, generated with a seeded RNG so the demo never changes between reloads.
+// - Global City RRR: 113 REAL plots from its DTCP layout (src/lib/layouts, tools/layouts): numbers, areas, facing,
+//   roads, sizes. Mortgage plots 97–113 REAL (printed on the layout); the others are Available as SAMPLE status.
+// - Global City V: 332 REAL plots from its HMDA layout (src/lib/layouts): numbers, areas, facing, roads, sizes.
+//   Statuses SAMPLE (generated with a seeded RNG, as before).
+// - Western County: 176 REAL plots from its HMDA layout (LP 000144/LO/PLG/HMDA/2022, src/lib/layouts): numbers,
+//   areas, facing, roads, sizes. Mortgages REAL as printed (10–25 & 36–46 to HMDA, 47–51 & 66–67 to HMDA for the
+//   nala); the others are Available as SAMPLE status.
+// - Urban Eden (24 villas): count REAL, everything else SAMPLE, generated with a seeded RNG so the demo never
+//   changes between reloads.
 // - Skyline Residences (sample): 2 towers × 12 floors × 4 flats, all SAMPLE.
-// - Global City RRR, Kompally County III, Godavari Green Farms, Global Nature View City: empty (count unknown).
+// - Kompally County III, Godavari Green Farms, Global Nature View City: empty (count unknown).
 import { DEMO_TODAY } from '../constants';
 import { toIstIso } from '../format';
+import gc5Layout from '../layouts/global-city-v.json';
+import rrrLayout from '../layouts/global-city-rrr.json';
+import wcLayout from '../layouts/western-county.json';
 import { hashSeed, mulberry32 } from '../rng';
 import type { Facing, ID, MortgagedTo, StatusEvent, Unit, UnitStatus } from '../types';
 import plan from './gc6-masterplan.json';
@@ -82,6 +92,38 @@ function gc6Units(): Unit[] {
       roadWidthFt: p.rw, ...(p.rw2 && { roadWidth2Ft: p.rw2 }),
       ...(p.corner && { corner: true }),
       status, ...(statusNote && { statusNote }), ...(mortgagedTo && { mortgagedTo }), sample, history,
+    });
+  });
+}
+
+/* ---------- plots from a digitised approved layout (src/lib/layouts) ---------- */
+
+interface DrawnPlot { n: string; a: number; f?: Facing; rw?: number; f2?: Facing; rw2?: number; corner?: boolean; w?: number; d?: number }
+
+/** A unit's physical fields from its plot on the approved layout. */
+const fromDrawing = (p: DrawnPlot) => ({
+  area: p.a,
+  ...(p.w && p.d && { widthFt: p.w, depthFt: p.d }),
+  ...(p.f && { facing: p.f }), ...(p.f2 && { facing2: p.f2 }),
+  ...(p.rw && { roadWidthFt: p.rw }), ...(p.rw2 && { roadWidth2Ft: p.rw2 }),
+  ...(p.corner && { corner: true }),
+});
+
+const RRR_PROJECT_ID = 'global-city-rrr';
+const RRR_TLP = 'TLP 236/2022/H';
+
+function rrrUnits(): Unit[] {
+  const added = fixed('2022-07-08', '10:00'); // the layout's approval date
+  return (rrrLayout.plots as DrawnPlot[]).map((p) => {
+    const n = Number(p.n);
+    const mortgaged = n >= 97 && n <= 113;
+    const statusNote = mortgaged ? `Mortgage plot as printed on the DTCP layout (${RRR_TLP})` : undefined;
+    const history: StatusEvent[] = [{ from: null, to: mortgaged ? 'mortgaged' : 'available', at: added, by: BY, ...(statusNote && { note: statusNote }) }];
+    return finish({
+      id: `${RRR_PROJECT_ID}:${p.n}`, projectId: RRR_PROJECT_ID, number: p.n, ...fromDrawing(p),
+      status: mortgaged ? 'mortgaged' : 'available', ...(statusNote && { statusNote }),
+      sample: !mortgaged, // availability of 1–96 is not confirmed by sales yet
+      history,
     });
   });
 }
@@ -164,52 +206,38 @@ function generate(spec: GenSpec): Unit[] {
   });
 }
 
-/* ---------- plot layouts: back-to-back rows, East/West facing, corner plots at row ends ---------- */
-
-const PLOT_SIZES = [
-  { a: 150, w: 30, d: 45 }, { a: 166.66, w: 30, d: 50 }, { a: 200, w: 30, d: 60 },
-  { a: 250, w: 45, d: 50 }, { a: 266.66, w: 40, d: 60 }, { a: 300, w: 45, d: 60 },
-];
-
-function plotPhysical(weights: number[], roads: number[], rowLen: number) {
-  const total = weights.reduce((a, b) => a + b, 0);
-  return (i: number, rnd: () => number): Physical => {
-    let r = rnd() * total, k = 0;
-    while (r >= weights[k]) r -= weights[k++];
-    const s = PLOT_SIZES[k];
-    const row = Math.floor(i / rowLen), pos = i % rowLen;
-    const corner = pos === 0 || pos === rowLen - 1;
-    const facing: Facing = row % 2 ? 'West' : 'East';
-    return {
-      area: s.a, widthFt: s.w, depthFt: s.d, facing,
-      roadWidthFt: roads[Math.floor(row / 2) % roads.length],
-      ...(corner && { corner: true, facing2: pos === 0 ? 'North' : 'South', roadWidth2Ft: 30 }),
-    };
-  };
-}
-
 const range = (n: number, start = 1) => Array.from({ length: n }, (_, i) => String(i + start));
+
+const GC5_PLOTS = gc5Layout.plots as DrawnPlot[];
 
 function gc5Units(): Unit[] {
   return generate({
-    projectId: 'global-city-v', launch: '2021-06-01', numbers: range(332),
-    physical: plotPhysical([8, 12, 60, 10, 0, 10], [40, 30, 33, 30], 14),
+    projectId: 'global-city-v', launch: '2021-06-01', numbers: GC5_PLOTS.map((p) => p.n),
+    physical: (i) => fromDrawing(GC5_PLOTS[i]),
     counts: { registered: 92, sold_out: 46 },
     mortgage: { from: 286, to: 331, note: 'Mortgaged to HMDA under LP 000299/LO/Plg/HMDA/2021 (sample)' },
     cancellations: 6,
   });
 }
 
+const WC_PROJECT_ID = 'western-county';
+const WC_LP = '000144/LO/PLG/HMDA/2022';
+/** Printed on the HMDA layout: plots mortgaged to HMDA (10–25, 36–46) and to HMDA for the nala (47–51, 66–67). */
+const wcMortgage = (n: number) =>
+  (n >= 10 && n <= 25) || (n >= 36 && n <= 46) ? 'HMDA' : (n >= 47 && n <= 51) || n === 66 || n === 67 ? 'HMDA for the nala' : null;
+
 function westernCountyUnits(): Unit[] {
-  return generate({
-    projectId: 'western-county', launch: '2019-08-03', numbers: range(176),
-    physical: plotPhysical([6, 14, 56, 12, 4, 8], [40, 30], 11),
-    counts: { registered: 76, sold_out: 21 },
-    mortgage: {
-      from: 151, to: 175, note: 'Mortgaged to HMDA under LP 0002364/LO/Plg/HMDA/2019 (sample)',
-      releasedTo: 162, releaseOn: '2026-08-12', releaseNote: 'Released by HMDA after layout works (sample)',
-    },
-    cancellations: 3,
+  const added = fixed('2022-07-27', '10:00'); // the layout's approval date
+  return (wcLayout.plots as DrawnPlot[]).map((p) => {
+    const m = wcMortgage(Number(p.n));
+    const statusNote = m ? `Mortgaged to ${m} as printed on the HMDA layout (LP ${WC_LP})` : undefined;
+    const history: StatusEvent[] = [{ from: null, to: m ? 'mortgaged' : 'available', at: added, by: BY, ...(statusNote && { note: statusNote }) }];
+    return finish({
+      id: `${WC_PROJECT_ID}:${p.n}`, projectId: WC_PROJECT_ID, number: p.n, ...fromDrawing(p),
+      status: m ? 'mortgaged' : 'available', ...(statusNote && { statusNote }), ...(m && { mortgagedTo: 'HMDA' as const }),
+      sample: !m, // availability of the other plots is not confirmed by sales yet
+      history,
+    });
   });
 }
 
@@ -260,6 +288,7 @@ function skylineUnits(): Unit[] {
 
 export const SEED_UNITS: Record<ID, Unit[]> = {
   [GC6_PROJECT_ID]: gc6Units(),
+  [RRR_PROJECT_ID]: rrrUnits(),
   'global-city-v': gc5Units(),
   'western-county': westernCountyUnits(),
   'urban-eden': urbanEdenUnits(),

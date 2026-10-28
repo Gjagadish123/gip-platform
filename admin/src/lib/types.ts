@@ -37,6 +37,7 @@ export interface Asset {
   width?: number;
   height?: number;
   source?: 'upload' | 'external' | 'generated'; // 'generated' = kie.ai
+  impression?: boolean;        // a render, not a photograph: the website labels it "Artist's impression"
 }
 
 /** One registry for all sections (lucide mapping in constants.ts ICONS). */
@@ -80,7 +81,7 @@ export interface ProjectType {
 
 /* ---------- inventory ---------- */
 
-export type UnitStatus = 'available' | 'sold_out' | 'mortgaged' | 'registered';
+export type UnitStatus = 'available' | 'sold_out' | 'mortgaged' | 'registered' | 'hold';
 
 export type MortgagedTo = 'HMDA' | 'DTCP' | 'Gram Panchayat' | 'Bank' | 'Other';
 
@@ -92,6 +93,8 @@ export interface StatusEvent {
   by: string;        // 'Admin' (login username in the demo)
   note?: string;
   batchId?: string;
+  /** Supabase mode: the unit's status fields before this change, as the database logs them (undo after a restore). */
+  prev?: Record<string, unknown>;
 }
 
 export interface Unit {
@@ -267,6 +270,8 @@ export interface Project {
   inventoryUpdatedAt?: ISODate;     // stamped by every status change ("Status as of …" on the buyer site)
   statusSample?: boolean;           // some unit statuses are sample data → "Sample" badge
   sample?: boolean;                 // the whole project is demo data (Skyline Residences)
+  /** Supabase mode: the row's updated_at when it was read; saves only land on that version (see supabase/data.ts). */
+  rev?: string;
 }
 
 /* ---------- activity ---------- */

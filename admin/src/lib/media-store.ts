@@ -1,8 +1,11 @@
 'use client';
-// Uploaded files live as Blobs in IndexedDB (keyed by Asset.id) so they survive a refresh; localStorage only
-// holds the 'idb:<id>' reference. No dependency. Remote and /public URLs pass straight through useAssetUrl.
+// Supabase mode: uploads go to the public media bucket and the Asset keeps its https URL.
+// Demo (no backend): uploaded files live as Blobs in IndexedDB (keyed by Asset.id) so they survive a refresh;
+// localStorage only holds the 'idb:<id>' reference. Remote and /public URLs pass straight through useAssetUrl.
 import { useEffect, useState } from 'react';
 import { withBase } from './base-path';
+import { BACKEND, createClient } from './supabase/client';
+import { describeError, uploadMedia } from './supabase/data';
 import type { Asset } from './types';
 
 const DB = 'gip-admin-media', STORE = 'blobs';
@@ -47,11 +50,29 @@ export class UploadStorageError extends Error {
   }
 }
 
-/** Stores the file and returns an Asset whose url is 'idb:<id>'. Rejects with UploadStorageError. */
+/** saveUpload's rejection in Supabase mode: the upload itself failed (network, size, type, permission). */
+export class UploadError extends Error {
+  constructor(cause: unknown) {
+    super(`Upload failed: ${describeError(cause)}.`, { cause });
+    this.name = 'UploadError';
+  }
+}
+
+/**
+ * Stores the file and returns its Asset: the bucket URL in Supabase mode (rejects with UploadError), else
+ * 'idb:<id>' (rejects with UploadStorageError).
+ */
 export async function saveUpload(file: File): Promise<Asset> {
   const id = `up-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 7)}`;
   const kind: Asset['kind'] = file.type === 'application/pdf' ? 'pdf' : 'image';
   const size = kind === 'image' ? await imageSize(file) : {};
+  if (BACKEND) {
+    try {
+      return { id, url: await uploadMedia(createClient(), file, id), kind, name: file.name, ...size, source: 'upload' };
+    } catch (e) {
+      throw new UploadError(e);
+    }
+  }
   try {
     await run('readwrite', (s) => s.put(file, id));
   } catch (e) {

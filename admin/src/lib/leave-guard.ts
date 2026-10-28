@@ -1,15 +1,19 @@
-// One app-wide "unsaved changes" guard. The editor registers it while dirty; navigations that don't go through a
-// <Link> (command menu) ask canLeave() before router.push. The guard may prompt and navigate later itself.
-// ponytail: a single slot, not a stack: only one editor is visible at a time (hidden routes unmount their effects).
-let guard: ((href: string) => boolean) | null = null;
+// One app-wide "unsaved changes" guard. The project editor and the unit sheet register it while dirty; actions that
+// don't go through a <Link> (command menu, sign out) call requestLeave(). The guard may prompt, then run `go` itself
+// after Save or Discard. ponytail: a single slot, not a stack: only one dirty form is visible at a time (hidden
+// routes unmount their effects).
+type Guard = (href: string, go: () => void) => boolean;
+let guard: Guard | null = null;
 
 /** Registers (or clears, with null) the guard. Returns a cleanup that clears it only if it's still this one. */
-export function setLeaveGuard(fn: ((href: string) => boolean) | null): () => void {
+export function setLeaveGuard(fn: Guard | null): () => void {
   guard = fn;
   return () => {
     if (guard === fn) guard = null;
   };
 }
 
-/** True when nothing objects to leaving for `href`. */
-export const canLeave = (href: string) => !guard || guard(href);
+/** Runs `go` (leaving for `href`) now, or later from the guard's prompt, or never if the admin stays. */
+export function requestLeave(href: string, go: () => void) {
+  if (!guard || guard(href, go)) go();
+}

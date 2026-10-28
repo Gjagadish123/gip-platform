@@ -27,15 +27,16 @@ export const COMPANY = {
 /** The dummy number the live site ships everywhere. Never accept it as a real phone. */
 export const PLACEHOLDER_PHONES = ['+919876543210'];
 
-/* ---------- unit statuses (client order everywhere: legend, bars, menus, keys 1–4) ---------- */
+/* ---------- unit statuses (client order everywhere: legend, bars, menus, keys 1–5) ---------- */
 
-export const UNIT_STATUSES: UnitStatus[] = ['available', 'sold_out', 'mortgaged', 'registered'];
+// Hold came after the first four, so it goes last: keys 1–4 keep the meaning admins learned.
+export const UNIT_STATUSES: UnitStatus[] = ['available', 'sold_out', 'mortgaged', 'registered', 'hold'];
 
 export const UNIT_STATUS_META: Record<UnitStatus, {
   label: string;
-  token: 'available' | 'sold' | 'mortgaged' | 'registered'; // → --status-<token>, .tile[data-s]
-  pattern: 'plain' | 'hatch' | 'dots' | 'corner';
-  key: '1' | '2' | '3' | '4';
+  token: 'available' | 'sold' | 'mortgaged' | 'registered' | 'hold'; // → --status-<token>, .tile[data-s]
+  pattern: 'plain' | 'hatch' | 'dots' | 'corner' | 'stripes';
+  key: '1' | '2' | '3' | '4' | '5';
   dateLabel: string;    // label of the status-date input
   description: string;  // one line for tooltips / the sheet
 }> = {
@@ -43,6 +44,7 @@ export const UNIT_STATUS_META: Record<UnitStatus, {
   sold_out: { label: 'Sold Out', token: 'sold', pattern: 'hatch', key: '2', dateLabel: 'Sold on', description: 'Booked or agreement signed; sale deed not yet registered.' },
   mortgaged: { label: 'Mortgaged', token: 'mortgaged', pattern: 'dots', key: '3', dateLabel: 'Mortgaged on', description: 'Held as security with the approving authority until released.' },
   registered: { label: 'Registered', token: 'registered', pattern: 'corner', key: '4', dateLabel: 'Registered on', description: 'Sale deed registered at the Sub-Registrar office. Final.' },
+  hold: { label: 'Hold', token: 'hold', pattern: 'stripes', key: '5', dateLabel: 'On hold since', description: 'Blocked for a buyer while the booking is confirmed. Not open for sale.' },
 };
 
 export const MORTGAGEES: MortgagedTo[] = ['HMDA', 'DTCP', 'Gram Panchayat', 'Bank', 'Other'];
@@ -189,6 +191,9 @@ export const PAGE_CONTENT_SECTIONS: SectionId[] = ['vision', 'masterplan', 'amen
 /** Ids for projects created in the demo. The static GitHub Pages preview pre-builds a page per id, so new projects get
  *  one of these instead of a random id. ponytail: 40 per browser, then random ids (fine on any server deploy). */
 export const NEW_PROJECT_IDS = Array.from({ length: 40 }, (_, i) => `new-project-${i + 1}`);
+
+/** The new public website (NEXT_PUBLIC_WEBSITE_URL), for "Live layout ↗" on the mapped projects; empty hides it. */
+export const WEBSITE_URL = (process.env.NEXT_PUBLIC_WEBSITE_URL ?? '').replace(/\/$/, '');
 
 /** Old live site, for "View on live site ↗" (only projects with publishing.legacySlug). */
 export const LIVE_SITE_URL = 'https://www.greaterinfraprojects.in';

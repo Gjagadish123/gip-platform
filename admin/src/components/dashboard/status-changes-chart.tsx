@@ -2,7 +2,7 @@
 // hairline grid, no animation, legend for 2+ series, the chart hidden from AT with a visually hidden data table.
 "use client"
 
-import { useMemo } from "react"
+import { useId, useMemo } from "react"
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
 
 import { monthlyStatusChanges } from "@/components/dashboard/dashboard-data"
@@ -14,13 +14,17 @@ import type { ActivityEvent } from "@/lib/types"
 
 // Inventory charts use the status tokens, never chart-1..5 (visual-direction §3.4).
 // ponytail: plain bar fills, no SVG hatch/dot patterns; the legend swatches teach the patterns, and the legend,
-// tooltip and hidden table carry the labels.
+// tooltip and hidden table carry the labels. Except Hold: it stacks right on Registered and the two hues are close for
+// protanopes, so its bar keeps the tile's stripes (drawn over the fill, so the tooltip dot still gets the colour).
 const CONFIG = Object.fromEntries(
   UNIT_STATUSES.map((s) => [s, { label: UNIT_STATUS_META[s].label, color: `var(--status-${UNIT_STATUS_META[s].token})` }]),
 ) satisfies ChartConfig
 
+type BarShape = { x?: number; y?: number; width?: number; height?: number; fill?: string }
+
 /** Units moved into each status per month, last 6 months, stacked in client order. */
 export function StatusChangesChart({ activity }: { activity: ActivityEvent[] }) {
+  const stripes = `${useId()}-hold`
   const rows = useMemo(() => monthlyStatusChanges(activity), [activity])
   const totals = UNIT_STATUSES.map((s) => rows.reduce((n, r) => n + r[s], 0))
   const sum = totals.reduce((a, b) => a + b, 0)
@@ -44,6 +48,11 @@ export function StatusChangesChart({ activity }: { activity: ActivityEvent[] }) 
 
       <ChartContainer config={CONFIG} aria-hidden className="aspect-auto h-[220px] w-full">
         <BarChart data={rows} accessibilityLayer={false} margin={{ top: 4, right: 0, bottom: 0, left: 0 }} barCategoryGap="28%">
+          <defs>
+            <pattern id={stripes} width={5} height={5} patternUnits="userSpaceOnUse">
+              <rect width={5} height={1.5} style={{ fill: "oklch(0 0 0 / 0.2)" }} />
+            </pattern>
+          </defs>
           <CartesianGrid vertical={false} stroke="var(--border)" />
           <XAxis dataKey="label" tickLine={false} axisLine={false} tickMargin={8} tickFormatter={(v: string) => v.slice(0, 3)} />
           <YAxis allowDecimals={false} tickLine={false} axisLine={false} width={32} />
@@ -59,6 +68,14 @@ export function StatusChangesChart({ activity }: { activity: ActivityEvent[] }) 
               radius={2}
               maxBarSize={24}
               isAnimationActive={false}
+              {...(s === "hold" && {
+                shape: ({ x = 0, y = 0, width = 0, height = 0, fill }: BarShape) => (
+                  <g>
+                    <rect x={x} y={y} width={width} height={height} rx={2} fill={fill} stroke="var(--card)" strokeWidth={1} />
+                    <rect x={x} y={y} width={width} height={height} rx={2} fill={`url(#${stripes})`} />
+                  </g>
+                ),
+              })}
             />
           ))}
         </BarChart>

@@ -10,11 +10,11 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group"
 import { AssetImage } from "./asset-image"
-import { Dropzone, LOCAL_UPLOAD_HINT, screenFiles, uploadErrorMessage } from "./dropzone"
-import { FieldMessage } from "./field-row"
+import { Dropzone, IMAGE_ACCEPT, LOCAL_UPLOAD_HINT, screenFiles, uploadErrorMessage } from "./dropzone"
+import { FieldMessage, LabelMark } from "./field-row"
 import { focusIsWithin, focusLater } from "./image-field"
 
-const ACCEPT = "application/pdf,image/*"
+const ACCEPT = `application/pdf,${IMAGE_ACCEPT}`
 const IMAGE_EXT = /\.(png|jpe?g|webp|avif|gif)(?:[?#]|$)/i
 
 function fileNameFromUrl(url: string) {
@@ -112,7 +112,7 @@ export function PdfField({
       {label && (
         <label htmlFor={value ? undefined : `${baseId}-link`} className="flex items-center gap-2 text-sm leading-5 font-medium">
           {label}
-          {mark && <span className="font-normal text-muted-foreground">{mark}</span>}
+          {mark && <LabelMark mark={mark} />}
         </label>
       )}
 
@@ -170,7 +170,7 @@ export function PdfField({
               <p className="truncate text-sm font-medium">{value.name || fileNameFromUrl(value.url)}</p>
               <p className="truncate text-xs text-muted-foreground">
                 {value.source === "upload"
-                  ? LOCAL_UPLOAD_HINT
+                  ? LOCAL_UPLOAD_HINT || "Uploaded"
                   : value.url.startsWith("/")
                     ? "Bundled with the site"
                     : `Link · ${hostOf(value.url)}`}

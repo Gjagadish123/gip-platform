@@ -1,12 +1,13 @@
 export { AreaInput, LandAreaInput } from "./area-inputs"
 export { AssetImage } from "./asset-image"
-export { Dropzone, LOCAL_UPLOAD_HINT, uploadErrorMessage } from "./dropzone"
+export { Dropzone, IMAGE_ACCEPT, LOCAL_UPLOAD_HINT, uploadErrorMessage } from "./dropzone"
 export {
   FieldGrid,
   FieldMessage,
   FieldMessages,
   FieldRow,
   FieldTouchContext,
+  LabelMark,
   describedBy,
   useTouchOnBlur,
   type FieldIssueProps,

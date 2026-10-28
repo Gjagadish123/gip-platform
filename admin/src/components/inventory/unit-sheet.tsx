@@ -6,6 +6,7 @@ import {
   useImperativeHandle,
   useLayoutEffect,
   useMemo,
+  useEffect,
   useRef,
   useState,
   type KeyboardEvent,
@@ -36,6 +37,7 @@ import { useIsMobile } from "@/hooks/use-mobile"
 import { AREA_UNIT_LABEL, DEMO_TODAY, MORTGAGEES, UNIT_STATUS_META } from "@/lib/constants"
 import { formatArea, formatDate, formatDateTime, formatINR, formatINRCompact, formatNumber } from "@/lib/format"
 import { canTransition } from "@/lib/inventory"
+import { setLeaveGuard } from "@/lib/leave-guard"
 import { todayIso, useDemo } from "@/lib/store"
 import type { Facing, MortgagedTo, Project, ProjectType, Unit, UnitStatus } from "@/lib/types"
 import { cn } from "@/lib/utils"
@@ -110,11 +112,16 @@ export function UnitSheet({
   const [confirmed, setConfirmed] = useState(false)
   const [tried, setTried] = useState(false)
   const [leaveTo, setLeaveTo] = useState<string | null | undefined>(undefined) // undefined = no prompt
+  const [after, setAfter] = useState<{ go: () => void } | null>(null) // an app-level leave (sign out) on hold
   if (unit && unit !== base) {
+    // A reload (Supabase mode) hands back an equal unit as a new object: keep unsaved edits unless the unit changed.
+    const keep = !!base && !!draft && unit.id === base.id && !isDirty(unit, base) && isDirty(clean(draft), base)
     setBase(unit)
-    setDraft(unit)
-    setConfirmed(false)
-    setTried(false)
+    if (!keep) {
+      setDraft(unit)
+      setConfirmed(false)
+      setTried(false)
+    }
   }
 
   // Hidden route (Next keeps it mounted): don't come back to a stale "Save changes?" prompt.
@@ -122,10 +129,31 @@ export function UnitSheet({
 
   const dirty = !!draft && !!base && isDirty(draft, base)
   function leave(target: string | null) {
+    setAfter(null)
     if (dirty) setLeaveTo(target)
     else onNavigate(target)
   }
   useImperativeHandle(ref, () => ({ dirty: !!unit && dirty, leave }))
+
+  // Leaving the app's way (sign out, command menu) asks too; Save or Discard then carries on. In Supabase mode sign out
+  // would otherwise drop the open sheet with the data.
+  const guarded = !!unit && dirty
+  useEffect(() => {
+    if (!guarded) return
+    return setLeaveGuard((_href, go) => {
+      setAfter({ go })
+      setLeaveTo(null)
+      return false
+    })
+  }, [guarded])
+  const carryOn = () => {
+    setAfter(null)
+    after?.go()
+  }
+  const stay = () => {
+    setLeaveTo(undefined)
+    setAfter(null)
+  }
 
   const batchSizes = useMemo(() => {
     const ids = new Set(base?.history.map((e) => e.batchId).filter(Boolean))
@@ -486,7 +514,10 @@ export function UnitSheet({
         </SheetContent>
       </Sheet>
 
-      <AlertDialog open={leaveTo !== undefined} onOpenChange={(o) => !o && setLeaveTo(undefined)}>
+      <AlertDialog
+        open={leaveTo !== undefined}
+        onOpenChange={(o) => !o && stay()}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Save changes to {name}?</AlertDialogTitle>
@@ -501,6 +532,7 @@ export function UnitSheet({
                 setLeaveTo(undefined)
                 setDraft(base)
                 onNavigate(target)
+                carryOn()
               }}
             >
               Discard
@@ -512,6 +544,7 @@ export function UnitSheet({
                 if (save()) {
                   onSaved(draft, target === null)
                   onNavigate(target)
+                  carryOn()
                 }
               }}
             >

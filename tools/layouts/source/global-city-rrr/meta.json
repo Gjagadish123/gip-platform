@@ -1,0 +1,13 @@
+{
+  "name": "Global City RRR",
+  "pin": { "lat": 17.5889915, "lng": 78.0067475, "source": "Google Maps listing “Global City-RRR”" },
+  "source": { "title": "DTCP approved layout", "reference": "TLP 236/2022/H", "date": "2022-07-08" },
+  "landUse": [
+    { "label": "Plotted", "sqyd": 24446.0 },
+    { "label": "Roads", "sqyd": 13170.0 },
+    { "label": "Open spaces", "sqyd": 4182.0 }
+  ],
+  "landTotal": 41798.0,
+  "landArea": "41,798 sq yd",
+  "plotCount": 113
+}

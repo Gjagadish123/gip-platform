@@ -1,0 +1,15 @@
+{
+  "name": "Global City V",
+  "pin": { "lat": 17.5280933, "lng": 78.136843, "source": "Google Maps listing “GLOBAL CITY-V”" },
+  "source": { "title": "HMDA approved layout", "reference": "000299/LO/Plg/HMDA/2021", "date": "2021-08-21" },
+  "landUse": [
+    { "label": "Plotted", "sqyd": 68558.0 },
+    { "label": "Roads", "sqyd": 33914.0 },
+    { "label": "Parks", "sqyd": 8662.0 },
+    { "label": "Social infrastructure", "sqyd": 2890.0 },
+    { "label": "Utility", "sqyd": 909.0 }
+  ],
+  "landTotal": 114933.0,
+  "landArea": "25 acres 17 guntas",
+  "plotCount": 332
+}

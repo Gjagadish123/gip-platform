@@ -1,4 +1,7 @@
-// SEED = the demo's starting state (also the server snapshot of the store). Deterministic: no clock, no Math.random.
+// SEED = the demo's starting state (also the server snapshot of the store): the four projects on the website's live
+// layouts page, this phase's working set. CATALOGUE = every project on file; scripts/gen-seed.ts writes the others to
+// supabase/seed.catalogue.sql, loaded on request. Deterministic: no clock, no Math.random.
+import { isLiveLayout } from '../layouts';
 import type { ActivityEvent, ID, Project, Unit } from '../types';
 import { deriveActivity } from './activity';
 import { PROJECTS } from './projects';
@@ -15,10 +18,16 @@ function withInventoryMeta(p: Project, units: Unit[] | undefined): Project {
 
 const projects = PROJECTS.map((p) => withInventoryMeta(p, SEED_UNITS[p.id]));
 
-export const SEED: SeedData = {
+export const CATALOGUE: SeedData = {
   projects,
   units: SEED_UNITS,
   activity: deriveActivity(projects, SEED_UNITS),
+};
+
+export const SEED: SeedData = {
+  projects: projects.filter((p) => isLiveLayout(p.id)),
+  units: Object.fromEntries(Object.entries(SEED_UNITS).filter(([id]) => isLiveLayout(id))),
+  activity: CATALOGUE.activity.filter((a) => isLiveLayout(a.projectId)),
 };
 
 /** Bumped (in checks/gen-projects.mjs) whenever any seed file changes; the store drops demo edits saved on an older seed. */

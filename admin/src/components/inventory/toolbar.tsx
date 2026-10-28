@@ -46,6 +46,7 @@ export function InventorySummary({
   onClearFilters,
   updatedAt,
   sampleNote,
+  liveHref,
 }: {
   type: ProjectType
   /** All units in the project. */
@@ -62,6 +63,8 @@ export function InventorySummary({
   onClearFilters: () => void
   updatedAt?: string
   sampleNote?: string
+  /** The website's live layouts page for this project: status changes show there within seconds. */
+  liveHref?: string
 }) {
   const noun = type.unitNounPlural.toLowerCase()
   const counted = UNIT_STATUSES.reduce((n, s) => n + counts[s], 0)
@@ -73,6 +76,20 @@ export function InventorySummary({
           <span className="text-base font-semibold text-foreground tabular-nums">{formatNumber(total)}</span>{" "}
           <span className="text-foreground">{noun}</span>
           {updatedAt ? <> · status as of {formatDate(updatedAt)}</> : null}
+          {liveHref ? (
+            <>
+              {" · "}
+              <a
+                href={liveHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Status changes show on the website's live layouts page within seconds"
+                className="font-medium text-foreground underline-offset-4 hover:underline"
+              >
+                Live layout ↗
+              </a>
+            </>
+          ) : null}
         </p>
         {/* Available is in the legend; on phones the legend carries the counts on its own. */}
         <p className="hidden text-sm text-muted-foreground tabular-nums sm:block">
@@ -412,7 +429,8 @@ const VIEWS: { value: InventoryView; label: string; icon: typeof LayoutGrid }[] 
   { value: "layout", label: "Layout", icon: MapIcon },
 ]
 
-export function ViewSwitch({ value, onChange }: { value: InventoryView; onChange: (v: InventoryView) => void }) {
+/** `layout` false drops the Layout view: only the live-layout projects have one. */
+export function ViewSwitch({ value, onChange, layout = true }: { value: InventoryView; onChange: (v: InventoryView) => void; layout?: boolean }) {
   return (
     <ToggleGroup
       type="single"
@@ -422,7 +440,7 @@ export function ViewSwitch({ value, onChange }: { value: InventoryView; onChange
       onValueChange={(v) => v && onChange(v as InventoryView)}
       aria-label="View"
     >
-      {VIEWS.map(({ value: v, label, icon: Icon }) => (
+      {VIEWS.filter((v) => layout || v.value !== "layout").map(({ value: v, label, icon: Icon }) => (
         <ToggleGroupItem key={v} value={v} aria-label={label}>
           <Icon data-icon="inline-start" />
           <span className="hidden sm:inline">{label}</span>

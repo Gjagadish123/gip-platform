@@ -7,8 +7,8 @@ import { cn } from "@/lib/utils"
 import { Label } from "@/components/ui/label"
 
 /**
- * One field's validation messages. `todo` is a required gap nobody has been asked to fix yet: it renders calm
- * (muted, no aria-invalid) until a publish attempt or a blur turns it into `error`.
+ * One field's validation messages. `todo` is a required gap nobody has been asked to fix yet: red like an error but
+ * with its own icon and no aria-invalid, until a publish attempt or a blur turns it into `error`.
  */
 export type FieldIssueProps = {
   error?: string | null
@@ -32,7 +32,7 @@ export function describedBy(
 
 const MESSAGE_ICON = { error: CircleAlert, todo: CircleDashed, warning: TriangleAlert }
 
-/** One message line: icon + text, so the kind reads without colour. */
+/** One message line: icon + text, so the kind reads without colour. An unfilled required field (todo) is red too. */
 export function FieldMessage({
   id,
   kind,
@@ -50,7 +50,7 @@ export function FieldMessage({
       id={id}
       className={cn(
         "flex gap-1.5 text-xs",
-        kind === "error" ? "text-destructive" : kind === "warning" ? "text-warning" : "text-muted-foreground",
+        kind === "warning" ? "text-warning" : "text-destructive",
         className,
       )}
     >
@@ -84,8 +84,23 @@ export function useTouchOnBlur(field: string | undefined) {
 }
 
 /**
+ * The requirement after a field's label. "Required" is a red star right after the label (the word stays for screen
+ * readers); "Optional" / "Recommended" are muted words. Labels are flex with gap-2, hence the pull-in.
+ */
+export function LabelMark({ mark }: { mark: React.ReactNode }) {
+  if (mark === "Required")
+    return (
+      <span title="Required" className="-ms-1.5 font-semibold text-destructive">
+        <span aria-hidden>*</span>
+        <span className="sr-only">Required</span>
+      </span>
+    )
+  return <span className="font-normal text-muted-foreground">{mark}</span>
+}
+
+/**
  * Label above the control (6px), helper 12px muted below, then one message line.
- * `optional` / `mark` sit inline after the label, muted; `aside` sits at the right end of the label row.
+ * `required` / `optional` / `mark` sit inline after the label (LabelMark); `aside` sits at the right end of the label row.
  */
 export function FieldRow({
   label,
@@ -95,6 +110,7 @@ export function FieldRow({
   warning,
   todo,
   issueField,
+  required,
   optional,
   mark,
   aside,
@@ -104,6 +120,8 @@ export function FieldRow({
   label: React.ReactNode
   htmlFor?: string
   description?: React.ReactNode
+  /** Needed to publish: a red star after the label. */
+  required?: boolean
   optional?: boolean
   /** Requirement shown after the label instead of "Optional": "Required", "Recommended". */
   mark?: React.ReactNode
@@ -112,12 +130,13 @@ export function FieldRow({
   children: React.ReactNode
 } & FieldIssueProps) {
   const onBlur = useTouchOnBlur(issueField)
+  const shown = required ? "Required" : mark || (optional && "Optional")
   return (
     <div data-slot="field-row" onBlur={onBlur} className={cn("flex min-w-0 flex-col gap-1.5", className)}>
       <div className="flex min-h-5 items-center justify-between gap-3">
         <Label htmlFor={htmlFor} className="leading-5">
           {label}
-          {(mark || optional) && <span className="font-normal text-muted-foreground">{mark || "Optional"}</span>}
+          {shown && <LabelMark mark={shown} />}
         </Label>
         {aside}
       </div>

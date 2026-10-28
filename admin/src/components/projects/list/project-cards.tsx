@@ -6,9 +6,10 @@ import Link from "next/link"
 import { AssetImage, SampleBadge, StatusBar } from "@/components/form"
 import { LIFECYCLE_META, projectTypeLabel } from "@/lib/constants"
 import { formatNumber } from "@/lib/format"
+import { emptyCounts } from "@/lib/inventory"
 
 import type { ProjectRow } from "./list-model"
-import { PublishBadge } from "./project-badges"
+import { ActiveToggle } from "./project-actions"
 
 /** Calm bordered cards, no shadows. The name link stretches over the card; the ⋯ menu sits above it. */
 export function ProjectCards({ rows, renderActions }: { rows: ProjectRow[]; renderActions: (row: ProjectRow) => ReactNode }) {
@@ -40,7 +41,7 @@ export function ProjectCards({ rows, renderActions }: { rows: ProjectRow[]; rend
                 {projectTypeLabel(p)} · {LIFECYCLE_META[p.lifecycle].label}
               </p>
               <div className="flex flex-col gap-1.5">
-                <StatusBar counts={counts ?? { available: 0, sold_out: 0, mortgaged: 0, registered: 0 }} height={6} noun={type.unitNounPlural.toLowerCase()} />
+                <StatusBar counts={counts ?? emptyCounts()} height={6} noun={type.unitNounPlural.toLowerCase()} />
                 <p className="text-xs text-muted-foreground tabular-nums">
                   {counts ? (
                     <>
@@ -55,7 +56,7 @@ export function ProjectCards({ rows, renderActions }: { rows: ProjectRow[]; rend
                 </p>
               </div>
               <div className="mt-auto flex items-center justify-between gap-2 border-t pt-3">
-                <PublishBadge state={p.publishing.state} />
+                <ActiveToggle row={row} className="relative z-10" />
                 <span className="truncate text-[13px] font-medium tabular-nums">{row.price}</span>
               </div>
             </div>

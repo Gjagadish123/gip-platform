@@ -10,11 +10,11 @@ import type { Asset } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { AssetImage } from "./asset-image"
-import { Dropzone, LOCAL_UPLOAD_HINT, screenFiles, uploadErrorMessage } from "./dropzone"
-import { FieldMessage, FieldRow } from "./field-row"
+import { Dropzone, IMAGE_ACCEPT, LOCAL_UPLOAD_HINT, screenFiles, uploadErrorMessage } from "./dropzone"
+import { FieldMessage, FieldRow, LabelMark } from "./field-row"
 import { SampleBadge } from "./hints"
 
-const ACCEPT = "image/*"
+const ACCEPT = IMAGE_ACCEPT
 
 /** Focus stays with the field when the control that had it is swapped out (no fall to <body>). */
 export function focusLater(ref: React.RefObject<HTMLElement | null>) {
@@ -84,7 +84,7 @@ export function ImageField({
       <div className="flex items-center justify-between gap-3">
         <span id={`${baseId}-label`} className="flex items-center gap-2 text-sm leading-5 font-medium">
           {label}
-          {mark && <span className="font-normal text-muted-foreground">{mark}</span>}
+          {mark && <LabelMark mark={mark} />}
         </span>
         {value?.source === "generated" && <SampleBadge />}
       </div>

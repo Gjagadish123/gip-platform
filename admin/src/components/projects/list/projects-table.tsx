@@ -17,7 +17,7 @@ import { useNow } from "@/lib/store"
 import { cn } from "@/lib/utils"
 
 import type { ProjectRow, SortKey } from "./list-model"
-import { PublishBadge } from "./project-badges"
+import { ActiveToggle } from "./project-actions"
 
 /** Header click sets a sort; clicking the active one goes back to display order. */
 function SortHead({
@@ -86,7 +86,7 @@ export function ProjectsTable({
             <TableHead className={head}>Type</TableHead>
             <SortHead label="Inventory" sortKey="available" dir="descending" sort={sort} onSort={onSort} className={cn(head, "w-[150px]")} />
             <TableHead className={cn(head, "w-[120px] text-right")}>Price from</TableHead>
-            <TableHead className={cn(head, "w-[110px]")}>Publishing</TableHead>
+            <TableHead className={cn(head, "w-[120px]")}>On website</TableHead>
             <SortHead label="Updated" sortKey="updated" dir="descending" sort={sort} onSort={onSort} className={cn(head, "w-[110px] text-right")} />
             <TableHead className={cn(head, STICKY, HEAD_FILL, "w-12 pr-3")}>
               <span className="sr-only">Actions</span>
@@ -158,8 +158,8 @@ export function ProjectsTable({
                 <TableCell className="truncate px-3 text-right tabular-nums" title={row.price}>
                   {row.price}
                 </TableCell>
-                <TableCell className="px-3">
-                  <PublishBadge state={p.publishing.state} />
+                <TableCell className="px-3" onClick={(e) => e.stopPropagation()}>
+                  <ActiveToggle row={row} />
                 </TableCell>
                 <TableCell className="px-3 text-right text-muted-foreground tabular-nums">
                   <time dateTime={row.updated} title={formatDate(row.updated)}>

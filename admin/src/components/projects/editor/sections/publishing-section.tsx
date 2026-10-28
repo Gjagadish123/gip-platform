@@ -62,7 +62,14 @@ export function PublishingSection({ draft, issues, update }: SectionProps) {
       <p className="mt-1 text-sm text-muted-foreground">Web address, homepage placement, ordering and search results.</p>
 
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-6">
-        <FieldRow className="sm:col-span-6" label="Web address" htmlFor={fid("slug")} error={slugError} warning={slugIssues.warning}>
+        <FieldRow
+          className="sm:col-span-6"
+          label="Web address"
+          required
+          htmlFor={fid("slug")}
+          error={slugError}
+          warning={slugIssues.warning}
+        >
           <SlugInput
             id={fid("slug")}
             value={pub.slug}

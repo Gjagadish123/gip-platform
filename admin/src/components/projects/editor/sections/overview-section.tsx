@@ -20,6 +20,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { AREA_UNIT_LABEL, DEFAULT_PROJECT_TYPES, LIFECYCLES, LIFECYCLE_META, MAX_NAME } from "@/lib/constants"
 import { plural } from "@/lib/format"
 import type { Lifecycle, ProjectType, UnitField } from "@/lib/types"
+import { hasDetailPage } from "@/lib/validate"
 
 import { fieldIssues, sectionDomId, type SectionProps } from "../section-types"
 
@@ -84,6 +85,7 @@ export function OverviewSection({ draft, type, units, issues, update }: SectionP
   const highlights = fieldIssues(issues, "highlights")
   const completion = fieldIssues(issues, "completionYear")
   const completed = draft.lifecycle === "completed"
+  const detail = hasDetailPage(draft)
 
   return (
     <section id={sid} aria-labelledby={`${sid}-h`} className="scroll-mt-32 lg:scroll-mt-[72px]">
@@ -96,6 +98,7 @@ export function OverviewSection({ draft, type, units, issues, update }: SectionP
         <FieldRow
           className="sm:col-span-3"
           label="Name"
+          required
           htmlFor={fid("name")}
           description="Natural case, e.g. Global City VI. Cards show it in capitals."
           {...name}
@@ -141,6 +144,7 @@ export function OverviewSection({ draft, type, units, issues, update }: SectionP
         <FieldRow
           className="sm:col-span-3"
           label="Project type"
+          required
           htmlFor={fid("type")}
           description={`${type.description ?? ""} ${type.hasInventory ? `Inventory of ${type.unitNounPlural.toLowerCase()}.` : "No inventory."} Website category: ${type.category}.`.trim()}
         >
@@ -186,7 +190,7 @@ export function OverviewSection({ draft, type, units, issues, update }: SectionP
           />
         </FieldRow>
 
-        <FieldRow className="sm:col-span-6" label="Lifecycle" description={
+        <FieldRow className="sm:col-span-6" label="Lifecycle" required description={
             draft.lifecycle === "ongoing" && draft.publishing.externalUrl
               ? "Selling now. The card opens the external website, so there is no detail page."
               : LIFECYCLE_META[draft.lifecycle].description
@@ -213,6 +217,7 @@ export function OverviewSection({ draft, type, units, issues, update }: SectionP
         <FieldRow
           className="sm:col-span-6"
           label="Description"
+          required={detail}
           htmlFor={fid("description")}
           description="Hero paragraph and search-result text. Keep prices out of it; they live in Pricing."
           {...description}

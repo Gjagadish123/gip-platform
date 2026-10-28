@@ -17,7 +17,9 @@ import {
   FieldMessages,
   FixedOnWebsiteHint,
   GalleryField,
+  IMAGE_ACCEPT,
   ImageField,
+  LabelMark,
   ListEditor,
   PdfField,
   describedBy,
@@ -41,9 +43,9 @@ export { FieldMessages }
 export type Level = "R" | "W" | "O"
 const LEVEL_LABEL: Record<Level, string> = { R: "Required", W: "Recommended", O: "Optional" }
 
-/** Publish requirement, inline after a field's label (muted), like FieldRow's "Optional". */
-export function Mark({ level, className }: { level: Level; className?: string }) {
-  return <span className={cn("font-normal text-muted-foreground", className)}>{LEVEL_LABEL[level]}</span>
+/** Publish requirement, inline after a field's label, like FieldRow's (R = red star). */
+export function Mark({ level }: { level: Level }) {
+  return <LabelMark mark={LEVEL_LABEL[level]} />
 }
 
 /** aria props for a control whose FieldRow renders `${id}-description` / `${id}-error`. */
@@ -442,7 +444,7 @@ function AmenityGallery({
     setPending((p) => p - files.length)
     const saved = results.flatMap((r) => (r.status === "fulfilled" ? [r.value] : []))
     const failed = results.find((r) => r.status === "rejected")
-    if (failed) setError(uploadErrorMessage(failed.reason, "photo"))
+    if (failed) setError([...rejected, uploadErrorMessage(failed.reason, "photo")].join(". "))
     if (saved.length) onAdd(saved.map((image) => ({ id: newId("amg"), image, caption: "" })))
   }
 
@@ -480,7 +482,7 @@ function AmenityGallery({
       )}
       <Dropzone
         ref={dropRef}
-        accept="image/*"
+        accept={IMAGE_ACCEPT}
         multiple
         busy={pending > 0}
         onFiles={upload}

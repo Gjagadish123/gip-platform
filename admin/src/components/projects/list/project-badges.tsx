@@ -13,14 +13,14 @@ export function LifecycleBadge({ lifecycle, className }: { lifecycle: Lifecycle;
   )
 }
 
-/** Filled dot = live, hollow dot = draft, no dot = archived. Solid edges: dashed is for dropzones only. */
+/** Green with a filled dot = live, hollow dot = draft, no dot = archived. Solid edges: dashed is for dropzones only. */
 export function PublishBadge({ state, className }: { state: PublishState; className?: string }) {
   return (
     <span
       title={PUBLISH_META[state].description}
       className={cn(
         PILL,
-        state === "published" && "bg-secondary text-secondary-foreground",
+        state === "published" && "bg-success-soft text-success",
         state === "draft" && "border border-border text-foreground",
         state === "archived" && "bg-muted text-muted-foreground",
         className,
@@ -31,7 +31,7 @@ export function PublishBadge({ state, className }: { state: PublishState; classN
           aria-hidden
           className={cn(
             "size-1.5 shrink-0 rounded-full",
-            state === "published" ? "bg-foreground" : "border border-muted-foreground",
+            state === "published" ? "bg-success" : "border border-muted-foreground",
           )}
         />
       )}

@@ -1,0 +1,16 @@
+{
+  "name": "Western County – Shankarpalli",
+  "pin": { "lat": 17.4742058, "lng": 78.1389772, "source": "Google Maps listing “Western County by Greater Infra”" },
+  "source": { "title": "HMDA approved layout", "reference": "000144/LO/PLG/HMDA/2022", "date": "2022-07-27" },
+  "landUse": [
+    { "label": "Plotted", "sqyd": 39159.18 },
+    { "label": "Roads", "sqyd": 21960.23 },
+    { "label": "Parks", "sqyd": 5683.79 },
+    { "label": "Parks (under the H.T. line)", "sqyd": 5855.13 },
+    { "label": "Social infrastructure", "sqyd": 1894.53 },
+    { "label": "Utility", "sqyd": 599.07 }
+  ],
+  "landTotal": 75151.93,
+  "landArea": "16+ acres",
+  "plotCount": 176
+}

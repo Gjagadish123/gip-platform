@@ -29,6 +29,8 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
   --color-warning: var(--warning);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
@@ -68,6 +70,10 @@
   --color-status-registered-fg: var(--status-registered-fg);
   --color-status-registered-on: var(--status-registered-on);
   --color-status-registered-soft: var(--status-registered-soft);
+  --color-status-hold: var(--status-hold);
+  --color-status-hold-fg: var(--status-hold-fg);
+  --color-status-hold-on: var(--status-hold-on);
+  --color-status-hold-soft: var(--status-hold-soft);
 
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
@@ -101,6 +107,8 @@
   --accent-foreground: oklch(0.29 0.075 252);
   --destructive: oklch(0.55 0.21 26);
   --warning: oklch(0.55 0.12 85); /* ochre text/icons, 4.9:1 on background */
+  --success: oklch(0.52 0.13 150); /* green text/icons (complete, published), ~5:1 on background and on -soft */
+  --success-soft: oklch(0.96 0.035 150);
   --border: oklch(0.912 0.007 255);
   --input: oklch(0.865 0.01 255);
   --ring: oklch(0.56 0.16 251);
@@ -121,7 +129,8 @@
   --brand: oklch(0.34 0.096 251);
   --brand-foreground: oklch(0.985 0.003 250);
 
-  /* Status palette (inventory-ux.md §5.1, CVD-checked). Client order: Available, Sold Out, Mortgaged, Registered. */
+  /* Status palette (inventory-ux.md §5.1, CVD-checked). Client order: Available, Sold Out, Mortgaged, Registered, Hold.
+     Hold is violet: clear of the red/amber/blue sold states; its stripes carry it where hue doesn't (CVD). */
   --status-available: oklch(0.8 0.12 180);
   --status-available-on: oklch(0.27 0.05 180);
   --status-available-fg: oklch(0.48 0.09 180);
@@ -138,6 +147,10 @@
   --status-registered-on: oklch(1 0 0);
   --status-registered-fg: oklch(0.45 0.15 264);
   --status-registered-soft: oklch(0.955 0.025 264);
+  --status-hold: oklch(0.56 0.17 310);
+  --status-hold-on: oklch(1 0 0);
+  --status-hold-fg: oklch(0.5 0.17 310);
+  --status-hold-soft: oklch(0.955 0.03 310);
   --tile-edge: oklch(0 0 0 / 0.28); /* light fills are < 3:1 on white, the edge restores 3:1 */
 }
 
@@ -158,6 +171,8 @@
   --accent-foreground: oklch(0.965 0.006 250);
   --destructive: oklch(0.68 0.19 24);
   --warning: oklch(0.8 0.13 85); /* 10:1 on background, 9.4:1 on card */
+  --success: oklch(0.76 0.15 150);
+  --success-soft: oklch(0.29 0.05 150);
   --border: oklch(0.285 0.017 256);
   --input: oklch(0.335 0.019 256);
   --ring: oklch(0.7 0.13 245);
@@ -191,6 +206,10 @@
   --status-registered-on: oklch(1 0 0);
   --status-registered-fg: oklch(0.76 0.1 264);
   --status-registered-soft: oklch(0.29 0.06 264);
+  --status-hold: oklch(0.56 0.17 310);
+  --status-hold-on: oklch(1 0 0);
+  --status-hold-fg: oklch(0.78 0.12 310);
+  --status-hold-soft: oklch(0.29 0.07 310);
   --tile-edge: transparent;
 }
 
@@ -200,7 +219,7 @@
 }
 
 /* Non-colour cues, identical on tiles, legend swatches and bars (inventory-ux.md §5.3).
-   Available is plain, Sold Out hatch, Mortgaged dots, Registered folded corner. */
+   Available is plain, Sold Out hatch, Mortgaged dots, Registered folded corner, Hold horizontal stripes. */
 @utility pattern-sold {
   background-image: repeating-linear-gradient(135deg, oklch(0 0 0 / 0.18) 0 2px, transparent 2px 6px);
 }
@@ -211,8 +230,11 @@
 @utility pattern-registered {
   background-image: linear-gradient(225deg, oklch(1 0 0 / 0.9) 0 7px, transparent 7px);
 }
+@utility pattern-hold {
+  background-image: repeating-linear-gradient(0deg, oklch(0 0 0 / 0.2) 0 1.5px, transparent 1.5px 5px);
+}
 
-/* Status tiles: <div class="tile" data-s="available|sold_out|mortgaged|registered">. In a layer so
+/* Status tiles: <div class="tile" data-s="available|sold_out|mortgaged|registered|hold">. In a layer so
    utilities on a tile can still override. Selection = double ring, never a fill change. Available is the soft
    fill with an -fg edge (the base teal is < 3:1 on the page) so the sold statuses dominate the grid. */
 @layer components {
@@ -243,6 +265,11 @@
     --st: var(--status-registered);
     --st-on: var(--status-registered-on);
     background-image: linear-gradient(225deg, oklch(1 0 0 / 0.9) 0 7px, transparent 7px);
+  }
+  .tile[data-s="hold"] {
+    --st: var(--status-hold);
+    --st-on: var(--status-hold-on);
+    background-image: repeating-linear-gradient(0deg, oklch(0 0 0 / 0.2) 0 1.5px, transparent 1.5px 5px);
   }
   /* Outside the filter: an outline only, so it can't be mistaken for a soft Available tile. */
   .tile[data-dim] {

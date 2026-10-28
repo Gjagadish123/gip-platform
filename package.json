@@ -1,0 +1,18 @@
+{
+  "name": "gip-platform",
+  "private": true,
+  "description": "Supabase CLI for the local backend. The apps live in website/ and admin/, each with its own package.json.",
+  "scripts": {
+    "db:start": "supabase start",
+    "db:stop": "supabase stop",
+    "db:reset": "supabase db reset",
+    "db:test": "supabase test db",
+    "db:lint": "supabase db advisors --local",
+    "db:types": "supabase gen types typescript --local --schema public > admin/src/lib/supabase/database.types.ts",
+    "db:seed": "tsx admin/scripts/gen-seed.ts"
+  },
+  "devDependencies": {
+    "supabase": "2.117.0",
+    "tsx": "4.23.15"
+  }
+}
