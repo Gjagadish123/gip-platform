@@ -230,8 +230,22 @@ on the stacked principle cards: `shadow-raise`, `shadow-overlay`. Navy surfaces 
 - **Spec sheet**: facts as a `dl` of label / value rows on hairlines (label `text-small text-muted`, value
   `text-ui font-medium text-navy`), not icon grids.
 - **Switchers**: one big picture with tabbed thumbnails or a segmented control under it, crossfading 500 ms.
-- **Rows, not cards**: lists of items (delivered layouts, promises, strengths, FAQs) are rows on hairlines with a title
-  and a line of text. Same-size icon cards as page structure are banned.
+- **Rows, not cards**: lists of items (promises, strengths, FAQs) are rows on hairlines with a title and a line of
+  text. Same-size icon cards as page structure are banned.
+- **Projects page** (the client's choices, 2026-10-26): it opens on `ProjectsHero`, the "full-screen" hero picked
+  from three rendered heroes after a navy band with a photo mosaic was called too dark and basic. Its background was
+  Home's film until 2026-10-27, when the client asked for one generated still instead: a kie.ai aerial render of a
+  plotted layout at golden hour (`projects-hero.webp`; phones frame its entrance arch). It fills the first screen
+  under the transparent header, scrims only from the foot and the left (light, contrast-checked), the H1 large in the
+  lower-left third in rising word masks, teal rule, lede with the live counts, teal Book a site visit + See current
+  projects; along the foot the record (live counts, then 600+ acres and 6,000+ customers from HOME_STATS) with the
+  Artist's impression note and a scroll cue; a short 140svh runway on desktop lifts the copy away while the picture
+  pushes in. Then `ProjectGrid`s of `ProjectCard`, three to a row: the "editorial frame"
+  card the client picked from three rendered styles: the picture inset in a light 20 px card, status chip, name,
+  place with a pin, facts as a spec row on hairlines, a full-width primary action only when there is somewhere to go
+  (View project, Visit website; no Enquire). Real photographs only: no photo, a stock image from the old data or a
+  render (`Asset.impression`, `source: 'generated'`) draws a plotted layout instead (`LayoutDrawing`). Fed by the
+  backend (`getProjects`). The project gallery likewise shows real site photographs only.
 - **Sticky split**: a heading + short copy that stays while a list or picture column scrolls (lg only).
 - **Bands**: one full-bleed film moment per page at most; the navy `Closing` ends every page.
 

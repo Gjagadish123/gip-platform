@@ -4,6 +4,7 @@ import type { NextConfig } from "next";
 // PAGES_BASE_PATH lets the website and the admin preview share one Pages site under different sub-paths.
 const pages = process.env.GITHUB_PAGES === "true";
 const basePath = pages ? (process.env.PAGES_BASE_PATH ?? "/gip-platform") : "";
+const backend = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY);
 
 const nextConfig: NextConfig = {
   cacheComponents: !pages, // PPR cannot run in export mode
@@ -20,6 +21,13 @@ const nextConfig: NextConfig = {
     ...(pages && { unoptimized: true }),
   },
   turbopack: {
+    // The export can't run "use cache" (cacheComponents is off there): with the Supabase variables it reads the live
+    // project at build time, uncached; without them it keeps the bundled data.
+    ...(pages && {
+      resolveAlias: {
+        "@/lib/projects-backend": backend ? "./src/lib/projects-backend.reads.ts" : "./src/lib/projects-backend.static.ts",
+      },
+    }),
     rules: {
       "*.css": {
         loaders: ["@tailwindcss/turbopack"],

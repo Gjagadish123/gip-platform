@@ -25,19 +25,20 @@ export const COMPANY = {
   },
 } as const;
 
-/* ---------- unit statuses (client order everywhere: Available, Sold Out, Mortgaged, Registered) ---------- */
+/* ---------- unit statuses (client order everywhere: Available, Sold Out, Mortgaged, Registered, Hold) ---------- */
 
-export const UNIT_STATUSES: UnitStatus[] = ['available', 'sold_out', 'mortgaged', 'registered'];
+export const UNIT_STATUSES: UnitStatus[] = ['available', 'sold_out', 'mortgaged', 'registered', 'hold'];
 
 export const UNIT_STATUS_META: Record<UnitStatus, {
   label: string;
-  token: 'available' | 'sold' | 'mortgaged' | 'registered'; // → --status-<token>
+  token: 'available' | 'sold' | 'mortgaged' | 'registered' | 'hold'; // → --status-<token>
   description: string; // buyer-facing
 }> = {
   available: { label: 'Available', token: 'available', description: 'Open for booking today.' },
   sold_out: { label: 'Sold Out', token: 'sold', description: 'Booked or agreement signed.' },
   mortgaged: { label: 'Mortgaged', token: 'mortgaged', description: 'Held with the approving authority until released; not for sale yet.' },
   registered: { label: 'Registered', token: 'registered', description: 'Sale deed registered with the owner.' },
+  hold: { label: 'Hold', token: 'hold', description: 'Blocked for a buyer while the booking is confirmed; not open for sale.' },
 };
 
 /* ---------- areas / types ---------- */

@@ -26,6 +26,7 @@ const LINKS: { href: string; label: string; sub?: { href: string; label: string;
     label: "Projects",
     sub: [
       { href: "/projects/global-city-vi", label: "Global City VI", selling: true },
+      { href: "/layouts", label: "Live layouts" },
       { href: "/projects#delivered", label: "Delivered layouts" },
     ],
   },

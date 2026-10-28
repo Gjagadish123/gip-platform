@@ -1,0 +1,42 @@
+{
+ "global-city-vi": {
+  "plots": 288,
+  "plotCount": 288,
+  "fit": 1.96,
+  "source": {
+   "title": "HMDA layout copy (brochure cum layout)",
+   "reference": "2046/HMDA/SWFL/2026"
+  },
+  "landArea": "21 acres 10 guntas"
+ },
+ "global-city-v": {
+  "plots": 332,
+  "plotCount": 332,
+  "fit": 2.01,
+  "source": {
+   "title": "HMDA approved layout",
+   "reference": "000299/LO/Plg/HMDA/2021"
+  },
+  "landArea": "25 acres 17 guntas"
+ },
+ "global-city-rrr": {
+  "plots": 113,
+  "plotCount": 113,
+  "fit": 2.35,
+  "source": {
+   "title": "DTCP approved layout",
+   "reference": "TLP 236/2022/H"
+  },
+  "landArea": "41,798 sq yd"
+ },
+ "western-county": {
+  "plots": 176,
+  "plotCount": 176,
+  "fit": 1.54,
+  "source": {
+   "title": "HMDA approved layout",
+   "reference": "000144/LO/PLG/HMDA/2022"
+  },
+  "landArea": "16+ acres"
+ }
+}

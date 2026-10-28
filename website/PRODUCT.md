@@ -35,15 +35,16 @@ beside clearly labelled artist's impressions.
 - Decisions are family decisions; links are shared on WhatsApp; NRIs call across time zones (office hours
   Mon–Sat 10:00–19:00 IST).
 - Site visits are arranged on request; the office is at Vasavi MPM Grand, Ameerpet, Hyderabad.
-- Plot status (Available, Sold Out, Mortgaged, Registered) will later come from the admin portal; today it is
-  hardcoded for one project.
+- Plot status (Available, Sold Out, Mortgaged, Registered, Hold) comes from the admin portal through Supabase.
 
 ## Capabilities and Constraints
 
 - Next.js 16.4 App Router (cacheComponents), React 19, TypeScript, Tailwind CSS v4, motion; also builds as a static
   export for GitHub Pages under `/gip-platform/site` (basePath via `withBase()`).
-- Exactly one project is hardcoded (Global City VI) through `src/lib/projects.ts`; more projects will come from
-  Supabase later. Do not hardcode other projects; delivered layouts appear only as a count.
+- Projects and plots come from Supabase (what the admin publishes) through `src/lib/projects.ts`, when
+  NEXT_PUBLIC_SUPABASE_URL/PUBLISHABLE_KEY are set; without them (the Pages preview) only Global City VI is bundled.
+  Only projects with their own page content (today Global City VI) get a detail page; the others are enquired about
+  from their card. Do not hardcode other projects in the site.
 - Enquiry has no backend: WhatsApp deep link plus mailto. Phone +91 97001 23900, email Gip@greaterinfraprojects.in.
 - SEO is a priority: static metadata, JSON-LD, sitemap, robots, OG image.
 - Price is not shown (open client question). "Mortgaged" status meaning and some sample statuses are pending client

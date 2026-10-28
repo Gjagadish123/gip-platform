@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
-import { avenueRoad, parkWalk, weekendVilla } from "@/assets/images";
 import { About } from "@/components/project/about";
 import { Amenities } from "@/components/project/amenities";
 import { Approvals } from "@/components/project/approvals";
@@ -98,19 +97,15 @@ async function ProjectContent({ params }: Params) {
   const landUse = plan?.landUse;
   const facingRows = plotsByFacing(units);
 
-  const slides: Slide[] = [
-    ...photos.map((p, i) => {
-      const date = photoDate(p);
-      return {
-        src: p.url,
-        alt: p.alt ?? `${project.name} site photograph${date ? `, ${formatDate(date)}` : ""} (${i + 1} of ${photos.length})`,
-        caption: date ? `Site photograph, ${formatDate(date)}` : "Site photograph",
-      };
-    }),
-    { src: avenueRoad, alt: "Artist's impression of an avenue road with street lights and tree guards", caption: "Artist's impression: avenue road", impression: true },
-    { src: parkWalk, alt: "Artist's impression of a park walk beside a children's play area", caption: "Artist's impression: park and play area", impression: true },
-    { src: weekendVilla, alt: "Artist's impression of a weekend villa on a plot", caption: "Artist's impression: weekend villa", impression: true },
-  ];
+  // Real site photographs only: the client keeps artist's impressions out of the gallery (2026-10-26).
+  const slides: Slide[] = photos.map((p, i) => {
+    const date = photoDate(p);
+    return {
+      src: p.url,
+      alt: p.alt ?? `${project.name} site photograph${date ? `, ${formatDate(date)}` : ""} (${i + 1} of ${photos.length})`,
+      caption: date ? `Site photograph, ${formatDate(date)}` : "Site photograph",
+    };
+  });
 
   const listing = {
     "@context": "https://schema.org",

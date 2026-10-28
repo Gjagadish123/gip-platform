@@ -36,6 +36,7 @@ export function Gallery({ slides }: { slides: Slide[] }) {
   const [open, setOpen] = useState<number | null>(null);
 
   const photos = slides.filter((s) => !s.impression).length;
+  const mixed = photos > 0 && photos < slides.length;
   const shown = filter === "all" ? slides : slides.filter((s) => (filter === "impressions" ? s.impression : !s.impression));
   const big = shown.length >= 5; // the 2 × 2 lead tile needs four tiles beside it
   const current = open === null ? null : shown[open];
@@ -55,9 +56,13 @@ export function Gallery({ slides }: { slides: Slide[] }) {
         <h2 id="gallery-title" className="text-h2">
           Site gallery
         </h2>
-        <Lede className="mt-4 max-w-[52ch]">Photographs from the site, March 2026, then artist&rsquo;s impressions, each one marked.</Lede>
+        <Lede className="mt-4 max-w-[52ch]">
+          {mixed
+            ? <>Photographs from the site, March 2026, then artist&rsquo;s impressions, each one marked.</>
+            : "Photographs from the site, March 2026."}
+        </Lede>
 
-        <Segmented
+        {mixed ? <Segmented
           label="Gallery filter"
           options={[
             { id: "all", label: "All" },
@@ -72,9 +77,12 @@ export function Gallery({ slides }: { slides: Slide[] }) {
           idOf={tabId}
           panelId={panelId}
           className="mt-8 lg:mt-10"
-        />
+        /> : null}
 
-        <ul id={panelId} role="tabpanel" aria-labelledby={tabId(filter)} className="mt-6 grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-4">
+        <ul
+          id={panelId}
+          {...(mixed && { role: "tabpanel", "aria-labelledby": tabId(filter) })}
+          className="mt-6 grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-4">
           {shown.map((s, i) => (
             <li key={keyOf(s)} className={cn("min-w-0", big && i === 0 && "col-span-2 lg:row-span-2")}>
               <button

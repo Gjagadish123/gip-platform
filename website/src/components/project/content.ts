@@ -37,7 +37,9 @@ export function approvalFacts(project: Project) {
 /** The earlier layout approval printed on the brochure's layout copy (the final permit is in project.legal). */
 export const BROCHURE_LP = { reference: "007133/LO/HMDA/1700/SKP/2024", date: "28 Nov 2024" } as const;
 
-export const sitePhotos = (project: Project): Asset[] => project.media.gallery.filter((a) => a.kind === "image");
+/** The gallery's real photographs: images that are not renders (flagged in the admin, or generated). */
+export const sitePhotos = (project: Project): Asset[] =>
+  project.media.gallery.filter((a) => a.kind === "image" && !a.impression && a.source !== "generated");
 
 /** "2026-03-06" from "WhatsApp Image 2026-03-06 at 4.13.29 PM.jpeg": the only date the site photos carry. */
 export const photoDate = (a: Asset) => /\d{4}-\d{2}-\d{2}/.exec(a.name ?? "")?.[0];

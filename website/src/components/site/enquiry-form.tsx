@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowUpRight, ChevronDown, Mail, Phone } from "lucide-react";
-import { useId, useState, type FormEvent, type ReactNode } from "react";
+import { useId, useState, useSyncExternalStore, type FormEvent, type ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
 import { COMPANY } from "@/lib/constants";
@@ -28,6 +28,7 @@ const control =
 const link = "inline-flex items-center gap-1 font-medium text-navy underline decoration-navy/30 underline-offset-4 hover:decoration-navy";
 
 type Errors = Partial<Record<"name" | "phone" | "email", string>>;
+const noSubscribe = () => () => {};
 
 /** One field: the 13 px label, the control, the error under it. */
 function Field({
@@ -92,6 +93,11 @@ export function EnquiryForm({
   const [errors, setErrors] = useState<Errors>({});
   const [state, setState] = useState<"idle" | "opening" | "done">("idle");
   const [last, setLast] = useState<Enquiry | null>(null);
+  // False in the server HTML until React owns the form: a native submit before then would send the visitor's name
+  // and phone to the server. A disabled default button also stops Enter from submitting. The form's
+  // autoComplete="off" stops Firefox restoring the button's enabled state on reload (fields keep their own tokens),
+  // and method="post" keeps any early submit out of the URL.
+  const ready = useSyncExternalStore(noSubscribe, () => true, () => false);
 
   function validate(): Errors {
     const e: Errors = {};
@@ -123,10 +129,15 @@ export function EnquiryForm({
   }
 
   return (
-    <form onSubmit={onSubmit} noValidate className={cn("flex flex-col", className)}>
+    <form method="post" autoComplete="off" onSubmit={onSubmit} noValidate className={cn("flex flex-col", className)}>
       <div className={cn("grid gap-y-6", compact ? "grid-cols-1" : "sm:grid-cols-2 sm:gap-x-5 lg:gap-y-7")}>
         {plot ? (
-          <dl className={cn("grid grid-cols-2 gap-x-6 gap-y-4 rounded-lg border border-line bg-mist p-5 sm:grid-cols-4", !compact && "sm:col-span-2")}>
+          <dl className={cn("grid grid-cols-2 gap-x-6 gap-y-4 rounded-lg border border-line bg-mist p-5", !compact && "sm:col-span-2 sm:grid-cols-4")}>
+            {plot.similar ? (
+              <p className="col-span-full -mb-1 text-label font-medium text-muted">
+                Plots similar to{plot.project ? ` this one at ${plot.project}` : " this one"}
+              </p>
+            ) : null}
             {[
               ["Plot", plot.number],
               ["Area", formatArea(plot.area, "sq_yd")],
@@ -250,7 +261,7 @@ export function EnquiryForm({
       </div>
 
       <div className={cn("mt-8 flex flex-col gap-4", !compact && "sm:flex-row sm:items-center sm:gap-6 lg:mt-10")}>
-        <Button type="submit" size="lg" className="w-full sm:w-auto" disabled={state === "opening"}>
+        <Button type="submit" size="lg" className="w-full sm:w-auto" disabled={!ready || state === "opening"}>
           <WhatsAppIcon className="size-4" />
           {state === "opening" ? "Opening WhatsApp…" : state === "done" ? "Send again on WhatsApp" : "Send on WhatsApp"}
         </Button>

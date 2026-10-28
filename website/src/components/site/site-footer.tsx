@@ -19,6 +19,7 @@ const EXPLORE = [
 ];
 const PROJECTS = [
   { href: "/projects/global-city-vi", label: "Global City VI" },
+  { href: "/layouts", label: "Live layouts" },
   { href: "/projects#delivered", label: "Delivered layouts" },
 ];
 

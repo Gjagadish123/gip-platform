@@ -37,6 +37,7 @@ export interface Asset {
   width?: number;
   height?: number;
   source?: 'upload' | 'external' | 'generated'; // 'generated' = kie.ai
+  impression?: boolean;        // a render, not a photograph: labelled "Artist's impression"
 }
 
 /** One registry for all sections (lucide mapping in constants.ts ICONS). */
@@ -80,7 +81,7 @@ export interface ProjectType {
 
 /* ---------- inventory ---------- */
 
-export type UnitStatus = 'available' | 'sold_out' | 'mortgaged' | 'registered';
+export type UnitStatus = 'available' | 'sold_out' | 'mortgaged' | 'registered' | 'hold';
 
 export type MortgagedTo = 'HMDA' | 'DTCP' | 'Gram Panchayat' | 'Bank' | 'Other';
 

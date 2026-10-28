@@ -14,6 +14,8 @@ import { Logo } from "./logo";
 import { SiteMenu } from "./site-menu";
 
 // Over the home hero while #hero still covers the header's band.
+// Pages that open on a navy #hero: the header sits on it transparent, in its light version.
+const DARK_HERO = new Set(["/", "/projects"]);
 const readOverHero = () => {
   const hero = document.getElementById("hero");
   return hero ? hero.getBoundingClientRect().bottom > 80 : false;
@@ -109,8 +111,8 @@ export function SiteHeader() {
   const { page } = useEnquiry();
   // Server render assumes the hero on Home (its first paint), so the logo never flashes navy on navy. The reader is tied
   // to the route, so arriving on Home by a client navigation re-reads #hero after the new page commits.
-  const readDark = useCallback(() => pathname === "/" && readOverHero(), [pathname]);
-  const dark = useSyncExternalStore(subscribeScrollResize, readDark, () => pathname === "/");
+  const readDark = useCallback(() => DARK_HERO.has(pathname) && readOverHero(), [pathname]);
+  const dark = useSyncExternalStore(subscribeScrollResize, readDark, () => DARK_HERO.has(pathname));
   const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
@@ -144,7 +146,9 @@ export function SiteHeader() {
         )}
       >
         <Container className="flex h-16 items-center justify-between gap-6 lg:h-20">
-          <Link href="/" aria-label={`${COMPANY.name} — home`} className="shrink-0">
+          {/* Not prefetched: it's on every page, and the home route's animation code would compete with each page's own
+              loading (the map on /layouts). Home still opens quickly from the menu or this link. */}
+          <Link href="/" prefetch={false} aria-label={`${COMPANY.name} — home`} className="shrink-0">
             <Logo variant={dark ? "white" : "navy"} width={120} className="w-[96px] lg:w-[116px]" />
           </Link>
 

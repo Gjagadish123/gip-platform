@@ -4,3 +4,5 @@ node_modules/
 supabase/.temp/
 supabase/.branches/
 .shots/
+.playwright-mcp/
+__pycache__/

@@ -5,14 +5,22 @@ import { COMPANY } from "./constants";
 import { formatArea } from "./format";
 import type { Unit } from "./types";
 
+// The four layouts on the live layouts page by project id, so an enquiry from any of them names its project.
 export const INTERESTS = [
   { id: "global-city-vi", label: "Global City VI" },
+  { id: "global-city-v", label: "Global City V" },
+  { id: "global-city-rrr", label: "Global City RRR" },
+  { id: "western-county", label: "Western County – Shankarpalli" },
   { id: "other", label: "Another GIP layout" },
   { id: "general", label: "General enquiry" },
 ] as const;
 export type InterestId = (typeof INTERESTS)[number]["id"];
 
 export interface EnquiryPlot {
+  /** The layout the plot is on: plot numbers repeat across projects, so a plot picked on a map names it. */
+  project?: string;
+  /** The plot isn't available: the visitor is asking for plots like it. */
+  similar?: boolean;
   number: string;
   area: number;
   facing?: string;
@@ -81,7 +89,8 @@ export const describePlot = (p: EnquiryPlot) =>
 export const interestLabel = (id: InterestId) => INTERESTS.find((i) => i.id === id)?.label ?? "General enquiry";
 
 export function enquiryBody(e: Enquiry): string {
-  const interest = e.plot ? `${interestLabel(e.interest)}, ${describePlot(e.plot)}` : interestLabel(e.interest);
+  const about = e.plot?.project ?? interestLabel(e.interest);
+  const interest = e.plot ? `${about}, ${e.plot.similar ? "plots similar to " : ""}${describePlot(e.plot)}` : about;
   return [
     "Hi Greater Infra Projects,",
     `Name: ${e.name.trim()}`,
@@ -100,9 +109,10 @@ export const whatsappUrl = (text: string) => `https://wa.me/${COMPANY.whatsappE1
 export const buildWhatsAppUrl = (e: Enquiry) => whatsappUrl(enquiryBody(e));
 
 export function buildMailto(e: Enquiry): string {
+  const about = e.plot?.project ?? interestLabel(e.interest);
   const subject = e.plot
-    ? `Enquiry — ${interestLabel(e.interest)}, Plot ${e.plot.number}`
-    : `Enquiry — ${interestLabel(e.interest)}`;
+    ? `Enquiry — ${about}, ${e.plot.similar ? "plots similar to " : ""}Plot ${e.plot.number}`
+    : `Enquiry — ${about}`;
   return `mailto:${COMPANY.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(enquiryBody(e))}`;
 }
 
@@ -112,6 +122,9 @@ export const WHATSAPP_TEXT = {
   contact: "Hi GIP, I'd like to talk about a plot.",
   project: (name: string, location: string) =>
     `Hi GIP, I'm interested in ${name} at ${location}. Please share availability and price.`,
-  plot: (name: string, p: EnquiryPlot) => `Hi GIP, I'm interested in ${describePlot(p)} at ${name}. Is it available?`,
+  plot: (name: string, p: EnquiryPlot) =>
+    p.similar
+      ? `Hi GIP, I'm looking for plots similar to ${describePlot(p)} at ${name}. What do you have available?`
+      : `Hi GIP, I'm interested in ${describePlot(p)} at ${name}. Is it available?`,
 } as const;
 
