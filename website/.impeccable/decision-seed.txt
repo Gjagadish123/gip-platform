@@ -1,0 +1,25 @@
+Direction round, 2026-10-19 — concept-seed record (corroborates FORM in the layout.tsx contract)
+
+Command: concept-seed.mjs --scope direction --mode persuade --candidate-count 7
+Output header: DIRECTION CONCEPT SEED (key: d2622931; mode: persuade; source: api; approved pool: c3b204a1eed6)
+ASSIGNED INDEX: 7
+
+Grounded candidates, ordered by resonance before the roll:
+1. White architectural site model (sales-office maquette)      -> presented as IMPECCABLE'S PICK
+2. HMDA layout copy / survey drawing
+3. Indian highway milestones and wayfinding
+4. Stamp paper guilloche and seals
+5. Survey demarcation (ranging rods, painted corner stones)
+6. Swiss International Typographic Style prospectus
+7. Satellite / GIS overlay (imagery with vector layers)        -> ASSIGNED, presented as "Survey Layers"
+
+Dealt challengers and verdicts (all declined, raises written into the assigned card):
+- ikeda-datamatics                          -> two-tone chrome discipline
+- scientific-notation-particle-detector-…   -> select-to-isolate; status in line weight
+- kraftwerk-man-machine                     -> orthogonal leader lines tie facts to places
+- design-canon-toyism-signed-collective-…   -> one shared pictogram set
+- paper-folds-pleats-deployable-miura-…     -> one gesture deploys the plan, stepped on phones
+- craft-making-lowicz-layered-papercut      -> depth only from overlapping flat layers
+
+Payload: .impeccable/decision-direction.json · Answer: .impeccable/decision-answer.txt
+(optionId "assigned", buildPath code). Telemetry ping sent: --kind assigned --from d2622931.

@@ -1,0 +1,132 @@
+{
+  "title": "Choose the visual world for the new GIP website",
+  "question": "The roll assigned Survey Layers. Keep it, take an alternate, or re-roll.",
+  "options": [
+    {
+      "id": "assigned",
+      "label": "Survey Layers",
+      "kicker": "THE ROLL",
+      "lineage": "GIS and cadastral maps: satellite imagery with vector layers, the view every buyer opens to check land",
+      "thesis": "The site is a live map: aerial imagery, then the approved plan registered on top, then each plot's status, one layer per section.",
+      "palette": ["#FFFFFF", "#0B2A55", "#0A0E14", "#16B4E6", "#E6EBF1"],
+      "materials": ["aerial imagery", "vector linework", "graticule hairlines", "coordinate readouts"],
+      "viewport": "Full-bleed aerial film framed as a map viewport: crosshair on the site, live lat/long, scale bar; huge headline; one scroll draws the 288-plot plan onto the land and fills it with live status beside WhatsApp and See the plan.",
+      "risk": "Can turn cold or dashboard-like for families if the imagery and type are not warm and the chrome is not edited hard.",
+      "raised": [
+        { "from": "challenger-ikeda", "raise": "Two-tone discipline: chrome is only white and navy-black; colour appears only as data (plot status) or imagery." },
+        { "from": "challenger-detector", "raise": "Selecting a plot isolates it and dims every other layer; status is also written in line weight, never colour alone." },
+        { "from": "challenger-kraftwerk", "raise": "Orthogonal leader lines tie every fact (road width, approval, amenity) to its exact place on the map." },
+        { "from": "challenger-toyism", "raise": "One shared pictogram set (gate, park, pool, tank, road) drawn in the map's line grammar, reused on every page." },
+        { "from": "challenger-miura", "raise": "One gesture deploys the whole plan: a single scroll registers the vector layer, stepped on phones." },
+        { "from": "challenger-lowicz", "raise": "Depth only by overlapping flat layers: no drop shadows, gradients or glass anywhere." }
+      ]
+    },
+    {
+      "id": "model-pick",
+      "label": "The Sales-Office Maquette",
+      "kicker": "IMPECCABLE’S PICK",
+      "lineage": "white architectural site models under glass at launch events",
+      "thesis": "The layout as a white scale model you fly over: available plots stand proud, sold plots sit flush.",
+      "palette": ["#FFFFFF", "#F1F3F6", "#0B2A55", "#14171C", "#2E9E6A"],
+      "materials": ["matte white card", "laser-cut acrylic", "studio shadow", "brass pins"],
+      "viewport": "A WebGL white maquette extruded from the real 288-plot geometry, camera slowly orbiting under a soft studio light, headline over the open sky of the board.",
+      "risk": "The most familiar idea for a developer (every sales office has the model), and WebGL weight on low-end Android."
+    },
+    {
+      "id": "challenger-miura",
+      "label": "Deployable Layout Sheet",
+      "verdict": "declined",
+      "lineage": "Miura-fold sheet unfolding from a hand-sized packet",
+      "thesis": "The layout copy as a folded packet that deploys into the full plan in one pull.",
+      "palette": ["#FFFFFF", "#C9A54A", "#8E8E8E", "#9CC3E6", "#111111"],
+      "materials": ["matte white sheet", "gold foil packet", "scored creases"],
+      "viewport": "A gold packet on white that unfolds across the viewport into the 288-plot plan.",
+      "case": "Fuses neatly with the folded layout copy, but loses to the map on both axes: buyers check land on satellite view, not origami.",
+      "kept": "One gesture deploys the whole plan, stepped on phones.",
+      "risk": "Origami reads as a design stunt rather than land.",
+      "hero": "https://impeccable.style/worlds/cards/paper-folds-pleats-deployable-miura-orbit-sheet-hero.webp"
+    },
+    {
+      "id": "challenger-kraftwerk",
+      "label": "Signal Wiring",
+      "verdict": "declined",
+      "lineage": "Kraftwerk Man-Machine line diagrams on a traffic grid",
+      "thesis": "Plot status as traffic signals wired to labels on a strict grid.",
+      "palette": ["#0A0A0A", "#FFFFFF", "#E2231A", "#F5A800", "#1DA650"],
+      "materials": ["enamel flat fills", "neon rules"],
+      "viewport": "Black field, the plan as a wiring schematic, signals lighting available plots.",
+      "case": "Status signals are clear, but the black schematic breaks the white brief and families do not see their land in it.",
+      "kept": "Orthogonal leader lines tie every fact to its place on the map.",
+      "risk": "Reads as a band poster, not a developer.",
+      "hero": "https://impeccable.style/worlds/cards/kraftwerk-man-machine-hero.webp"
+    },
+    {
+      "id": "challenger-ikeda",
+      "label": "Datamatics Field",
+      "verdict": "declined",
+      "lineage": "Ryoji Ikeda data-sublime installations",
+      "thesis": "288 plots as a strobing black-and-white barcode field.",
+      "palette": ["#000000", "#FFFFFF"],
+      "materials": ["pixel bars", "hairline rules", "monospace numerics"],
+      "viewport": "A wall of bars, one per plot, inverting as status changes.",
+      "case": "Abstracts the land away; neither families nor NRIs recognise their plot in it.",
+      "kept": "Total two-tone contrast discipline for chrome.",
+      "risk": "Cold and unreadable for the audience.",
+      "hero": "https://impeccable.style/worlds/cards/ikeda-datamatics-hero.webp"
+    },
+    {
+      "id": "challenger-detector",
+      "label": "Event Display",
+      "verdict": "declined",
+      "lineage": "particle-collider event displays",
+      "thesis": "The layout as concentric detector rings with plots as tracks.",
+      "palette": ["#07090D", "#5B7A99", "#F2D04B", "#2EC4D6", "#E0452B"],
+      "materials": ["vacuum black", "steel rings", "signal tracks"],
+      "viewport": "A dark ring section with the site at its centre.",
+      "case": "Dark ground breaks the brief and the metaphor has nothing to do with buying land.",
+      "kept": "Selection isolates one plot and dims the rest; weight encodes status.",
+      "risk": "Science-fiction costume.",
+      "hero": "https://impeccable.style/worlds/cards/scientific-notation-particle-detector-event-display-hero.webp"
+    },
+    {
+      "id": "challenger-toyism",
+      "label": "Collective Plate",
+      "verdict": "declined",
+      "lineage": "Toyism collective paintings with a shared symbol set",
+      "thesis": "Every page painted from one shared symbol set.",
+      "palette": ["#1F3FD1", "#E0257D", "#F4E04D", "#FFFFFF"],
+      "materials": ["hard-edged flat paint"],
+      "viewport": "Hovering symbols of gate, plot and tree on a flat ground.",
+      "case": "Playful palette fights trust and the navy brand anchor.",
+      "kept": "One shared pictogram set reused on every page.",
+      "risk": "Toy-like for a land purchase.",
+      "hero": "https://impeccable.style/worlds/cards/design-canon-toyism-signed-collective-plate-hero.webp"
+    },
+    {
+      "id": "challenger-lowicz",
+      "label": "Layered Papercut",
+      "verdict": "declined",
+      "lineage": "Łowicz layered folk papercuts",
+      "thesis": "Depth built from flat cut layers pasted one over another.",
+      "palette": ["#E63946", "#2A9D8F", "#F4D35E", "#1D3557", "#FFFFFF"],
+      "materials": ["glossy flat paper"],
+      "viewport": "A symmetrical roundel of the layout built up in cut colour layers.",
+      "case": "Beautiful craft, but folk ornament says nothing about approved land.",
+      "kept": "Depth only by overlapping flat layers, never shadows or gradients.",
+      "risk": "Decorative, off-subject.",
+      "hero": "https://impeccable.style/worlds/cards/craft-making-lowicz-layered-papercut-hero.webp"
+    }
+  ],
+  "reroll": { "registers": ["safer", "bolder"] },
+  "buildPath": { "value": "code", "toggle": false },
+  "canon": true,
+  "canonCard": {
+    "label": "The category standard",
+    "thesis": "A premium Hyderabad developer site executed impeccably: drone film, light serif headline, project cards.",
+    "palette": ["#FFFFFF", "#111111", "#103C68", "#EE5E5E"],
+    "materials": ["drone film", "glossy renders", "pill buttons"],
+    "viewport": "Full-bleed drone film with a large light serif headline and an Enquire pill, then project cards and amenity icons.",
+    "risk": "Indistinguishable from Honer and every competitor by design."
+  },
+  "steer": true
+}

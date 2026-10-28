@@ -1,0 +1,453 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-19T13:07:54+00:00",
+  "title": "Design System: Greater Infra Projects",
+  "extensions": {
+    "colorMeta": {
+      "navy": {
+        "role": "primary",
+        "displayName": "GIP Navy",
+        "tonalRamp": [
+          "oklch(15% 0.1 252)",
+          "oklch(25% 0.1 252)",
+          "oklch(35% 0.1 252)",
+          "oklch(45% 0.1 252)",
+          "oklch(58% 0.1 252)",
+          "oklch(70% 0.1 252)",
+          "oklch(82% 0.1 252)",
+          "oklch(95% 0.1 252)"
+        ]
+      },
+      "frame": {
+        "role": "primary",
+        "displayName": "Frame Navy",
+        "tonalRamp": [
+          "oklch(15% 0.07 258)",
+          "oklch(25% 0.07 258)",
+          "oklch(35% 0.07 258)",
+          "oklch(45% 0.07 258)",
+          "oklch(58% 0.07 258)",
+          "oklch(70% 0.07 258)",
+          "oklch(82% 0.07 258)",
+          "oklch(95% 0.07 258)"
+        ]
+      },
+      "night": {
+        "role": "primary",
+        "displayName": "Night Navy",
+        "tonalRamp": [
+          "oklch(15% 0.05 250)",
+          "oklch(25% 0.05 250)",
+          "oklch(35% 0.05 250)",
+          "oklch(45% 0.05 250)",
+          "oklch(58% 0.05 250)",
+          "oklch(70% 0.05 250)",
+          "oklch(82% 0.05 250)",
+          "oklch(95% 0.05 250)"
+        ]
+      },
+      "navy-2": {
+        "role": "primary",
+        "displayName": "Slate Navy",
+        "tonalRamp": [
+          "oklch(15% 0.07 260)",
+          "oklch(25% 0.07 260)",
+          "oklch(35% 0.07 260)",
+          "oklch(45% 0.07 260)",
+          "oklch(58% 0.07 260)",
+          "oklch(70% 0.07 260)",
+          "oklch(82% 0.07 260)",
+          "oklch(95% 0.07 260)"
+        ]
+      },
+      "coral": {
+        "role": "secondary",
+        "displayName": "Signal Coral",
+        "tonalRamp": [
+          "oklch(15% 0.17 22)",
+          "oklch(25% 0.17 22)",
+          "oklch(35% 0.17 22)",
+          "oklch(45% 0.17 22)",
+          "oklch(58% 0.17 22)",
+          "oklch(70% 0.17 22)",
+          "oklch(82% 0.17 22)",
+          "oklch(95% 0.17 22)"
+        ]
+      },
+      "coral-2": {
+        "role": "secondary",
+        "displayName": "Signal Coral (hover)",
+        "tonalRamp": [
+          "oklch(15% 0.16 22)",
+          "oklch(25% 0.16 22)",
+          "oklch(35% 0.16 22)",
+          "oklch(45% 0.16 22)",
+          "oklch(58% 0.16 22)",
+          "oklch(70% 0.16 22)",
+          "oklch(82% 0.16 22)",
+          "oklch(95% 0.16 22)"
+        ]
+      },
+      "sky": {
+        "role": "tertiary",
+        "displayName": "Sky Italic",
+        "tonalRamp": [
+          "oklch(15% 0.16 258)",
+          "oklch(25% 0.16 258)",
+          "oklch(35% 0.16 258)",
+          "oklch(45% 0.16 258)",
+          "oklch(58% 0.16 258)",
+          "oklch(70% 0.16 258)",
+          "oklch(82% 0.16 258)",
+          "oklch(95% 0.16 258)"
+        ]
+      },
+      "sky-ink": {
+        "role": "tertiary",
+        "displayName": "Sky Ink",
+        "tonalRamp": [
+          "oklch(15% 0.2 265)",
+          "oklch(25% 0.2 265)",
+          "oklch(35% 0.2 265)",
+          "oklch(45% 0.2 265)",
+          "oklch(58% 0.2 265)",
+          "oklch(70% 0.2 265)",
+          "oklch(82% 0.2 265)",
+          "oklch(95% 0.2 265)"
+        ]
+      },
+      "link": {
+        "role": "tertiary",
+        "displayName": "Article Blue",
+        "tonalRamp": [
+          "oklch(15% 0.14 252)",
+          "oklch(25% 0.14 252)",
+          "oklch(35% 0.14 252)",
+          "oklch(45% 0.14 252)",
+          "oklch(58% 0.14 252)",
+          "oklch(70% 0.14 252)",
+          "oklch(82% 0.14 252)",
+          "oklch(95% 0.14 252)"
+        ]
+      },
+      "canvas": {
+        "role": "neutral",
+        "displayName": "Canvas"
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink"
+      },
+      "ink-2": {
+        "role": "neutral",
+        "displayName": "Ink 2"
+      },
+      "ink-3": {
+        "role": "neutral",
+        "displayName": "Ink 3"
+      },
+      "pill": {
+        "role": "neutral",
+        "displayName": "Pill Grey"
+      },
+      "card": {
+        "role": "neutral",
+        "displayName": "Card Grey"
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Hairline"
+      },
+      "baby": {
+        "role": "neutral",
+        "displayName": "Baby Blue"
+      },
+      "ice": {
+        "role": "neutral",
+        "displayName": "Ice"
+      },
+      "on-dark": {
+        "role": "neutral",
+        "displayName": "On-dark"
+      },
+      "on-dark-2": {
+        "role": "neutral",
+        "displayName": "On-dark 2"
+      },
+      "scrim": {
+        "role": "neutral",
+        "displayName": "Scrim"
+      },
+      "destructive": {
+        "role": "neutral",
+        "displayName": "Destructive"
+      },
+      "whatsapp": {
+        "role": "neutral",
+        "displayName": "WhatsApp Green"
+      }
+    },
+    "typographyMeta": {
+      "hero": {
+        "displayName": "Hero",
+        "purpose": "Home hero headline only."
+      },
+      "display": {
+        "displayName": "Display",
+        "purpose": "Section statements and footer sign-off."
+      },
+      "numeral": {
+        "displayName": "Numeral",
+        "purpose": "Brand-story numerals, italic navy."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Inner-page H1."
+      },
+      "headline-secondary": {
+        "displayName": "Headline Secondary",
+        "purpose": "Second hero line, navy box statements, location rows."
+      },
+      "menu": {
+        "displayName": "Menu",
+        "purpose": "Full-screen menu links."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "H2s, connect band, sheet title."
+      },
+      "title-small": {
+        "displayName": "Title Small",
+        "purpose": "H3s, plot number."
+      },
+      "lede": {
+        "displayName": "Lede",
+        "purpose": "24 px story paragraphs and subtitles."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Running copy."
+      },
+      "body-small": {
+        "displayName": "Body Small",
+        "purpose": "Footer, sheet and tray copy."
+      },
+      "caption": {
+        "displayName": "Caption",
+        "purpose": "Captions, legal notes."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Form field and data labels, uppercase."
+      },
+      "control": {
+        "displayName": "Control",
+        "purpose": "MENU / CLOSE pills only."
+      }
+    },
+    "shadows": [
+      {
+        "name": "overlay",
+        "value": "0 1px 2px rgb(7 25 44 / 0.06), 0 16px 40px -12px rgb(7 25 44 / 0.25)",
+        "purpose": "Sheets, dialogs, the Projects dropdown, the floating plan-download pill."
+      },
+      {
+        "name": "tray",
+        "value": "0 -2px 24px rgb(7 25 44 / 0.08)",
+        "purpose": "The bottom action tray only, cast upward."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-soft",
+        "value": "cubic-bezier(0.5, 0, 0.3, 1)",
+        "purpose": "Colour and position transitions: pills 400 ms, header and tray 500 ms, menu panels 1000 ms."
+      },
+      {
+        "name": "ease-reveal",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Word-up headline keyframe (1 s); menu links with a 70 ms stagger."
+      },
+      {
+        "name": "cut-reveal",
+        "value": "translateY(105%) to 0, 700 ms, 80 ms per word, cubic-bezier(0.22, 1, 0.36, 1)",
+        "purpose": "Display headlines rising word by word out of clipped boxes."
+      },
+      {
+        "name": "reveal",
+        "value": "opacity 0 to 1, y 16px to 0, 600 ms, once",
+        "purpose": "Below-the-fold blocks; never above the fold."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "durations 0.01ms; hero renders its final beat",
+        "purpose": "Every scroll or motion sequence has a static end state."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Coral Pill",
+      "kind": "button",
+      "refersTo": "button-coral",
+      "description": "Primary action: enquire, site visit, connect, send.",
+      "html": "<button class=\"ds-btn-coral\">Enquire now</button>",
+      "css": ".ds-btn-coral{display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 20px;border-radius:999px;border:1px solid transparent;font-family:var(--font-sans), Geist, ui-sans-serif, system-ui, sans-serif;font-size:16px;cursor:pointer;transition:background-color .4s cubic-bezier(0.5,0,0.3,1),border-color .4s cubic-bezier(0.5,0,0.3,1),color .4s cubic-bezier(0.5,0,0.3,1);background:var(--coral,#d24242);color:#fff;} .ds-btn-coral:hover{background:var(--coral-2,#b93636);border-color:var(--coral,#d24242);} .ds-btn-coral:focus-visible{outline:2px solid var(--sky-ink, #2f62e8);outline-offset:2px;}"
+    },
+    {
+      "name": "Grey Pill",
+      "kind": "button",
+      "refersTo": "button-grey",
+      "description": "Secondary contact routes: Call now, WhatsApp, Download brochure.",
+      "html": "<button class=\"ds-btn-grey\">Call now <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z\"/></svg></button>",
+      "css": ".ds-btn-grey{display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 20px;border-radius:999px;border:1px solid transparent;font-family:var(--font-sans), Geist, ui-sans-serif, system-ui, sans-serif;font-size:16px;cursor:pointer;transition:background-color .4s cubic-bezier(0.5,0,0.3,1),border-color .4s cubic-bezier(0.5,0,0.3,1),color .4s cubic-bezier(0.5,0,0.3,1);height:40px;padding:0 16px;font-size:14px;background:var(--pill,#f2f2f2);color:#171b13;} .ds-btn-grey:hover{background:var(--line,#dde0e3);} .ds-btn-grey:focus-visible{outline:2px solid var(--sky-ink, #2f62e8);outline-offset:2px;}"
+    },
+    {
+      "name": "Navy Pill",
+      "kind": "button",
+      "refersTo": "button-navy",
+      "description": "Navy action on white grounds.",
+      "html": "<button class=\"ds-btn-navy\">View project</button>",
+      "css": ".ds-btn-navy{display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 20px;border-radius:999px;border:1px solid transparent;font-family:var(--font-sans), Geist, ui-sans-serif, system-ui, sans-serif;font-size:16px;cursor:pointer;transition:background-color .4s cubic-bezier(0.5,0,0.3,1),border-color .4s cubic-bezier(0.5,0,0.3,1),color .4s cubic-bezier(0.5,0,0.3,1);background:var(--navy,#033967);color:#fff;} .ds-btn-navy:hover{background:var(--navy-2,#24426d);} .ds-btn-navy:focus-visible{outline:2px solid var(--sky-ink, #2f62e8);outline-offset:2px;}"
+    },
+    {
+      "name": "White and Outline Pills on Navy",
+      "kind": "button",
+      "refersTo": "button-white",
+      "description": "Secondary actions on navy bands and in the menu.",
+      "html": "<div class=\"ds-navyband\"><button class=\"ds-btn-white\">Call now</button><button class=\"ds-btn-outline\">WhatsApp</button></div>",
+      "css": ".ds-navyband{display:flex;gap:12px;padding:24px;background:var(--navy,#033967);border-radius:16px;} .ds-btn-white{display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 20px;border-radius:999px;border:1px solid transparent;font-family:var(--font-sans), Geist, ui-sans-serif, system-ui, sans-serif;font-size:16px;cursor:pointer;transition:background-color .4s cubic-bezier(0.5,0,0.3,1),border-color .4s cubic-bezier(0.5,0,0.3,1),color .4s cubic-bezier(0.5,0,0.3,1);background:#fff;color:var(--ink,#1b1b1b);} .ds-btn-white:hover{background:var(--pill,#f2f2f2);} .ds-btn-outline{display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 20px;border-radius:999px;border:1px solid transparent;font-family:var(--font-sans), Geist, ui-sans-serif, system-ui, sans-serif;font-size:16px;cursor:pointer;transition:background-color .4s cubic-bezier(0.5,0,0.3,1),border-color .4s cubic-bezier(0.5,0,0.3,1),color .4s cubic-bezier(0.5,0,0.3,1);background:transparent;color:#fff;border-color:currentColor;} .ds-btn-outline:hover{background:rgb(255 255 255 / .1);} .ds-btn-white:focus-visible,.ds-btn-outline:focus-visible{outline:2px solid #5b9cff;outline-offset:2px;}"
+    },
+    {
+      "name": "Desktop Nav Capsule",
+      "kind": "nav",
+      "refersTo": "nav-pill-group",
+      "description": "Grey capsule of page pills; active page is a white pill; MENU pill beside it.",
+      "html": "<nav class=\"ds-nav\"><ul class=\"ds-nav-cap\"><li><a class=\"ds-nav-pill ds-on\" href=\"#\">Home</a></li><li><a class=\"ds-nav-pill\" href=\"#\">Projects</a></li><li><a class=\"ds-nav-pill\" href=\"#\">About</a></li><li><a class=\"ds-nav-pill\" href=\"#\">Contact</a></li></ul><button class=\"ds-menu\">Menu</button></nav>",
+      "css": ".ds-nav{display:flex;align-items:center;gap:16px;font-family:var(--font-sans), Geist, ui-sans-serif, system-ui, sans-serif;} .ds-nav-cap{display:flex;gap:4px;list-style:none;margin:0;padding:6px 8px;border-radius:999px;background:var(--pill,#f2f2f2);} .ds-nav-pill{display:inline-block;padding:6px 14px;border-radius:999px;font-size:14px;color:#222;text-decoration:none;transition:background-color .3s;} .ds-nav-pill:hover{background:rgb(255 255 255 / .7);} .ds-nav-pill.ds-on{background:#fff;color:var(--ink,#1b1b1b);} .ds-nav-pill:focus-visible{outline:2px solid var(--sky-ink, #2f62e8);outline-offset:2px;} .ds-menu{height:40px;padding:0 20px;border:0;border-radius:999px;background:var(--navy-2,#24426d);color:#fff;font-family:var(--font-sans), Geist, ui-sans-serif, system-ui, sans-serif;font-size:13px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:background-color .4s cubic-bezier(0.5,0,0.3,1);} .ds-menu:hover{background:var(--navy,#033967);} .ds-menu:focus-visible{outline:2px solid var(--sky-ink, #2f62e8);outline-offset:2px;}"
+    },
+    {
+      "name": "Underline Field",
+      "kind": "input",
+      "refersTo": "input-underline",
+      "description": "Underline-only control with an uppercase 12 px label; sky-ink 2 px line on focus.",
+      "html": "<div class=\"ds-field\"><label class=\"ds-label\" for=\"ds-n\">Full name</label><input id=\"ds-n\" class=\"ds-input\" placeholder=\"Enter your name\"></div>",
+      "css": ".ds-field{display:flex;flex-direction:column;max-width:360px;font-family:var(--font-sans), Geist, ui-sans-serif, system-ui, sans-serif;} .ds-label{font-size:12px;letter-spacing:.02em;text-transform:uppercase;color:var(--ink,#1b1b1b);} .ds-input{height:48px;border:0;border-bottom:1px solid var(--line,#dde0e3);border-radius:0;background:transparent;padding:0;font:inherit;font-size:16px;color:var(--ink,#1b1b1b);transition:border-color .3s cubic-bezier(0.5,0,0.3,1),box-shadow .3s cubic-bezier(0.5,0,0.3,1);} .ds-input::placeholder{color:rgb(107 118 128 / .7);} .ds-input:focus{outline:none;border-color:var(--sky-ink,#2f62e8);box-shadow:0 1px 0 var(--sky-ink,#2f62e8);}"
+    },
+    {
+      "name": "Media Plate with Impression Chip",
+      "kind": "card",
+      "refersTo": "media-plate",
+      "description": "16 px rounded image; renders always carry the Artist's impression chip.",
+      "html": "<figure class=\"ds-plate\"><div class=\"ds-plate-img\"><span class=\"ds-chip\">Artist&rsquo;s impression</span></div><figcaption class=\"ds-cap\">Entrance arch, Global City VI</figcaption></figure>",
+      "css": ".ds-plate{margin:0;max-width:420px;font-family:var(--font-sans), Geist, ui-sans-serif, system-ui, sans-serif;} .ds-plate-img{position:relative;aspect-ratio:4/3;border-radius:16px;overflow:hidden;background:linear-gradient(160deg,#cdeaf7,#102a4c);} .ds-chip{position:absolute;right:12px;bottom:12px;padding:5px 10px;border-radius:999px;background:rgb(255 255 255 / .9);color:#1b1b1b;font-size:11px;line-height:1;letter-spacing:.02em;} .ds-cap{margin-top:12px;font-size:13px;line-height:1.4;color:var(--ink-3,#6b7680);}"
+    },
+    {
+      "name": "Grey Data Card",
+      "kind": "card",
+      "refersTo": "card-grey",
+      "description": "Plot summary and info cards: card grey, 16 px, uppercase labels over values.",
+      "html": "<dl class=\"ds-card\"><div><dt>Plot</dt><dd class=\"ds-big\">118</dd></div><div><dt>Area</dt><dd>200 sq yd</dd></div><div><dt>Facing</dt><dd>East</dd></div><div><dt>Road</dt><dd>40 ft</dd></div></dl>",
+      "css": ".ds-card{display:grid;grid-template-columns:repeat(4,auto);gap:16px 24px;margin:0;padding:20px;border-radius:16px;background:var(--card,#f1f2f4);font-family:var(--font-sans), Geist, ui-sans-serif, system-ui, sans-serif;} .ds-card dt{font-size:12px;letter-spacing:.02em;text-transform:uppercase;color:var(--ink-3,#6b7680);} .ds-card dd{margin:4px 0 0;font-size:16px;color:var(--ink,#1b1b1b);} .ds-card .ds-big{font-family:var(--font-serif), 'Source Serif 4', Georgia, serif;font-weight:350;font-size:32px;line-height:1.12;letter-spacing:-.01em;font-variant-numeric:tabular-nums;}"
+    },
+    {
+      "name": "Action Tray",
+      "kind": "custom",
+      "refersTo": "action-tray",
+      "description": "Floating bottom tray: grey Call now and WhatsApp, coral Schedule site visit.",
+      "html": "<div class=\"ds-tray\"><button class=\"ds-t ds-t-grey\">Call now <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z\"/></svg></button><button class=\"ds-t ds-t-grey\">Whatsapp</button><button class=\"ds-t ds-t-coral\">Schedule site visit <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"4\" width=\"18\" height=\"18\" rx=\"2\"/><path d=\"M16 2v4M8 2v4M3 10h18\"/></svg></button></div>",
+      "css": ".ds-tray{display:inline-flex;gap:8px;padding:12px;background:#fff;border-radius:20px 20px 0 0;box-shadow:0 -2px 24px rgb(7 25 44 / .08);} .ds-t{display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 16px;border:0;border-radius:999px;font-family:var(--font-sans), Geist, ui-sans-serif, system-ui, sans-serif;font-size:14px;cursor:pointer;transition:background-color .4s cubic-bezier(0.5,0,0.3,1);} .ds-t-grey{background:var(--pill,#f2f2f2);color:#171b13;} .ds-t-grey:hover{background:var(--line,#dde0e3);} .ds-t-coral{background:var(--coral,#d24242);color:#fff;} .ds-t-coral:hover{background:var(--coral-2,#b93636);} .ds-t:focus-visible{outline:2px solid var(--sky-ink, #2f62e8);outline-offset:2px;}"
+    },
+    {
+      "name": "Two-tone Serif Headline on Navy",
+      "kind": "custom",
+      "refersTo": "",
+      "description": "Light serif statement with one sky-blue italic phrase, on the frame navy.",
+      "html": "<div class=\"ds-frame\"><h2 class=\"ds-h\">Plan with purpose, build with <em>integrity.</em></h2></div>",
+      "css": ".ds-frame{padding:48px 40px;border-radius:16px;background:var(--frame,#102a4c);} .ds-h{margin:0;font-family:var(--font-serif), 'Source Serif 4', Georgia, serif;font-weight:300;font-variation-settings:'opsz' 60;font-size:56px;line-height:1.1;letter-spacing:-.05em;color:#fffffb;text-align:center;} .ds-h em{font-style:italic;color:var(--sky,#5b9cff);}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Framed Horizon",
+    "overview": "A white page with a navy window cut into it. The site opens inside a navy frame inset on white, and everything after keeps to that one contrast: white canvas with near-black ink, broken at intervals by full-width navy bands that hold the big statements, the plot-size data, the menu and the sign-off. Headlines are set very large in a light, tightly tracked serif. In most headlines one phrase turns to italic, in sky blue on navy or in coral inside navy boxes, and that phrase carries the emphasis. Everything you press is a fully round pill: coral when it opens a conversation, grey when it is a secondary way to reach a person.\n\nThis is the client-pinned language of honerhomes.com, expressed only through GIP's own roof mark, land, film and photographs. The density is low and the pace is slow. Generous section rhythm (128 px on desktop) gives the big serif room, and the 16 px rounded media plates read as calm objects on white rather than full-bleed spectacle. Motion is one slow, soft grammar: words rise out of clipped boxes, panels slide on a long ease-out, and the hero film grows from a small inline tile to fill the frame.\n\nTruth is part of the look. Renders always carry the \"Artist's impression\" chip. Approval numbers and plot counts are set as plain data, never as decoration.",
+    "keyCharacteristics": [
+      "White canvas, near-black ink, GIP navy frames and bands; footer on the deepest navy.",
+      "Very large light serif (Source Serif 4 at weight 300, optical size 60) with one italic accent phrase per headline.",
+      "Coral pills open conversations, grey pills are secondary routes, and a navy MENU pill opens a full-screen navy overlay.",
+      "16 px radius on every media plate and grey card; every control is fully round.",
+      "A floating white action tray (Call now, WhatsApp, Schedule site visit) is always at the bottom of the screen.",
+      "Flat surfaces. The only shadows sit under things that float."
+    ],
+    "rules": [
+      {
+        "name": "The One Phrase Rule",
+        "body": "A headline gets at most one italic accent phrase. Use sky on navy, sky-ink on white, and coral only inside a navy box. Two accents are allowed only in the footer sign-off, where the tagline has two halves.",
+        "section": "colors"
+      },
+      {
+        "name": "The Coral Means Talk Rule",
+        "body": "Coral fills only actions that start a conversation (enquire, site visit, connect, send). Navigation, downloads and secondary contact routes use grey, white or outline pills.",
+        "section": "colors"
+      },
+      {
+        "name": "The Inverted Band Rule",
+        "body": "Navy grounds are always `.on-dark` scopes. Ink, lines and the focus colour remap inside them, so components move between white and navy without forks.",
+        "section": "colors"
+      },
+      {
+        "name": "The Light Serif Rule",
+        "body": "Serif display never goes above weight 350 and always uses negative tracking (−0.01 to −0.06em). If it looks bold, it is wrong.",
+        "section": "typography"
+      },
+      {
+        "name": "The Rising Word Rule",
+        "body": "Display headlines arrive word by word. Each word rises 105% out of its own clipped box with an 80 ms stagger, and the full text sits in a screen-reader span. Reduced motion shows the words in place.",
+        "section": "typography"
+      },
+      {
+        "name": "The Float-Only Shadow Rule",
+        "body": "If an element scrolls with the page, it has no shadow. Cards, plates, pills and bands are flat.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Diagonal Band Rule",
+        "body": "Navy bands get their texture from darker navy polygons (#022c52, #012657) clipped across them. Use these instead of gradients or images. The menu slides two of them in from opposite corners.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do set every headline in Source Serif 4 at weight 300–350 with negative tracking, and give it at most one italic accent phrase.",
+      "Do put the accent in sky on navy grounds and sky-ink on white. Inside navy boxes, coral is the warm alternative.",
+      "Do use coral pills only for actions that start a conversation, and grey pills for secondary contact routes.",
+      "Do give every media plate and grey card a 16 px radius, and every control a full pill radius.",
+      "Do wrap navy sections in the `.on-dark` scope so ink, lines and focus colours remap.",
+      "Do label every render with the Artist's impression chip and caption real photographs with place and date.",
+      "Do keep section rhythm on the 128 / 96 / 48 px steps (80 / 64 / 40 on phones).",
+      "Do give every scroll and reveal sequence a reduced-motion end state."
+    ],
+    "donts": [
+      "Don't add shadows to anything that scrolls with the page. Shadows are for sheets, dialogs, dropdowns and the tray.",
+      "Don't use bold or semibold serif, or serif text below 24 px.",
+      "Don't put two accent phrases in a headline (the footer sign-off is the single exception).",
+      "Don't use backdrop blur on overlays. The scrim is a flat navy tint.",
+      "Don't give inputs boxes or fills. Fields are underline-only.",
+      "Don't use Honer's logo, copy, photographs or film. The language is borrowed but every asset is GIP's.",
+      "Don't add uppercase section kickers above headlines. The uppercase label style is reserved for data and form labels.",
+      "Don't set sky-blue text on white at body or caption size. Use sky-ink."
+    ]
+  }
+}

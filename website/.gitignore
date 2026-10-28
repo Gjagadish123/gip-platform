@@ -40,3 +40,12 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 !.env.example
+
+# kie.ai source renders (3.5 MB JPGs each; the site ships src/assets/images/*.webp)
+/assets-src/
+/.shots/
+
+# Impeccable design-tool cache and review captures
+/.impeccable/hook.cache.json
+/.impeccable/review/
+/.impeccable/questions/
