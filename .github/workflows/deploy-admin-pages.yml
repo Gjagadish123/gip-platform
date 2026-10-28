@@ -1,10 +1,13 @@
-# Static client preview of the admin UI at https://gjagadish123.github.io/gip-platform/
-name: Deploy admin preview to GitHub Pages
+# One GitHub Pages site, two static previews:
+#   admin   → https://gjagadish123.github.io/gip-platform/        (the link the client already has)
+#   website → https://gjagadish123.github.io/gip-platform/site/
+# Both are noindex previews; the real website launches on a Node host with the image optimizer and Cache Components.
+name: Deploy previews to GitHub Pages
 
 on:
   push:
     branches: [main]
-    paths: ["admin/**", ".github/workflows/deploy-admin-pages.yml"]
+    paths: ["admin/**", "website/**", ".github/workflows/deploy-admin-pages.yml"]
   workflow_dispatch:
 
 permissions:
@@ -19,21 +22,41 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: admin
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: admin/package-lock.json
-      - run: npm ci
-      - run: npx next build
+          cache-dependency-path: |
+            admin/package-lock.json
+            website/package-lock.json
+
+      - name: Build admin (/gip-platform/)
+        working-directory: admin
+        run: |
+          npm ci
+          npx next build
+          node scripts/flatten-segments.mjs out
         env:
           GITHUB_PAGES: "true"
-      - run: node scripts/flatten-segments.mjs out && touch out/.nojekyll
+
+      - name: Build website (/gip-platform/site/)
+        working-directory: website
+        run: |
+          npm ci
+          npx next build
+          node scripts/flatten-segments.mjs out
+        env:
+          GITHUB_PAGES: "true"
+          PAGES_BASE_PATH: /gip-platform/site
+
+      - name: Assemble one Pages tree
+        run: |
+          mkdir -p admin/out/site
+          cp -R website/out/. admin/out/site/
+          touch admin/out/.nojekyll
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: admin/out

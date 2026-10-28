@@ -104,6 +104,19 @@ schools, hospitals, shopping and transport from Google Places and drive routes f
    statuses are sample data (marked as such): check them with the client first.
 5. `npx supabase db advisors --linked` should report no issues.
 
+## Website (public site)
+
+The site hardcodes ONE project (Global City VI) through `website/src/lib/projects.ts`;
+swap those function bodies for Supabase queries when the backend lands and nothing in the pages changes.
+
+- Imagery: re-encode source renders and photos with `website/scripts/optimize-images.py` →
+  `src/assets/images/*.webp`.
+- Previews: `.github/workflows/deploy-admin-pages.yml` publishes the admin at `/gip-platform/` and the website at
+  `/gip-platform/site/` on GitHub Pages (both `noindex`). Local export test from `website/`:
+  `GITHUB_PAGES=true PAGES_BASE_PATH=/gip-platform/site npx next build && node scripts/flatten-segments.mjs out`
+  (in Git Bash prefix `MSYS_NO_PATHCONV=1` so the path is not rewritten).
+- The real launch goes to a Node host (Vercel or similar): the image optimizer and Cache Components come back.
+
 ## Adding UI components
 
 Run inside `website/` or `admin/`:
