@@ -5,7 +5,7 @@ import { COMPANY } from "./constants";
 import { formatArea } from "./format";
 import type { Unit } from "./types";
 
-// The four layouts on the live layouts page by project id, so an enquiry from any of them names its project.
+// The four layouts in the live layouts app (LIVE_LAYOUT_IDS) by project id, so an enquiry names its project.
 export const INTERESTS = [
   { id: "global-city-vi", label: "Global City VI" },
   { id: "global-city-v", label: "Global City V" },

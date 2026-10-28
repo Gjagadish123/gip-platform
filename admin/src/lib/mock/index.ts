@@ -1,5 +1,5 @@
-// SEED = the demo's starting state (also the server snapshot of the store): the four projects on the website's live
-// layouts page, this phase's working set. CATALOGUE = every project on file; scripts/gen-seed.ts writes the others to
+// SEED = the demo's starting state (also the server snapshot of the store): the four projects in the live
+// layouts app, this phase's working set. CATALOGUE = every project on file; scripts/gen-seed.ts writes the others to
 // supabase/seed.catalogue.sql, loaded on request. Deterministic: no clock, no Math.random.
 import { isLiveLayout } from '../layouts';
 import type { ActivityEvent, ID, Project, Unit } from '../types';

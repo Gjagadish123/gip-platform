@@ -6,10 +6,8 @@ import { loadProjects, loadUnits } from '@/lib/projects-backend';
 
 import { UNIT_STATUSES } from './constants';
 import { GLOBAL_CITY_VI } from './data/global-city-vi';
-import LAYOUT_INDEX from './data/layouts/index.json';
 import { GC6_PLAN, GC6_PROJECT_ID, GC6_UNITS, type Gc6Plan } from './data/units';
-import { formatLandArea, percents } from './format';
-import { isLiveLayout, toLiveUnit, type LiveProject, type LiveUnit } from './layouts';
+import { percents } from './format';
 import { BACKEND } from './supabase';
 import type { ID, Project, Unit, UnitStatus } from './types';
 
@@ -55,42 +53,6 @@ export function getPlan(projectId: ID): Gc6Plan | null {
 const PAGE_CONTENT = new Set<ID>([GC6_PROJECT_ID]);
 export const hasDetailPage = (p: Project) =>
   PAGE_CONTENT.has(p.id) && p.lifecycle !== 'completed' && !p.publishing.externalUrl;
-
-/**
- * /layouts: the mapped projects that are published (RLS hides the rest from the site), in the admin's order, with
- * their plots' public columns. Only the four projects with an approved layout on file can appear (LIVE_LAYOUT_IDS).
- */
-export async function getLiveLayouts(): Promise<{ projects: LiveProject[]; units: Record<ID, LiveUnit[]> }> {
-  const projects = (await getProjects()).filter((p) => isLiveLayout(p.id));
-  const units = await Promise.all(projects.map(async (p) => [p.id, (await getUnits(p.id)).map(toLiveUnit)] as const));
-  return { projects: projects.map(toLiveProject), units: Object.fromEntries(units) };
-}
-
-const DRAWINGS: Record<string, { landArea: string; source: { reference?: string; pending?: boolean } }> = LAYOUT_INDEX;
-
-function toLiveProject(p: Project): LiveProject {
-  // The approved drawing's own figures win: its land area, and its approval number when the record has none. From
-  // the small index, so the facts are final on first paint instead of changing when the drawing loads.
-  const drawing = DRAWINGS[p.id];
-  const drawingRef = drawing && !drawing.source.pending ? drawing.source.reference : undefined;
-  const landArea = drawing?.landArea ?? (p.landArea && formatLandArea(p.landArea));
-  return {
-    id: p.id as LiveProject['id'],
-    slug: p.publishing.slug,
-    name: p.name,
-    place: p.location.short.replace(/,\s*Hyderabad$/i, ''),
-    lifecycle: p.lifecycle,
-    ...(landArea && { landArea }),
-    approvals: p.legal.approvals.map((a) => {
-      const reference = a.reference ?? (a.authority === 'HMDA' || a.authority === 'DTCP' ? drawingRef : undefined);
-      return { authority: a.authority, title: a.title, ...(reference && { reference }), ...(a.date && { date: a.date }) };
-    }),
-    ...(p.inventoryUpdatedAt && { inventoryUpdatedAt: p.inventoryUpdatedAt }),
-    ...(p.statusSample && { statusSample: true }),
-    ...(hasDetailPage(p) && { detailHref: `/projects/${p.publishing.slug}` }),
-    ...(p.media.brochure?.url && { brochure: p.media.brochure.url }),
-  };
-}
 
 export interface InventorySummary {
   total: number;

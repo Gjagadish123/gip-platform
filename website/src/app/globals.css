@@ -389,13 +389,6 @@
       scroll-padding-bottom: calc(4.25rem + env(safe-area-inset-bottom));
     }
   }
-  /* The live layouts page is a full-height app on desktop: only its panel scrolls, so the site footer stays off it
-     (the header's menu and the panel's links reach everything the footer does). */
-  @media (width >= 64rem) {
-    body:has([data-layouts-app]) footer {
-      display: none;
-    }
-  }
   body {
     @apply bg-background text-foreground;
     font-size: 1rem;

@@ -1,7 +1,7 @@
 // Supabase reads behind ./projects-backend, uncached. The server build wraps them in "use cache"
 // (./projects-backend.ts); the GitHub Pages export can't run that (no cacheComponents there), so next.config.ts points
 // '@/lib/projects-backend' straight at this file when the export has the Supabase variables: its pages then hold a
-// build-time copy, and /layouts catches up in the browser (components/layouts/use-live.ts).
+// build-time copy.
 import { supabase } from './supabase';
 import type { ID, Price, Project, Unit, UnitStatus } from './types';
 

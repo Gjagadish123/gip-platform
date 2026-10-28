@@ -4,7 +4,6 @@ Checks the live-layout geometry and the seed against each other. Exits non-zero 
 - every digitised plan: plot numbers 1..plotCount exactly once, valid outlines, plot and zone label points inside, areas summing to
   the printed plotted area within 0.2 %, a satellite fit within 3 m, plots drawn at one scale (a fit that squeezes or
   stretches a block shows up as plots whose drawn area strays from the printed one);
-- the admin and website copies are identical;
 - supabase/seed.sql has the same plot numbers and areas as each drawing.
 
 Run:  python -P -E tools/layouts/check_layouts.py
@@ -14,7 +13,6 @@ import json, os, re, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(HERE, "..", ".."))
 ADMIN = os.path.join(REPO, "admin", "src", "lib", "layouts")
-WEBSITE = os.path.abspath(os.path.join(REPO, "..", "gip-platform-website", "website", "src", "lib", "data", "layouts"))
 fails = []
 
 
@@ -49,10 +47,6 @@ for name in sorted(os.listdir(ADMIN)):
         continue
     doc = json.load(open(os.path.join(ADMIN, name), encoding="utf-8"))
     pid = doc["id"]
-    if os.path.isdir(WEBSITE):
-        web = os.path.join(WEBSITE, name)
-        check(os.path.exists(web) and open(web, encoding="utf-8").read() == open(os.path.join(ADMIN, name), encoding="utf-8").read(),
-              f"{pid}: website copy differs from the admin copy (rerun build_layouts.py)")
     plots = doc["plots"]
     if not plots:
         check(doc["source"].get("pending") is True, f"{pid}: no plots but not marked pending")

@@ -147,7 +147,7 @@ export function SiteHeader() {
       >
         <Container className="flex h-16 items-center justify-between gap-6 lg:h-20">
           {/* Not prefetched: it's on every page, and the home route's animation code would compete with each page's own
-              loading (the map on /layouts). Home still opens quickly from the menu or this link. */}
+              loading. Home still opens quickly from the menu or this link. */}
           <Link href="/" prefetch={false} aria-label={`${COMPANY.name} — home`} className="shrink-0">
             <Logo variant={dark ? "white" : "navy"} width={120} className="w-[96px] lg:w-[116px]" />
           </Link>

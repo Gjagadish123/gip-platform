@@ -1,4 +1,4 @@
-// The four projects drawn on the website's live layouts page (gip-platform/tools/layouts/build_layouts.py writes
+// The four projects drawn in the live layouts app (gip-platform/tools/layouts/build_layouts.py writes
 // ./layouts/<id>.json from the approved layout copies). Only projects with plot outlines get the inventory's Layout
 // view; the geometry loads per project, so the inventory doesn't carry every drawing.
 import index from './layouts/index.json';

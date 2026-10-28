@@ -1,15 +1,15 @@
 "use client"
 // Layout view: the project's real plot outlines from its approved layout (src/lib/layouts, metres east/north; y is
 // flipped for SVG), filled by status with the same patterns as the tiles. Offered for the projects drawn on the
-// website's live layouts page. Shares selection, filters, bulk bar and sheet with the other views. Zoom and pan are
+// live layouts app. Shares selection, filters, bulk bar and sheet with the other views. Zoom and pan are
 // plain viewBox math (no deps). A tall plan in a wide box is turned a quarter (north to the right) when that draws it
-// larger. A live-layout project whose drawing isn't digitised yet says what the website shows.
+// larger. A live-layout project whose drawing isn't digitised yet says what the live layouts app shows.
 import { memo, useEffect, useId, useMemo, useRef, useState, type KeyboardEvent, type PointerEvent } from "react"
 import { ArrowUpRight, Map as MapIcon, Maximize, Minus, Plus } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty"
-import { WEBSITE_URL } from "@/lib/constants"
+import { liveLayoutUrl } from "@/lib/constants"
 import { hasDigitalLayout, layoutInfo, loadLayout, type LayoutPlan, type PlanRing } from "@/lib/layouts"
 import { useAssetUrl } from "@/lib/media-store"
 import type { Project, ProjectType, Unit, UnitStatus } from "@/lib/types"
@@ -476,8 +476,7 @@ export function NoLayout({ project, type }: { project: Project; type: ProjectTyp
   const url = useAssetUrl(plan)
   const href = url && plan ? (plan.kind === "pdf" ? `${url}#page=${project.media.masterPlanPage || 1}` : url) : null
   const source = layoutInfo(project.id)?.source
-  const live = WEBSITE_URL && project.publishing.state === "published" ? `${WEBSITE_URL}/layouts?project=${project.id}` : null
-  const nouns = type.unitNounPlural.toLowerCase()
+  const live = project.publishing.state === "published" ? liveLayoutUrl(project.id) : null
   return (
     <Empty className="border border-solid py-12">
       <EmptyHeader>
@@ -488,7 +487,7 @@ export function NoLayout({ project, type }: { project: Project; type: ProjectTyp
         <EmptyDescription>
           {type.unitNoun} outlines go on the map once the {source?.title ?? "approved layout"}
           {source?.reference ? ` (LP ${source.reference})` : ""} is digitised. Until then the live layouts page shows the
-          site pin and the {nouns} as a list, and status changes made in Grid or Table reach it at once.
+          site pin and its status counts, and status changes made in Grid or Table reach it at once.
         </EmptyDescription>
       </EmptyHeader>
       <EmptyContent className="flex-row flex-wrap justify-center">

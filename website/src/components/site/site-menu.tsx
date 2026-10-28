@@ -7,7 +7,7 @@ import { Dialog as DialogPrimitive } from "radix-ui";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import { Arrow, Button } from "@/components/ui/button";
-import { COMPANY } from "@/lib/constants";
+import { COMPANY, LAYOUTS_URL } from "@/lib/constants";
 import { WHATSAPP_TEXT, whatsappUrl } from "@/lib/enquiry";
 import { COPYRIGHT_YEAR, OFFICE } from "@/lib/site";
 import { cn } from "@/lib/utils";
@@ -26,7 +26,7 @@ const LINKS: { href: string; label: string; sub?: { href: string; label: string;
     label: "Projects",
     sub: [
       { href: "/projects/global-city-vi", label: "Global City VI", selling: true },
-      { href: "/layouts", label: "Live layouts" },
+      { href: LAYOUTS_URL, label: "Live layouts" },
       { href: "/projects#delivered", label: "Delivered layouts" },
     ],
   },

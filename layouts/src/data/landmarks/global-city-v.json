@@ -1,0 +1,276 @@
+{
+ "generated": "2026-10-28",
+ "source": "Google Places API (New) + Routes API, driving without live traffic, from the site pin",
+ "site": {
+  "lat": 17.5280933,
+  "lng": 78.136843
+ },
+ "places": [
+  {
+   "category": "Education",
+   "name": "GITAM University, Hyderabad campus",
+   "googleName": "GITAM Deemed to be University Hyderabad",
+   "address": "Rudraram, Patancheru, Telangana 502329",
+   "type": "University",
+   "location": {
+    "lat": 17.549778099999997,
+    "lng": 78.1655871
+   },
+   "mapsUrl": "https://maps.google.com/?cid=14751291371855763967&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 6.9,
+   "driveMin": 22
+  },
+  {
+   "category": "Education",
+   "name": "IIT Hyderabad",
+   "googleName": "Indian Institute of Technology, Hyderabad",
+   "address": "Kandi, Telangana 502284",
+   "type": "University",
+   "location": {
+    "lat": 17.5947027,
+    "lng": 78.1230401
+   },
+   "mapsUrl": "https://maps.google.com/?cid=8305007107326644625&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 12.1,
+   "driveMin": 23
+  },
+  {
+   "category": "Education",
+   "name": "Sri Chaitanya Vasishtha Bhavan Rudraram",
+   "googleName": "Sri Chaitanya Vasishtha Bhavan Rudraram",
+   "address": "Rudraram, Patancheru, Hyderabad, Telangana 502329",
+   "type": "School",
+   "location": {
+    "lat": 17.560566599999998,
+    "lng": 78.1636295
+   },
+   "mapsUrl": "https://maps.google.com/?cid=16031836232566919159&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 7.9,
+   "driveMin": 24
+  },
+  {
+   "category": "Connectivity",
+   "name": "NH-65 Mumbai Highway, Rudraram",
+   "googleName": "Rudraram",
+   "address": "Rudraram, Telangana 502329, India",
+   "type": "Bus stop",
+   "location": {
+    "lat": 17.5641073,
+    "lng": 78.1651947
+   },
+   "mapsUrl": "https://maps.google.com/?cid=58122702008931130&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 15.3,
+   "driveMin": 26
+  },
+  {
+   "category": "Connectivity",
+   "name": "Outer Ring Road, Exit 2",
+   "googleName": "Edulanagulapalli Toll Booth Exit 2",
+   "address": "F67X+7M7, Nehru Outer Ring Rd, Nagulapalli, Edulnagulapally, Hyderabad, Telangana 502300",
+   "type": "Toll Booth",
+   "location": {
+    "lat": 17.4631571,
+    "lng": 78.24918629999999
+   },
+   "mapsUrl": "https://maps.google.com/?cid=1663776973338780645&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 20.1,
+   "driveMin": 43
+  },
+  {
+   "category": "Connectivity",
+   "name": "Outer Ring Road, Exit 3 (Muthangi)",
+   "googleName": "ORR EXIT 3 KYASARAM TOLL ఓ ఆర్ ఆర్ ఎక్జిట్ 3",
+   "address": "G6QM+4V3, Muthangi, Hyderabad, Telangana 502300",
+   "type": "Point of interest",
+   "location": {
+    "lat": 17.53775,
+    "lng": 78.2346845
+   },
+   "mapsUrl": "https://maps.google.com/?cid=11707889170140191393&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 16.6,
+   "driveMin": 36
+  },
+  {
+   "category": "Connectivity",
+   "name": "Patancheru bus station",
+   "googleName": "Patancheruvu BS",
+   "address": "H no 11-73 /1, Shanthi Nagar, Patancheruvu, Telangana 502319",
+   "type": "Bus Station",
+   "location": {
+    "lat": 17.528784299999998,
+    "lng": 78.2640965
+   },
+   "mapsUrl": "https://maps.google.com/?cid=7586143443649363737&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 18.9,
+   "driveMin": 43
+  },
+  {
+   "category": "Connectivity",
+   "name": "Lingampally railway station",
+   "googleName": "Lingampalli",
+   "address": "Hyderabad, 500019, Rail Vihar, Serilingampally, Hyderabad, Serilingampalle (M), Telangana 500019",
+   "type": "Train Station",
+   "location": {
+    "lat": 17.483132299999998,
+    "lng": 78.31759009999999
+   },
+   "mapsUrl": "https://maps.google.com/?cid=221369228267295781&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 27.2,
+   "driveMin": 60
+  },
+  {
+   "category": "Connectivity",
+   "name": "Miyapur metro station",
+   "googleName": "Miyapur",
+   "address": "Nadigada Tanda, Hafeezpet, Miyapur, Hyderabad, Telangana 500049",
+   "type": "Subway Station",
+   "location": {
+    "lat": 17.4964542,
+    "lng": 78.3729359
+   },
+   "mapsUrl": "https://maps.google.com/?cid=11342516693891745667&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 31.0,
+   "driveMin": 66
+  },
+  {
+   "category": "Connectivity",
+   "name": "Rajiv Gandhi International Airport",
+   "googleName": "Rajiv Gandhi International Airport",
+   "address": "Shamshabad, Hyderabad, Telangana 500409",
+   "type": "International Airport",
+   "location": {
+    "lat": 17.240282699999998,
+    "lng": 78.429358
+   },
+   "mapsUrl": "https://maps.google.com/?cid=5989833598862796881&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 59.3,
+   "driveMin": 79
+  },
+  {
+   "category": "Work hubs",
+   "name": "Pashamylaram industrial area",
+   "googleName": "Industrial Park",
+   "address": "Industrial Park, Pashamylaram, Telangana 502307",
+   "type": null,
+   "location": {
+    "lat": 17.53817,
+    "lng": 78.1745235
+   },
+   "mapsUrl": "https://maps.google.com/?cid=14391731149754259750&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 7.2,
+   "driveMin": 22
+  },
+  {
+   "category": "Work hubs",
+   "name": "Sultanpur Medical Devices Park",
+   "googleName": "Medical Devices Park, Dayara",
+   "address": "EXIT NO 4, Sultanpur, Hyderabad, Telangana 502319",
+   "type": "Store",
+   "location": {
+    "lat": 17.566523699999998,
+    "lng": 78.3143217
+   },
+   "mapsUrl": "https://maps.google.com/?cid=6036258060655996103&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 26.4,
+   "driveMin": 48
+  },
+  {
+   "category": "Work hubs",
+   "name": "ICRISAT, Patancheru",
+   "googleName": "International Crops Research Institute for the Semi-arid Tropics",
+   "address": "Patancheru, Hyderabad, Patancheruvu, Telangana 502324",
+   "type": "Research Institute",
+   "location": {
+    "lat": 17.5178392,
+    "lng": 78.2790229
+   },
+   "mapsUrl": "https://maps.google.com/?cid=12712677214243471034&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 20.3,
+   "driveMin": 45
+  },
+  {
+   "category": "Work hubs",
+   "name": "Financial District, Gachibowli",
+   "googleName": "Financial District",
+   "address": "Financial District, Nanakramguda, Telangana",
+   "type": null,
+   "location": {
+    "lat": 17.4117312,
+    "lng": 78.3424898
+   },
+   "mapsUrl": "https://maps.google.com/?cid=18286672786433890820&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 33.6,
+   "driveMin": 58
+  },
+  {
+   "category": "Work hubs",
+   "name": "HITEC City",
+   "googleName": "HITEC City",
+   "address": "HITEC City, Hyderabad, Telangana",
+   "type": null,
+   "location": {
+    "lat": 17.4470457,
+    "lng": 78.3778342
+   },
+   "mapsUrl": "https://maps.google.com/?cid=1830867091394109678&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 41.7,
+   "driveMin": 68
+  },
+  {
+   "category": "Healthcare",
+   "name": "MNR Hospital",
+   "googleName": "MNR Hospital",
+   "address": "MNR Hospital, Mohd.Shapur, Telangana 502294",
+   "type": null,
+   "location": {
+    "lat": 17.622316599999998,
+    "lng": 78.127045
+   },
+   "mapsUrl": "https://maps.google.com/?cid=15451566057706542793&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 16.3,
+   "driveMin": 28
+  },
+  {
+   "category": "Healthcare",
+   "name": "Prachin Global Hospitals",
+   "googleName": "Prachin Global Hospitals",
+   "address": "Survey No 52/AA, Indresham Rd, Patancheru Industrial Area, Patancheruvu, Hyderabad, Telangana 502319",
+   "type": "Hospital",
+   "location": {
+    "lat": 17.5404257,
+    "lng": 78.2609763
+   },
+   "mapsUrl": "https://maps.google.com/?cid=7757284919304057127&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 19.3,
+   "driveMin": 42
+  },
+  {
+   "category": "Town",
+   "name": "Sangareddy town",
+   "googleName": "Sangareddy New Bus Stand",
+   "address": "J38J+4VR, Veerabhadra Nagar, Sangareddy, Telangana 502001",
+   "type": "Transportation Service",
+   "location": {
+    "lat": 17.6153561,
+    "lng": 78.0821266
+   },
+   "mapsUrl": "https://maps.google.com/?cid=11258185781176125598&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 13.9,
+   "driveMin": 26
+  },
+  {
+   "category": "Town",
+   "name": "Isnapur crossroads",
+   "googleName": "Isnapur",
+   "address": "National Highway 9, New Town Colony, Isnapur, Isnapur, Hyderabad, Telangana 502307",
+   "type": "Bus stop",
+   "location": {
+    "lat": 17.5466354,
+    "lng": 78.2128141
+   },
+   "mapsUrl": "https://maps.google.com/?cid=1582648264183979293&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 10.7,
+   "driveMin": 28
+  }
+ ]
+}

@@ -1,17 +1,19 @@
-# One GitHub Pages site, two static previews:
-#   admin   → https://gjagadish123.github.io/gip-platform/        (the link the client already has)
-#   website → https://gjagadish123.github.io/gip-platform/site/
-# Both are noindex previews; the real website launches on a Node host with the image optimizer and Cache Components.
-# Both run on the live Supabase project: the admin signs in and writes there, the website reads it at build time and
-# follows it live in the browser. The URL and publishable key are public by design (every visitor's browser gets them;
-# RLS decides what they can read). The Google Maps browser key is a repository secret; without it the website shows
-# the layouts as plans, without the map or nearby places. Never put the Supabase secret key here.
+# One GitHub Pages site, three static previews:
+#   admin    → https://gjagadish123.github.io/gip-platform/          (the link the client already has)
+#   website  → https://gjagadish123.github.io/gip-platform/site/
+#   layouts  → https://gjagadish123.github.io/gip-platform/layouts/  (live layouts app; ?project=<id> opens one)
+# All are noindex previews; the real website launches on a Node host with the image optimizer and Cache Components.
+# All run on the live Supabase project: the admin signs in and writes there, the website reads it at build time, and
+# the layouts app reads statuses in the browser and follows them live. The URL and publishable key are public by
+# design (every visitor's browser gets them; RLS decides what they can read). The Google Maps browser key is a
+# repository secret (VITE_GOOGLE_MAPS_API_KEY, or the older NEXT_PUBLIC_GOOGLE_MAPS_API_KEY) and the vector map id a
+# repository variable (VITE_GOOGLE_MAP_ID). Never put the Supabase secret key here.
 name: Deploy previews to GitHub Pages
 
 on:
   push:
     branches: [main]
-    paths: ["admin/**", "website/**", ".github/workflows/deploy-admin-pages.yml"]
+    paths: ["admin/**", "website/**", "layouts/**", ".github/workflows/deploy-admin-pages.yml"]
   workflow_dispatch:
 
 permissions:
@@ -26,6 +28,7 @@ concurrency:
 env:
   NEXT_PUBLIC_SUPABASE_URL: https://jjskgxbshmjsfrowlzsj.supabase.co
   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: sb_publishable_cJWKoNVL9CRIxkrwRHLxsw_aVvCxAjU
+  NEXT_PUBLIC_LAYOUTS_URL: https://gjagadish123.github.io/gip-platform/layouts/
 
 jobs:
   build:
@@ -39,6 +42,7 @@ jobs:
           cache-dependency-path: |
             admin/package-lock.json
             website/package-lock.json
+            layouts/package-lock.json
 
       - name: Build admin (/gip-platform/)
         working-directory: admin
@@ -48,7 +52,6 @@ jobs:
           node scripts/flatten-segments.mjs out
         env:
           GITHUB_PAGES: "true"
-          NEXT_PUBLIC_WEBSITE_URL: https://gjagadish123.github.io/gip-platform/site
 
       - name: Build website (/gip-platform/site/)
         working-directory: website
@@ -59,13 +62,35 @@ jobs:
         env:
           GITHUB_PAGES: "true"
           PAGES_BASE_PATH: /gip-platform/site
-          NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
+
+      - name: Build live layouts (/gip-platform/layouts/)
+        working-directory: layouts
+        run: |
+          npm ci
+          npx vite build
+        env:
+          VITE_BASE: /gip-platform/layouts/
+          VITE_SUPABASE_URL: https://jjskgxbshmjsfrowlzsj.supabase.co
+          VITE_SUPABASE_PUBLISHABLE_KEY: sb_publishable_cJWKoNVL9CRIxkrwRHLxsw_aVvCxAjU
+          VITE_GOOGLE_MAPS_API_KEY: ${{ secrets.VITE_GOOGLE_MAPS_API_KEY || secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
+          VITE_GOOGLE_MAP_ID: ${{ vars.VITE_GOOGLE_MAP_ID }}
+          VITE_WEBSITE_URL: https://gjagadish123.github.io/gip-platform/site/
 
       - name: Assemble one Pages tree
         run: |
-          mkdir -p admin/out/site
+          mkdir -p admin/out/site admin/out/layouts
           cp -R website/out/. admin/out/site/
+          cp -R layouts/dist/. admin/out/layouts/
           touch admin/out/.nojekyll
+          # The website used to host the live layouts at site/layouts/; keep that link (and ?project=&plot=) working.
+          mkdir -p admin/out/site/layouts
+          cat > admin/out/site/layouts/index.html <<EOF
+          <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex">
+          <title>Live layouts - Greater Infra Projects</title>
+          <meta http-equiv="refresh" content="0; url=${NEXT_PUBLIC_LAYOUTS_URL}">
+          <script>location.replace('${NEXT_PUBLIC_LAYOUTS_URL}' + location.search + location.hash)</script>
+          </head><body><a href="${NEXT_PUBLIC_LAYOUTS_URL}">Live layouts have moved: open them here.</a></body></html>
+          EOF
 
       - uses: actions/upload-pages-artifact@v3
         with:

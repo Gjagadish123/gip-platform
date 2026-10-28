@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { COMPANY } from "@/lib/constants";
+import { COMPANY, LAYOUTS_URL } from "@/lib/constants";
 import { COPYRIGHT_YEAR, OFFICE } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
@@ -19,7 +19,7 @@ const EXPLORE = [
 ];
 const PROJECTS = [
   { href: "/projects/global-city-vi", label: "Global City VI" },
-  { href: "/layouts", label: "Live layouts" },
+  { href: LAYOUTS_URL, label: "Live layouts" },
   { href: "/projects#delivered", label: "Delivered layouts" },
 ];
 

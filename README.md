@@ -1,23 +1,45 @@
 # GIP Platform
 
-Greater Infra Projects: public website, admin portal, and Supabase backend.
+Greater Infra Projects: three apps on one Supabase backend.
 
 | Folder | What | Dev URL |
 | --- | --- | --- |
 | `website/` | Public site (Next.js, reads published projects) | http://localhost:3000 |
 | `admin/` | Admin portal (Next.js, Supabase Auth) | http://localhost:3001 |
+| `layouts/` | Live layouts: the four approved layouts on the satellite map, live plot statuses (Vite + React + three.js) | http://127.0.0.1:4030 |
 | `supabase/` | Database migrations, storage, auth config | http://127.0.0.1:54323 (Studio) |
 
-Stack: Next.js 16 + TypeScript + Tailwind v4 + shadcn/ui (Radix) + 21st.dev components, Supabase.
+Stack: website and admin are Next.js 16 + TypeScript + Tailwind v4 + shadcn/ui (Radix) + 21st.dev components; the
+layouts app is the client-approved Global City VI demo (Vite 5, React 18, Tailwind 3, framer-motion, three.js) grown
+to four projects; all three use Supabase.
 
 ## Run
 
 ```bash
 cd website && npm install && npm run dev
 cd admin && npm install && npm run dev
+cd layouts && npm install && npm run dev
 ```
 
-Each app needs `.env.local`; copy it from `.env.example`.
+Each app needs `.env.local`; copy it from `.env.example` where there is one. The layouts app reads
+`VITE_GOOGLE_MAPS_API_KEY`, `VITE_GOOGLE_MAP_ID`, `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY`
+(`layouts/README.md`).
+
+## GitHub Pages previews
+
+`.github/workflows/deploy-admin-pages.yml` builds all three on every push to `main` that touches them and publishes
+one Pages site (all `noindex`, all on the live Supabase project):
+
+| Path | App |
+| --- | --- |
+| `/gip-platform/` | admin (the link the client already has) |
+| `/gip-platform/site/` | website |
+| `/gip-platform/layouts/` | live layouts; `?project=<id>` opens one project |
+
+The website's "Live layouts" links and the admin's "Live layout ↗" links open the layouts app at
+`NEXT_PUBLIC_LAYOUTS_URL` (default: the Pages copy). The workflow needs the repository secret
+`VITE_GOOGLE_MAPS_API_KEY` (or the older `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`) and the repository variable
+`VITE_GOOGLE_MAP_ID` for the map.
 
 ## Backend (Supabase)
 
@@ -52,37 +74,37 @@ How it fits together:
   its history row, activity line and the project's "status as of" stamp. They refuse a change made on a stale screen
   (another admin changed that plot first), and generate/remove only touch the plots they add or remove. A trigger logs
   every status change.
-- **Website (anon)** can read the listing columns of published projects and the public columns of their units: no
+- **Website and layouts app (anon)** can read the listing columns of published projects and the public columns of their units: no
   `content` yet (it holds the price even when hidden, and unlisted documents), no notes, mortgagee, sale deed numbers
   or unit prices, no history or activity. Wiring the website adds a cleaned public read of `content`.
 - **Media** uploads go to the public `project-media` bucket (JPEG/PNG/WebP/AVIF/GIF and PDF, 20 MB, no SVG).
 
-### Live layouts (`/layouts` on the website)
+### Live layouts (`layouts/`, a separate app)
 
-Global City VI, Global City V, Global City RRR and Western County – Shankarpalli on one page: each approved layout
-drawn plot by plot on Google Maps (satellite, street map, or the plan alone), coloured by today's status, with nearby
-schools, hospitals, shopping and transport from Google Places and drive routes from the Routes API.
+Global City VI, Global City V, Global City RRR and Western County – Shankarpalli, one project at a time
+(`?project=<id>`), in the look the client approved for the Global City VI demo: a full-screen Google satellite map
+with the approved layout drawn as raised plot slabs, a project card, today's status counts, plot search and filters,
+a plot card on click, 2D/3D and a guided tour, then the project's sections below. It is not part of the website.
 
 - **Geometry** is built by `tools/layouts/build_layouts.py` from traceable sources in `tools/layouts/source/<id>/`
-  (digitised plots and roads, printed side lengths, satellite control points). It writes the same JSON to
-  `admin/src/lib/layouts/` and the website's `src/lib/data/layouts/`. Check it with `tools/layouts/check_layouts.py`
-  (numbering, printed area totals, satellite fit, plots drawn at one scale, both copies, and that `supabase/seed.sql`
-  has the same plots).
+  (digitised plots and roads, printed side lengths, satellite control points). It writes `admin/src/lib/layouts/`
+  (plus any extra output folder given on the command line). Check it with `tools/layouts/check_layouts.py`
+  (numbering, printed area totals, satellite fit, plots drawn at one scale, and that `supabase/seed.sql` has the same
+  plots).
 - **Sync**: migration `*_live_layouts.sql` broadcasts every status change of a published project on the private
   Realtime channel `live-layouts` (number, status, status date and sample flag only: columns anon can read anyway).
-  Its RLS policy lets visitors listen and nobody send, so the publishable key cannot fake a change. The page patches
-  the plot at once and re-reads all four projects through RLS on reconnect, on tab focus, and every 30 s while offline
-  or after a failed read; only the newest read of a project may replace its plots.
-  Unpublishing a project removes it from the page. The same migration enforces the admin's guarded changes in the
+  Its RLS policy lets visitors listen and nobody send, so the publishable key cannot fake a change. The layouts app
+  reads the published projects' plots through RLS and follows that channel. Unpublishing a project removes it from
+  the app. The same migration enforces the admin's guarded changes in the
   RPCs: undoing a registration or putting a sold plot back on sale needs a note. `npm run db:test` covers both.
-- **Keys**: the website needs `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` (a browser key: restrict it to your site's referrers
-  and to Maps JavaScript API, Places API (New) and Routes API). Without it the page shows the plans without a map.
-  The admin's `NEXT_PUBLIC_WEBSITE_URL` adds a "Live layout ↗" link to those projects' inventory.
+- **Keys**: the layouts app needs `VITE_GOOGLE_MAPS_API_KEY` (a browser key: restrict it to your site's referrers
+  and to Maps JavaScript API) and `VITE_GOOGLE_MAP_ID` (a vector map id, for tilt and the 3D overlay). The website
+  and admin need no Maps key; their `NEXT_PUBLIC_LAYOUTS_URL` says where the app lives.
 - **Admin**: works on these four projects. `supabase/seed.sql` holds only them, and the admin's demo data starts with
   them (`SEED` in `admin/src/lib/mock`). The client's other 20 projects stay on file: `npm run db:seed` also writes
   `supabase/seed.catalogue.sql`, which `db:reset` does not load; add it to `[db.seed]` in `supabase/config.toml` (or run
   it after `seed.sql` in the SQL editor) to bring them back. **Live layouts** in the sidebar (`/live-layouts`) shows,
-  per project, whether it is on the live page, its drawing and fit, today's availability and sample data, with links to
+  per project, whether it is in the layouts app, its drawing and fit, today's availability and sample data, with links to
   change statuses on the layout. The inventory's Layout view is offered for these four alone; every other project keeps
   Grid and Table, and its master plan stays in Media.
 
@@ -112,8 +134,7 @@ swap those function bodies for Supabase queries when the backend lands and nothi
 
 - Imagery: artist's impressions come from kie.ai (`website/scripts/kie-generate.py`, key in the repo-root `.env`);
   re-encode anything for the site with `website/scripts/optimize-images.py` → `src/assets/images/*.webp`.
-- Previews: `.github/workflows/deploy-admin-pages.yml` publishes the admin at `/gip-platform/` and the website at
-  `/gip-platform/site/` on GitHub Pages (both `noindex`). Local export test from `website/`:
+- Previews: see GitHub Pages previews above. Local export test from `website/`:
   `GITHUB_PAGES=true PAGES_BASE_PATH=/gip-platform/site npx next build && node scripts/flatten-segments.mjs out`
   (in Git Bash prefix `MSYS_NO_PATHCONV=1` so the path is not rewritten).
 - The real launch goes to a Node host (Vercel or similar): the image optimizer and Cache Components come back.

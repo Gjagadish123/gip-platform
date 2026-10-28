@@ -1,0 +1,157 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  Greater Infra Projects palette, plus a survey-yellow used for selection.
+  Status colours live in tailwind.config.js and src/lib/plots.js.
+*/
+:root {
+  --navy-950: #010f20;
+  --navy-900: #011a35;
+  --navy-700: #033967;
+  --navy-600: #085b9e;
+  --navy-500: #0f7ed9;
+  --navy-100: #eaf0ff;
+  --navy-50: #f4f7ff;
+  --ink: #14161c;
+  --ink-soft: #464851;
+  --ink-muted: #676f7e;
+  --line: #dfe5ef;
+  --survey: #f2c14e;
+  --hero-h: 100svh;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    margin: 0;
+    overflow-x: clip;
+    font-family: 'Archivo', 'Inter', system-ui, sans-serif;
+    font-variation-settings: 'wdth' 100;
+    color: var(--ink);
+    background: #fff;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  h1,
+  h2,
+  h3 {
+    color: var(--navy-900);
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  :focus-visible {
+    outline: 3px solid var(--navy-500);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.92);
+    border-radius: 6px;
+  }
+  ::selection {
+    background: var(--navy-700);
+    color: #fff;
+  }
+}
+
+@layer components {
+  /* Condensed numerals: plot numbers, areas, distances. One family, two widths. */
+  .num {
+    font-variation-settings: 'wdth' 68;
+    font-feature-settings: 'tnum' 1, 'lnum' 1;
+    letter-spacing: 0;
+  }
+  .display {
+    font-variation-settings: 'wdth' 112;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 0.98;
+  }
+  .glass {
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(14px) saturate(1.2);
+    -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  }
+  .glass-dark {
+    background: rgba(1, 26, 53, 0.86);
+    backdrop-filter: blur(14px) saturate(1.2);
+    -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  }
+  /* Surveyor's tick marks used as a section rule: it carries the scale-bar idea, not decoration for its own sake. */
+  .tick-rule {
+    height: 9px;
+    background-image: repeating-linear-gradient(90deg, var(--navy-700) 0 1px, transparent 1px 12px),
+      linear-gradient(var(--navy-700), var(--navy-700));
+    background-size: auto 9px, 100% 1px;
+    background-position: 0 0, 0 100%;
+    background-repeat: repeat-x, no-repeat;
+    opacity: 0.35;
+  }
+  /* The admin's non-colour cues: Available plain, Sold Out hatch, Mortgaged dots, Registered folded corner, Hold stripes. */
+  .pattern-sold {
+    background-image: repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0 2px, transparent 2px 6px);
+  }
+  .pattern-mortgaged {
+    background-image: radial-gradient(rgba(60, 30, 0, 0.35) 1.1px, transparent 1.3px);
+    background-size: 5px 5px;
+  }
+  .pattern-registered {
+    background-image: linear-gradient(225deg, rgba(255, 255, 255, 0.92) 0 30%, transparent 30%);
+  }
+  .pattern-hold {
+    background-image: repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.45) 0 1.5px, transparent 1.5px 5px);
+  }
+}
+
+.gc-place-pin {
+  transform: translateY(-6px);
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--survey);
+  color: var(--navy-900);
+  font: 700 13px/1 'Archivo', sans-serif;
+  white-space: nowrap;
+  box-shadow: 0 8px 22px -8px rgba(0, 0, 0, 0.6);
+}
+
+/* Google Maps chrome we do not want fighting our own controls */
+.gm-style iframe + div {
+  border: none !important;
+}
+.gm-style-cc {
+  opacity: 0.85;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+@keyframes loadbar {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(300%);
+  }
+}
