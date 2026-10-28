@@ -2,6 +2,10 @@
 #   admin   → https://gjagadish123.github.io/gip-platform/        (the link the client already has)
 #   website → https://gjagadish123.github.io/gip-platform/site/
 # Both are noindex previews; the real website launches on a Node host with the image optimizer and Cache Components.
+# Both run on the live Supabase project: the admin signs in and writes there, the website reads it at build time and
+# follows it live in the browser. The URL and publishable key are public by design (every visitor's browser gets them;
+# RLS decides what they can read). The Google Maps browser key is a repository secret; without it the website shows
+# the layouts as plans, without the map or nearby places. Never put the Supabase secret key here.
 name: Deploy previews to GitHub Pages
 
 on:
@@ -18,6 +22,10 @@ permissions:
 concurrency:
   group: pages
   cancel-in-progress: true
+
+env:
+  NEXT_PUBLIC_SUPABASE_URL: https://jjskgxbshmjsfrowlzsj.supabase.co
+  NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: sb_publishable_cJWKoNVL9CRIxkrwRHLxsw_aVvCxAjU
 
 jobs:
   build:
@@ -40,6 +48,7 @@ jobs:
           node scripts/flatten-segments.mjs out
         env:
           GITHUB_PAGES: "true"
+          NEXT_PUBLIC_WEBSITE_URL: https://gjagadish123.github.io/gip-platform/site
 
       - name: Build website (/gip-platform/site/)
         working-directory: website
@@ -50,6 +59,7 @@ jobs:
         env:
           GITHUB_PAGES: "true"
           PAGES_BASE_PATH: /gip-platform/site
+          NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
 
       - name: Assemble one Pages tree
         run: |
