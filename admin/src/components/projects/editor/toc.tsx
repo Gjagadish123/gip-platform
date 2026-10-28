@@ -10,7 +10,7 @@ import { SECTION_IDS, SECTION_META, type SectionId } from "@/lib/constants"
 import { cn } from "@/lib/utils"
 import type { Issue, SectionState } from "@/lib/validate"
 
-/** `todo`: required gaps on a draft nobody has tried to publish yet (calm, not red). */
+/** `todo`: required gaps on a draft nobody has tried to publish yet (the same red dot as `missing`). */
 export type TocState = SectionState | "todo" | "off"
 export type TocEntry = { key: string; label: string; target: string; state: TocState }
 export type TocGroup = { label: string | null; entries: TocEntry[] }
@@ -78,21 +78,20 @@ export function useActiveSection(targets: string[], refresh?: unknown): string |
 }
 
 /**
- * Completion mark. Each state has its own shape, so it reads in grayscale too: check = complete, hollow ring =
- * recommendations, filled dot = required (red once publishing was attempted, muted before), dashed ring = not shown.
+ * Completion mark. Each state has its own shape, so it reads in grayscale too: green check = complete, ochre ring =
+ * recommendations, red dot = required fields not filled, dashed ring = not shown.
  */
 export function StateDot({ state, className }: { state: TocState; className?: string }) {
   return (
     <span aria-hidden title={STATE_LABEL[state]} className={cn("inline-flex size-3 shrink-0 items-center justify-center", className)}>
       {state === "complete" ? (
-        <Check className="size-3 text-muted-foreground" />
+        <Check strokeWidth={3} className="size-3 text-success" />
       ) : (
         <span
           className={cn(
             "size-2 rounded-full",
-            state === "warning" && "border-[1.5px] border-muted-foreground",
-            state === "missing" && "bg-destructive",
-            state === "todo" && "bg-muted-foreground",
+            state === "warning" && "border-[1.5px] border-warning",
+            (state === "missing" || state === "todo") && "bg-destructive",
             state === "off" && "border-[1.5px] border-dashed border-border",
           )}
         />

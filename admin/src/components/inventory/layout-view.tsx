@@ -1,16 +1,17 @@
 "use client"
-// Layout view: Global City VI's real plot outlines (masterplan.json, metres east/north; y is flipped for SVG),
-// filled by status with the same patterns as the tiles. Shares selection, filters, bulk bar and sheet with the
-// other views. Zoom and pan are plain viewBox math (no deps). The plan is tall, so in a wide box it is turned a
-// quarter (north to the right) when that draws it larger. Other projects get a pointer to their master plan.
+// Layout view: the project's real plot outlines from its approved layout (src/lib/layouts, metres east/north; y is
+// flipped for SVG), filled by status with the same patterns as the tiles. Offered for the projects drawn on the
+// website's live layouts page. Shares selection, filters, bulk bar and sheet with the other views. Zoom and pan are
+// plain viewBox math (no deps). A tall plan in a wide box is turned a quarter (north to the right) when that draws it
+// larger. A live-layout project whose drawing isn't digitised yet says what the website shows.
 import { memo, useEffect, useId, useMemo, useRef, useState, type KeyboardEvent, type PointerEvent } from "react"
-import Link from "next/link"
 import { ArrowUpRight, Map as MapIcon, Maximize, Minus, Plus } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty"
+import { WEBSITE_URL } from "@/lib/constants"
+import { hasDigitalLayout, layoutInfo, loadLayout, type LayoutPlan, type PlanRing } from "@/lib/layouts"
 import { useAssetUrl } from "@/lib/media-store"
-import { GC6_PLAN, GC6_PROJECT_ID, type PlanRing } from "@/lib/mock"
 import type { Project, ProjectType, Unit, UnitStatus } from "@/lib/types"
 import { cn } from "@/lib/utils"
 
@@ -18,29 +19,32 @@ import { STATUS_BY_KEY } from "./model"
 import { UnitCard } from "./unit-card"
 import type { ClickMode } from "./use-selection"
 
-export const hasDigitalLayout = (projectId: string) => projectId === GC6_PROJECT_ID
+export { hasDigitalLayout }
 
-/* ---------- static geometry (module scope is fine: pure data, no clock or randomness) ---------- */
+/* ---------- geometry ---------- */
 
 const PAD = 12
-const EXT = GC6_PLAN.extent
-const BASE = { x: EXT.minX - PAD, y: -EXT.maxY - PAD, w: EXT.maxX - EXT.minX + 2 * PAD, h: EXT.maxY - EXT.minY + 2 * PAD }
-// The same box after rotate(90), which maps (x, y) to (−y, x).
-const BASE_R = { x: -(BASE.y + BASE.h), y: BASE.x, w: BASE.h, h: BASE.w }
 const MAX_ZOOM = 8
 const LABEL_ZOOM = 1.5
 
 const pathOf = (xy: number[][]) => `M${xy.map(([x, y]) => `${x},${-y}`).join("L")}Z`
 const ringsPath = (rings: PlanRing[]) => rings.map((r) => [r.outer, ...r.holes].map(pathOf).join("")).join("")
 
-const PLOTS = GC6_PLAN.plots.map((p) => ({ number: String(p.n), d: pathOf(p.xy), cx: p.c[0], cy: -p.c[1] }))
-const BOUNDARY = pathOf(GC6_PLAN.boundary)
-const ROADS = ringsPath([...GC6_PLAN.roads, ...GC6_PLAN.road100])
-const GREENS = ringsPath(GC6_PLAN.greens)
-const ZONES = Object.entries(GC6_PLAN.zones).map(([key, z]) => {
-  const c = (z as { c?: number[] }).c
-  return { key, name: z.name, d: pathOf(z.xy), label: c ? { x: c[0], y: -c[1] } : null }
-})
+function geometryOf(plan: LayoutPlan) {
+  const e = plan.extent!
+  const base = { x: e.minX - PAD, y: -e.maxY - PAD, w: e.maxX - e.minX + 2 * PAD, h: e.maxY - e.minY + 2 * PAD }
+  return {
+    base,
+    // The same box after rotate(90), which maps (x, y) to (−y, x).
+    baseR: { x: -(base.y + base.h), y: base.x, w: base.h, h: base.w },
+    plots: plan.plots.map((p) => ({ number: p.n, d: pathOf(p.xy), cx: p.c[0], cy: -p.c[1] })),
+    boundary: plan.boundary ? pathOf(plan.boundary) : "",
+    roads: ringsPath([...plan.roads, ...plan.access.map((a) => ({ outer: a.xy, holes: [] }))]),
+    greens: ringsPath(plan.greens),
+    zones: plan.zones.map((z) => ({ key: z.id, name: z.name, d: pathOf(z.xy), label: { x: z.c[0], y: -z.c[1] } })),
+  }
+}
+type Plot = ReturnType<typeof geometryOf>["plots"][number]
 
 // Literal class names so Tailwind generates them.
 const FILL: Record<UnitStatus, string> = {
@@ -48,16 +52,18 @@ const FILL: Record<UnitStatus, string> = {
   sold_out: "fill-status-sold",
   mortgaged: "fill-status-mortgaged",
   registered: "fill-status-registered",
+  hold: "fill-status-hold",
 }
 const INK: Record<UnitStatus, string> = {
   available: "fill-status-available-fg",
   sold_out: "fill-status-sold-on",
   mortgaged: "fill-status-mortgaged-on",
   registered: "fill-status-registered-on",
+  hold: "fill-status-hold-on",
 }
-const PATTERN: Partial<Record<UnitStatus, string>> = { sold_out: "hatch", mortgaged: "dots", registered: "corner" }
+const PATTERN: Partial<Record<UnitStatus, string>> = { sold_out: "hatch", mortgaged: "dots", registered: "corner", hold: "stripes" }
 
-type ViewBox = typeof BASE
+type ViewBox = { x: number; y: number; w: number; h: number }
 
 function clampBox(v: ViewBox, base: ViewBox): ViewBox {
   const w = Math.min(base.w, Math.max(base.w / MAX_ZOOM, v.w))
@@ -82,17 +88,19 @@ const upright = (rot: boolean, x: number, y: number) => (rot ? `rotate(-90 ${x} 
 /* ---------- layers (memoised: hover and pan don't re-render 288 paths) ---------- */
 
 const PlotsLayer = memo(function PlotsLayer({
+  plots,
   byNumber,
   matchIds,
   uid,
 }: {
+  plots: Plot[]
   byNumber: Map<string, Unit>
   matchIds: ReadonlySet<string> | null
   uid: string
 }) {
   return (
     <g>
-      {PLOTS.map((p) => {
+      {plots.map((p) => {
         const u = byNumber.get(p.number)
         if (!u) return <path key={p.number} d={p.d} className="fill-muted stroke-background" strokeWidth={0.35} />
         // Outside the filter: flat muted, no pattern (not faded, so it can't pass for a soft Available plot).
@@ -125,17 +133,19 @@ const PlotsLayer = memo(function PlotsLayer({
 })
 
 const LabelsLayer = memo(function LabelsLayer({
+  plots,
   byNumber,
   matchIds,
   rot,
 }: {
+  plots: Plot[]
   byNumber: Map<string, Unit>
   matchIds: ReadonlySet<string> | null
   rot: boolean
 }) {
   return (
     <g pointerEvents="none" className="font-condensed" fontSize={4.2} fontWeight={600} textAnchor="middle" dominantBaseline="central">
-      {PLOTS.map((p) => {
+      {plots.map((p) => {
         const u = byNumber.get(p.number)
         const ink = !u || (matchIds && !matchIds.has(u.id)) ? "fill-muted-foreground" : INK[u.status]
         return (
@@ -151,6 +161,7 @@ const LabelsLayer = memo(function LabelsLayer({
 /* ---------- the map ---------- */
 
 export function LayoutView({
+  plan,
   units,
   type,
   project,
@@ -163,6 +174,7 @@ export function LayoutView({
   onClear,
   onSelectAll,
 }: {
+  plan: LayoutPlan
   units: Unit[]
   type: ProjectType
   project: Project
@@ -179,6 +191,9 @@ export function LayoutView({
   const boxRef = useRef<HTMLDivElement>(null)
   const svgRef = useRef<SVGSVGElement>(null)
   const drag = useRef<{ x: number; y: number; vb: ViewBox; id: string | null; moved: boolean } | null>(null)
+  const geo = useMemo(() => geometryOf(plan), [plan])
+  const BASE = geo.base
+  const PLOTS = geo.plots
   const [size, setSize] = useState<{ w: number; h: number } | null>(null)
   const [vb, setVb] = useState<ViewBox>(BASE)
   const [vbRot, setVbRot] = useState(false)
@@ -186,7 +201,7 @@ export function LayoutView({
 
   // Fit: turn the plan a quarter when that draws it larger in this box. A new orientation starts fitted.
   const rot = !!size && Math.min(size.w / BASE.h, size.h / BASE.w) > Math.min(size.w / BASE.w, size.h / BASE.h)
-  const base = rot ? BASE_R : BASE
+  const base = rot ? geo.baseR : BASE
   if (vbRot !== rot) {
     setVbRot(rot)
     setVb(base)
@@ -196,7 +211,7 @@ export function LayoutView({
   const byId = useMemo(() => new Map(units.map((u) => [u.id, u])), [units])
   const order = useMemo(
     () => PLOTS.map((p) => byNumber.get(p.number)?.id).filter((id): id is string => !!id),
-    [byNumber],
+    [byNumber, PLOTS],
   )
   const zoom = base.w / vb.w
   // Patterns are sized in screen pixels, as on the tiles, so they read at any zoom. px = map units per pixel.
@@ -339,6 +354,10 @@ export function LayoutView({
             <pattern id={`${uid}-dots`} width={5 * px} height={5 * px} patternUnits="userSpaceOnUse">
               <circle cx={2.5 * px} cy={2.5 * px} r={1.1 * px} style={{ fill: "oklch(0.3 0.07 55 / 0.3)" }} />
             </pattern>
+            {/* Hold: 1.5px dark stripe every 5px, level on screen like the tiles. */}
+            <pattern id={`${uid}-stripes`} width={5 * px} height={5 * px} patternUnits="userSpaceOnUse" patternTransform={rot ? "rotate(-90)" : undefined}>
+              <rect width={5 * px} height={1.5 * px} style={{ fill: "oklch(0 0 0 / 0.2)" }} />
+            </pattern>
             {/* Folded corner of each plot's bounding box, top right on screen like the tiles. */}
             <pattern id={`${uid}-corner`} width={1} height={1} patternContentUnits="objectBoundingBox">
               <path d={rot ? "M0,0 L0.34,0 L0,0.34 Z" : "M0.66,0 L1,0 L1,0.34 Z"} style={{ fill: "oklch(1 0 0 / 0.9)" }} />
@@ -346,19 +365,19 @@ export function LayoutView({
           </defs>
 
           <g transform={rot ? "rotate(90)" : undefined}>
-            <path d={BOUNDARY} className="fill-muted stroke-border" strokeWidth={0.6} />
-            {ZONES.map((z) => (
+            {geo.boundary ? <path d={geo.boundary} className="fill-muted stroke-border" strokeWidth={0.6} /> : null}
+            {geo.zones.map((z) => (
               <path key={z.key} d={z.d} className="fill-muted-foreground/10" />
             ))}
-            <path d={GREENS} className="fill-muted-foreground/15" />
-            <path d={ROADS} className="fill-background" fillRule="evenodd" />
+            <path d={geo.greens} className="fill-muted-foreground/15" />
+            <path d={geo.roads} className="fill-background" fillRule="evenodd" />
 
-            <PlotsLayer byNumber={byNumber} matchIds={matchIds} uid={uid} />
+            <PlotsLayer plots={PLOTS} byNumber={byNumber} matchIds={matchIds} uid={uid} />
 
-            {zoom >= LABEL_ZOOM ? <LabelsLayer byNumber={byNumber} matchIds={matchIds} rot={rot} /> : null}
+            {zoom >= LABEL_ZOOM ? <LabelsLayer plots={PLOTS} byNumber={byNumber} matchIds={matchIds} rot={rot} /> : null}
 
             <g pointerEvents="none" className="fill-muted-foreground font-medium" textAnchor="middle">
-              {ZONES.map((z) =>
+              {geo.zones.map((z) =>
                 z.label && z.name && z.key !== "clubhouse" ? (
                   <text key={z.key} x={z.label.x} y={z.label.y} transform={upright(rot, z.label.x, z.label.y)} fontSize={zoom >= LABEL_ZOOM ? 4 : 6}>
                     {z.name}
@@ -412,46 +431,84 @@ export function LayoutView({
         ) : null}
       </div>
       <p id={`${uid}-help`} className="text-xs text-muted-foreground">
-        {type.unitNoun} outlines from the brochure layout{rot ? ", turned so north is to the right" : ""}. Drag to pan,
+        {type.unitNoun} outlines from the {plan.source.title}{rot ? ", turned so north is to the right" : ""}. Drag to pan,
         Ctrl + scroll to zoom, or use + and −. Click to select, Shift or Ctrl to add, double-click for details. Find
-        a {noun} with /, Space to select, Enter to open. Keys 1–4 set the status of the selection.
+        a {noun} with /, Space to select, Enter to open. Keys 1–5 set the status of the selection.
       </p>
     </div>
   )
 }
 
+/* ---------- loads the project's drawing (one chunk per project), then shows it ---------- */
+
+export function ProjectLayout(props: Omit<Parameters<typeof LayoutView>[0], "plan">) {
+  const id = props.project.id
+  const [loaded, setLoaded] = useState<{ id: string; plan: LayoutPlan | null } | null>(null)
+  useEffect(() => {
+    let live = true
+    loadLayout(id).then(
+      (plan) => live && setLoaded({ id, plan }),
+      () => live && setLoaded({ id, plan: null }),
+    )
+    return () => {
+      live = false
+    }
+  }, [id])
+  if (loaded?.id === id && loaded.plan) return <LayoutView {...props} plan={loaded.plan} />
+  if (loaded?.id === id) {
+    return (
+      <Empty className="border border-solid py-12">
+        <EmptyHeader>
+          <EmptyTitle>Couldn&rsquo;t load the layout drawing</EmptyTitle>
+          <EmptyDescription>Check the connection and reload. Grid and Table work meanwhile.</EmptyDescription>
+        </EmptyHeader>
+      </Empty>
+    )
+  }
+  return <div aria-busy aria-label="Loading the layout" className="h-[min(56svh,760px)] min-h-80 animate-pulse rounded-xl border bg-muted/40 md:h-[min(72svh,760px)]" />
+}
+
 /* ---------- projects without plot outlines ---------- */
 
+/** Layout view of a live-layout project whose approved drawing isn't digitised yet. */
 export function NoLayout({ project, type }: { project: Project; type: ProjectType }) {
   const plan = project.media.masterPlan
   const url = useAssetUrl(plan)
   const href = url && plan ? (plan.kind === "pdf" ? `${url}#page=${project.media.masterPlanPage || 1}` : url) : null
+  const source = layoutInfo(project.id)?.source
+  const live = WEBSITE_URL && project.publishing.state === "published" ? `${WEBSITE_URL}/layouts?project=${project.id}` : null
+  const nouns = type.unitNounPlural.toLowerCase()
   return (
     <Empty className="border border-solid py-12">
       <EmptyHeader>
         <EmptyMedia>
           <MapIcon aria-hidden className="size-5 text-muted-foreground" />
         </EmptyMedia>
-        <EmptyTitle>No digital layout yet</EmptyTitle>
+        <EmptyTitle>Drawing pending</EmptyTitle>
         <EmptyDescription>
-          {type.unitNoun} outlines aren&rsquo;t mapped for {project.name}. Manage {type.unitNounPlural.toLowerCase()} in
-          Grid and Table; the master plan stays the reference drawing.
+          {type.unitNoun} outlines go on the map once the {source?.title ?? "approved layout"}
+          {source?.reference ? ` (LP ${source.reference})` : ""} is digitised. Until then the live layouts page shows the
+          site pin and the {nouns} as a list, and status changes made in Grid or Table reach it at once.
         </EmptyDescription>
       </EmptyHeader>
-      <EmptyContent>
-        {href && plan ? (
+      <EmptyContent className="flex-row flex-wrap justify-center">
+        {live ? (
           <Button variant="outline" asChild>
+            <a href={live} target="_blank" rel="noopener noreferrer">
+              See it on the live page
+              <ArrowUpRight data-icon="inline-end" />
+              <span className="sr-only">(opens in a new tab)</span>
+            </a>
+          </Button>
+        ) : null}
+        {href && plan ? (
+          <Button variant="ghost" asChild>
             <a href={href} target="_blank" rel="noreferrer">
               {plan.kind === "pdf" ? `Open master plan (PDF page ${project.media.masterPlanPage || 1})` : "Open master plan"}
               <ArrowUpRight data-icon="inline-end" />
             </a>
           </Button>
-        ) : (
-          <Button variant="outline" asChild>
-            {/* The plan file lives in Media, not in the Master plan text section. */}
-            <Link href={`/projects/${project.id}#${project.id}--media`}>Add a master plan</Link>
-          </Button>
-        )}
+        ) : null}
       </EmptyContent>
     </Empty>
   )

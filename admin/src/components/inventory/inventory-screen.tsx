@@ -19,15 +19,16 @@ import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from "@/components/ui/empty"
 import { Kbd } from "@/components/ui/kbd"
-import { getProjectType, UNIT_STATUS_META } from "@/lib/constants"
+import { getProjectType, UNIT_STATUS_META, WEBSITE_URL } from "@/lib/constants"
 import { canTransition, compressRanges, isGuarded, naturalCompare, statusCounts } from "@/lib/inventory"
+import { isLiveLayout } from "@/lib/layouts"
 import { GC6_PROJECT_ID } from "@/lib/mock"
 import { todayIso, useDemo, useProject, useUnits, type StatusChangeOptions } from "@/lib/store"
 import type { Project, ProjectType, Unit, UnitStatus } from "@/lib/types"
 
 import { BulkBar, RemoveUnitsDialog } from "./bulk-bar"
 import { GenerateDialog, InventoryEmpty } from "./generate"
-import { hasDigitalLayout, LayoutView, NoLayout } from "./layout-view"
+import { hasDigitalLayout, NoLayout, ProjectLayout } from "./layout-view"
 import {
   activeFilterCount,
   countLabel,
@@ -74,6 +75,9 @@ function sampleNoteFor(project: Project, units: Unit[]): string | undefined {
   if (project.id === GC6_PROJECT_ID) {
     return "Sold plots from the brochure scan of 21 Sep 2026; Registered/Mortgaged split is sample data."
   }
+  if (hasDigitalLayout(project.id)) {
+    return "Plot numbers, sizes and facing are from the approved layout; statuses marked Sample are placeholders until sales confirms them."
+  }
   return "The unit count is real; sizes and statuses are sample data for this demo."
 }
 
@@ -110,10 +114,12 @@ function InventoryBody({ project, type, units }: { project: Project; type: Proje
 
   /* ---------- derived ---------- */
 
-  // The view choice is shared by every project. "Layout" saved on Global City VI shows Grid on a project
-  // without plot outlines, without overwriting the saved choice; picking a view here is honoured as is.
+  // The view choice is shared by every project. Only the four live-layout projects have a Layout view; "Layout"
+  // saved on one of them shows Grid elsewhere, and on a live project without outlines yet until picked there, without
+  // overwriting the saved choice.
+  const live = isLiveLayout(project.id)
   const view: InventoryView =
-    !viewPicked && savedView === "layout" && !hasDigitalLayout(project.id) ? "grid" : savedView
+    savedView === "layout" && (!live || (!viewPicked && !hasDigitalLayout(project.id))) ? "grid" : savedView
   const towerMode = isTowerType(type)
   const sorted = useMemo(() => [...units].sort((a, b) => naturalCompare(a.number, b.number)), [units])
   const byId = useMemo(() => new Map(units.map((u) => [u.id, u])), [units])
@@ -448,6 +454,7 @@ function InventoryBody({ project, type, units }: { project: Project; type: Proje
         onClearFilters={() => setFilters(NO_FILTERS)}
         updatedAt={project.inventoryUpdatedAt}
         sampleNote={sampleNoteFor(project, units)}
+        liveHref={WEBSITE_URL && live && project.publishing.state === "published" ? `${WEBSITE_URL}/layouts?project=${project.id}` : undefined}
       />
 
       <div className="flex flex-col gap-3">
@@ -481,6 +488,7 @@ function InventoryBody({ project, type, units }: { project: Project; type: Proje
             )}
             <ViewSwitch
               value={view}
+              layout={live}
               onChange={(v) => {
                 setViewPicked(true)
                 setSavedView(v)
@@ -521,7 +529,7 @@ function InventoryBody({ project, type, units }: { project: Project; type: Proje
           />
         ) : view === "layout" ? (
           hasDigitalLayout(project.id) ? (
-            <LayoutView
+            <ProjectLayout
               units={sorted}
               type={type}
               project={project}
@@ -571,7 +579,7 @@ function InventoryBody({ project, type, units }: { project: Project; type: Proje
               <span>Click selects, <Kbd>Ctrl</Kbd> adds, <Kbd>Shift</Kbd> selects a range, double-click opens.</span>
               <span>
                 With the grid focused: arrows move, <Kbd>Space</Kbd> selects, <Kbd>Enter</Kbd> opens,{" "}
-                <Kbd>1</Kbd>–<Kbd>4</Kbd> set status, <Kbd>Esc</Kbd> clears, <Kbd>Ctrl Z</Kbd> undoes.
+                <Kbd>1</Kbd>–<Kbd>5</Kbd> set status, <Kbd>Esc</Kbd> clears, <Kbd>Ctrl Z</Kbd> undoes.
               </span>
             </p>
           </div>

@@ -29,7 +29,7 @@ import { cn } from "@/lib/utils"
 
 import { countLabel } from "./model"
 
-/** Four options in client order, each with its swatch and pattern. Native radios: arrow keys work for free. */
+/** One option per status, in client order, each with its swatch and pattern. Native radios: arrow keys work for free. */
 export function StatusSegmented({
   value,
   onChange,
@@ -41,7 +41,7 @@ export function StatusSegmented({
 }) {
   const name = useId()
   return (
-    <div role="radiogroup" aria-labelledby={labelledBy} className="grid grid-cols-4 gap-1 rounded-lg border p-1">
+    <div role="radiogroup" aria-labelledby={labelledBy} className="grid grid-cols-5 gap-1 rounded-lg border p-1">
       {UNIT_STATUSES.map((s) => (
         <label
           key={s}
@@ -259,7 +259,8 @@ function DialogBody({
               to === "available" ? "Booking cancelled, refund issued"
                 : to === "mortgaged" ? "LP letter number"
                   : to === "registered" ? "Registered at SRO Sangareddy"
-                    : "Booked by agreement of sale"
+                    : to === "hold" ? "Token paid, held for the buyer till 30 Oct"
+                      : "Booked by agreement of sale"
             }
             aria-invalid={tried && noteMissing ? true : undefined}
             aria-describedby={tried && noteMissing ? `${id}-note-error` : undefined}

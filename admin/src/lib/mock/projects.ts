@@ -14,7 +14,7 @@
 import type { Project } from '../types';
 
 /** Seed data version; bump in gen-projects.mjs. Re-exported by ./index. */
-export const SEED_VERSION = 2;
+export const SEED_VERSION = 5;
 
 export const PROJECTS: Project[] = [
   // old id 2 · live /property/GLOBAL CITY VI
@@ -468,6 +468,7 @@ export const PROJECTS: Project[] = [
         kind: "image",
         name: "WhatsApp Image 2026-03-07 at 3.31.42 PM.jpeg",
         source: "external",
+        impression: true, // a villa render, not a photograph
       },
       hero: null,
       gallery: [
@@ -505,6 +506,7 @@ export const PROJECTS: Project[] = [
           kind: "image",
           name: "WhatsApp Image 2026-03-07 at 3.31.42 PM.jpeg",
           source: "external",
+          impression: true,
         },
       ],
       amenityGallery: [],
@@ -1957,13 +1959,8 @@ export const PROJECTS: Project[] = [
         name: "global-locations.png",
         source: "external",
       },
-      masterPlan: {
-        id: "western-county-plan",
-        url: "https://images.unsplash.com/photo-1524661135-423995f22d0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
-        kind: "image",
-        name: "photo-1524661135-423995f22d0b",
-        source: "external",
-      },
+      // The old site showed an Unsplash stock photo here, not the layout: the HMDA layout (flyer, LP 000144/LO/PLG/HMDA/2022) is digitised for live layouts but not uploaded to Media yet.
+      masterPlan: null,
       masterPlanPage: 1,
       brochure: null,
     },
@@ -1975,13 +1972,13 @@ export const PROJECTS: Project[] = [
           id: "western-county-vis-1",
           icon: "target",
           title: "HMDA Approved",
-          description: "LP No. 0002364/LO/Plg/HMDA/2019 dated 03.08.2019.",
+          description: "LP No. 000144/LO/PLG/HMDA/2022 dated 27.07.2022.",
         },
         {
           id: "western-county-vis-2",
           icon: "shield",
           title: "RERA Certified",
-          description: "TS RERA No: P02400001474.",
+          description: "TS RERA No: P02400001472.",
         },
         {
           id: "western-county-vis-3",
@@ -2078,16 +2075,16 @@ export const PROJECTS: Project[] = [
           id: "western-county-ap-1",
           authority: "HMDA",
           title: "HMDA Approved",
-          reference: "0002364/LO/Plg/HMDA/2019",
-          date: "2019-08-03",
+          reference: "000144/LO/PLG/HMDA/2022",
+          date: "2022-07-27",
           status: "approved",
-          description: "LP No. 0002364/LO/Plg/HMDA/2019 (03.08.2019)",
+          description: "LP No. 000144/LO/PLG/HMDA/2022 (27.07.2022)",
         },
         {
           id: "western-county-ap-2",
           authority: "RERA",
           title: "TS RERA",
-          reference: "P02400001474",
+          reference: "P02400001472",
           status: "approved",
         },
       ],
@@ -2445,6 +2442,7 @@ export const PROJECTS: Project[] = [
         kind: "image",
         name: "Global city I.jpg",
         source: "external",
+        impression: true, // a render, not a photograph
       },
       hero: null,
       gallery: [],
@@ -2501,6 +2499,7 @@ export const PROJECTS: Project[] = [
         kind: "image",
         name: "global city II.png",
         source: "external",
+        impression: true, // a render, not a photograph
       },
       hero: null,
       gallery: [],
@@ -2557,6 +2556,7 @@ export const PROJECTS: Project[] = [
         kind: "image",
         name: "global city III.jpeg",
         source: "external",
+        impression: true, // a render, not a photograph
       },
       hero: null,
       gallery: [],
@@ -2613,6 +2613,7 @@ export const PROJECTS: Project[] = [
         kind: "image",
         name: "greater infra resorts.jpg",
         source: "external",
+        impression: true, // a render, not a photograph
       },
       hero: null,
       gallery: [],
@@ -2669,6 +2670,7 @@ export const PROJECTS: Project[] = [
         kind: "image",
         name: "LR Palm Meadows.jpg",
         source: "external",
+        impression: true, // a render, not a photograph
       },
       hero: null,
       gallery: [],
@@ -2725,6 +2727,7 @@ export const PROJECTS: Project[] = [
         kind: "image",
         name: "highway city.jpeg",
         source: "external",
+        impression: true, // a render, not a photograph
       },
       hero: null,
       gallery: [],
@@ -2843,6 +2846,7 @@ export const PROJECTS: Project[] = [
         kind: "image",
         name: "lr medchal county.jpg",
         source: "external",
+        impression: true, // a render, not a photograph
       },
       hero: null,
       gallery: [],
@@ -2899,6 +2903,7 @@ export const PROJECTS: Project[] = [
         kind: "image",
         name: "keesara county.jpg",
         source: "external",
+        impression: true, // a render, not a photograph
       },
       hero: null,
       gallery: [],
@@ -3024,6 +3029,7 @@ export const PROJECTS: Project[] = [
         kind: "image",
         name: "sri yadadri gardens.jpg",
         source: "external",
+        impression: true, // a render, not a photograph
       },
       hero: null,
       gallery: [],

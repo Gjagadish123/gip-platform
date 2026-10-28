@@ -262,8 +262,15 @@ function TowerForm({ project, type, units, onDone }: FormProps) {
   const count = nf && np ? nf * np : 0
   const numberOf = (floor: number, p: number) => `${name}-${floor}${String(p).padStart(2, "0")}`
 
+  // Numbers, not just the tower field: an edited tower name must not let a new tower reuse sold flats' numbers.
+  const existing = new Set(units.map((u) => u.number))
+  const clash = count && count <= 1200
+    ? Array.from({ length: nf! }, (_, f) => Array.from({ length: np! }, (_, p) => numberOf(f + 1, p + 1))).flat().filter((n) => existing.has(n))
+    : []
   const errors = {
-    tower: !name ? "Name the tower." : units.some((u) => u.tower === name) ? `Tower ${name} already exists.` : null,
+    tower: !name ? "Name the tower."
+      : units.some((u) => u.tower === name) ? `Tower ${name} already exists.`
+        : clash.length ? `${type.unitNounPlural} ${compressRanges(clash)} already exist.` : null,
     floors: nf && nf >= 1 && nf <= 60 ? null : "1 to 60 floors.",
     perFloor: np && np >= 1 && np <= 20 ? null : `1 to 20 ${type.unitNounPlural.toLowerCase()} per floor.`,
     bhk: nb ? null : "Enter the BHK.",

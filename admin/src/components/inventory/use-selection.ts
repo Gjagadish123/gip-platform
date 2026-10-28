@@ -129,10 +129,11 @@ function subscribeView(l: () => void) {
 
 export function useInventoryView(): [InventoryView, (v: InventoryView) => void] {
   const view = useSyncExternalStore(subscribeView, readView, () => "grid" as const)
-  return [view, setView]
+  return [view, setInventoryView]
 }
 
-function setView(v: InventoryView) {
+/** Also for links that open a project's inventory in a given view (the Live layouts screen). */
+export function setInventoryView(v: InventoryView) {
   cachedView = v
   try {
     localStorage.setItem(VIEW_KEY, v)

@@ -38,12 +38,19 @@ const TOKEN: Record<Token, { fill: string; fg: string; soft: string; dot: string
     soft: "bg-status-registered-soft",
     dot: "bg-status-registered-fg",
   },
+  hold: {
+    fill: "bg-status-hold",
+    fg: "text-status-hold-fg",
+    soft: "bg-status-hold-soft",
+    dot: "bg-status-hold-fg",
+  },
 }
 const PATTERN: Record<Pattern, string> = {
   plain: "",
   hatch: "pattern-sold",
   dots: "pattern-mortgaged",
   corner: "pattern-registered",
+  stripes: "pattern-hold",
 }
 
 /** Fill + pattern classes for a status (bars, swatches, map polygons drawn with HTML). */

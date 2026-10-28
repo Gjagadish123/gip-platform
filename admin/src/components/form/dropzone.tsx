@@ -4,6 +4,8 @@
 import * as React from "react"
 import { ImageUp, Loader2 } from "lucide-react"
 
+import { UploadError } from "@/lib/media-store"
+import { BACKEND } from "@/lib/supabase/client"
 import { cn } from "@/lib/utils"
 
 const MAX_BYTES = 20 * 1024 * 1024
@@ -29,10 +31,17 @@ export function screenFiles(list: FileList | File[], accept: string) {
   return { ok, rejected }
 }
 
-export const LOCAL_UPLOAD_HINT = "Uploads stay in this browser until the backend is connected."
+export const LOCAL_UPLOAD_HINT = BACKEND ? "" : "Uploads stay in this browser until the backend is connected."
 
-/** Why saveUpload failed: a full disk quota is about size; anything else means the browser refuses storage. */
+/** Image types to offer. Supabase mode: exactly what the project-media bucket accepts (no SVG, HEIC, BMP). */
+export const IMAGE_ACCEPT = BACKEND ? "image/jpeg,image/png,image/webp,image/avif,image/gif" : "image/*"
+
+/**
+ * Why saveUpload failed. Supabase mode: the upload's own message. Demo: a full disk quota is about size; anything
+ * else means the browser refuses storage.
+ */
 export function uploadErrorMessage(error: unknown, noun = "file") {
+  if (error instanceof UploadError) return error.message
   return error instanceof DOMException && error.name === "QuotaExceededError"
     ? `Not enough browser storage for this ${noun}. Try a smaller file.`
     : `This browser blocks storage, so the ${noun} can't be kept. Allow site data for this site, or paste a link instead.`

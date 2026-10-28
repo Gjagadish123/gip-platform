@@ -5,8 +5,9 @@ import { TriangleAlert } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { STORAGE_KEY } from "@/lib/store"
+import { BACKEND } from "@/lib/supabase/client"
 
-/** Most crashes in this UI-only build come from demo data saved in this browser; resetting it is the way out. */
+/** Demo: most crashes come from demo data saved in this browser; resetting it is the way out. */
 export default function ErrorPage({ error, retry }: { error: Error & { digest?: string }; retry: () => void }) {
   useEffect(() => {
     console.error(error)
@@ -27,14 +28,15 @@ export default function ErrorPage({ error, retry }: { error: Error & { digest?: 
       <div className="grid gap-1.5">
         <h1 className="text-xl font-semibold tracking-[-0.01em]">This page couldn&rsquo;t load</h1>
         <p className="text-sm text-muted-foreground">
-          Something in the demo data saved in this browser doesn&rsquo;t fit the page. Try again, or reset the demo
-          data to start over from the original projects.
+          {BACKEND
+            ? "Something went wrong showing this page. Your saved data is safe. Try again, or reload the page."
+            : "Something in the demo data saved in this browser doesn’t fit the page. Try again, or reset the demo data to start over from the original projects."}
         </p>
       </div>
       <div className="flex flex-wrap gap-2">
         <Button onClick={() => retry()}>Try again</Button>
-        <Button variant="outline" onClick={reset}>
-          Reset demo data
+        <Button variant="outline" onClick={BACKEND ? () => location.reload() : reset}>
+          {BACKEND ? "Reload page" : "Reset demo data"}
         </Button>
       </div>
     </main>

@@ -18,6 +18,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea"
 import { LOCATION_AREAS } from "@/lib/constants"
 import type { Distance, LocationCategory, NearbyPlace, Project } from "@/lib/types"
+import { hasDetailPage } from "@/lib/validate"
 
 import { fieldIssues, newId, sectionDomId, type SectionProps } from "../section-types"
 import { MediaLink } from "./media-section"
@@ -40,6 +41,7 @@ export function LocationSection({ draft, issues, update }: SectionProps) {
   const fid = (f: string) => `${draft.id}-${f}`
   const loc = draft.location
   const adv = draft.locationAdvantages
+  const detail = hasDetailPage(draft)
   const iss = (f: string) => fieldIssues(issues, f)
 
   const text = (field: keyof Pick<Project["location"], "short" | "full" | "village" | "mandal" | "district" | "state">, optional = false) =>
@@ -69,6 +71,7 @@ export function LocationSection({ draft, issues, update }: SectionProps) {
         <FieldRow
           className="sm:col-span-6"
           label="Short location"
+          required
           htmlFor={fid("loc-short")}
           description="On listing cards, e.g. Peddapur, Sangareddy District, Hyderabad."
           {...short}
@@ -85,6 +88,7 @@ export function LocationSection({ draft, issues, update }: SectionProps) {
         <FieldRow
           className="sm:col-span-6"
           label="Full location"
+          required={detail}
           htmlFor={fid("loc-full")}
           description="Under the title in the detail page hero."
           {...full}
@@ -106,7 +110,7 @@ export function LocationSection({ draft, issues, update }: SectionProps) {
         <FieldRow className="sm:col-span-3" label="Mandal" optional htmlFor={fid("loc-mandal")}>
           <Input id={fid("loc-mandal")} className="h-9" value={loc.mandal ?? ""} onChange={text("mandal", true)} />
         </FieldRow>
-        <FieldRow className="sm:col-span-3" label="District" htmlFor={fid("loc-district")} {...district}>
+        <FieldRow className="sm:col-span-3" label="District" required={detail} htmlFor={fid("loc-district")} {...district}>
           <Input
             id={fid("loc-district")}
             className="h-9"
@@ -116,7 +120,7 @@ export function LocationSection({ draft, issues, update }: SectionProps) {
             onChange={text("district")}
           />
         </FieldRow>
-        <FieldRow className="sm:col-span-3" label="State" htmlFor={fid("loc-state")} {...state}>
+        <FieldRow className="sm:col-span-3" label="State" required={detail} htmlFor={fid("loc-state")} {...state}>
           <Input
             id={fid("loc-state")}
             className="h-9"

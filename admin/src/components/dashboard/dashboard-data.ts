@@ -2,7 +2,7 @@
 // Self-check: scratchpad dash/check.sh (compiles this file + src/lib, asserts over the seed).
 import { DEMO_NOW, UNIT_STATUSES, getProjectType } from "@/lib/constants"
 import { formatDate, toIsoDate } from "@/lib/format"
-import { naturalCompare, percents, statusCounts, type StatusCounts } from "@/lib/inventory"
+import { emptyCounts, naturalCompare, percents, statusCounts, type StatusCounts } from "@/lib/inventory"
 import type { ActivityEvent, ID, Project, ProjectType, Unit, UnitStatus } from "@/lib/types"
 import { validateProject, type Issue } from "@/lib/validate"
 
@@ -97,7 +97,7 @@ export function monthlyStatusChanges(activity: ActivityEvent[], months = 6): Mon
   const [y, m] = end.split("-").map(Number)
   const rows: MonthRow[] = Array.from({ length: months }, (_, i) => {
     const month = new Date(Date.UTC(y, m - months + i, 1)).toISOString().slice(0, 7) // fixed date, not the clock
-    return { month, label: formatDate(`${month}-01`).replace(/^\d+ /, ""), available: 0, sold_out: 0, mortgaged: 0, registered: 0 }
+    return { month, label: formatDate(`${month}-01`).replace(/^\d+ /, ""), ...emptyCounts() }
   })
   const byMonth = new Map(rows.map((r) => [r.month, r]))
   for (const a of activity) {

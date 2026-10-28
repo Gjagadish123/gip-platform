@@ -46,10 +46,10 @@ function StatusPill({ status }: { status: (typeof STATUSES)[number] }) {
     <span
       className={cn(
         "inline-flex h-5.5 w-fit items-center gap-1.5 rounded-full px-2 text-xs font-medium whitespace-nowrap",
-        status.done ? "bg-secondary text-secondary-foreground" : "border border-border text-muted-foreground",
+        status.done ? "bg-success-soft text-success" : "border border-border text-muted-foreground",
       )}
     >
-      <Icon aria-hidden className="size-3 shrink-0 text-muted-foreground" />
+      <Icon aria-hidden className={cn("size-3 shrink-0", status.done ? "text-success" : "text-muted-foreground")} />
       {status.label}
     </span>
   )
@@ -129,7 +129,7 @@ export function LegalSection({ draft, issues, update }: SectionProps) {
       <FieldGroup
         id={`${base}-approvals`}
         label="Approvals"
-        level={draft.lifecycle === "ongoing" ? "R" : "W"}
+        level={draft.lifecycle === "ongoing" && hasDetailPage(draft) ? "R" : "W"}
         count={l.approvals.length ? l.approvals.length : undefined}
         description={
           <>

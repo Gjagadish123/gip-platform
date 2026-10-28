@@ -20,6 +20,7 @@ import { AREA_UNIT_LABEL } from "@/lib/constants"
 import { formatNumber, formatPrice, plural } from "@/lib/format"
 import { sizeRange } from "@/lib/inventory"
 import type { Configuration, SizeRange } from "@/lib/types"
+import { hasDetailPage } from "@/lib/validate"
 
 import { fieldIssues, newId, sectionDomId, type SectionProps } from "../section-types"
 
@@ -35,6 +36,8 @@ export function PricingSection({ draft, type, units, issues, update }: SectionPr
   const total = fieldIssues(issues, "totalUnits")
   const size = fieldIssues(issues, "unitSize")
   const fromInventory = units.length > 0 ? sizeRange(units, type.areaUnit) : null
+  // Mirrors validateProject: a project page with inventory but no units yet needs the count and the size range.
+  const unitsRequired = hasDetailPage(draft) && type.hasInventory
   const sizeUnit = draft.unitSize?.unit ?? type.areaUnit
   const range = fromInventory ?? (draft.unitSize?.min || draft.unitSize?.max ? draft.unitSize : null)
   const rangeText =
@@ -61,7 +64,13 @@ export function PricingSection({ draft, type, units, issues, update }: SectionPr
       </p>
 
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-6">
-        <FieldRow className="sm:col-span-6" label="Starting price" htmlFor={fid("price")} {...price}>
+        <FieldRow
+          className="sm:col-span-6"
+          label="Starting price"
+          required={draft.price.mode !== "on_request"}
+          htmlFor={fid("price")}
+          {...price}
+        >
           <PriceInput
             id={fid("price")}
             value={draft.price}
@@ -120,7 +129,8 @@ export function PricingSection({ draft, type, units, issues, update }: SectionPr
         <FieldRow
           className="sm:col-span-4"
           label="Land area"
-          mark={draft.lifecycle === "completed" ? "Recommended" : undefined}
+          required={draft.lifecycle !== "completed"}
+          mark="Recommended"
           htmlFor={fid("landArea")}
           {...land}
         >
@@ -167,6 +177,7 @@ export function PricingSection({ draft, type, units, issues, update }: SectionPr
             <FieldRow
               className="sm:col-span-2"
               label={`Number of ${nouns}`}
+              required={unitsRequired}
               htmlFor={fid("totalUnits")}
               description={type.hasInventory ? `Fills in once ${nouns} are added in Inventory.` : undefined}
               {...total}
@@ -189,7 +200,13 @@ export function PricingSection({ draft, type, units, issues, update }: SectionPr
               />
             </FieldRow>
 
-            <FieldRow className="sm:col-span-4" label={`${type.unitNoun} size range`} htmlFor={fid("sizeMin")} {...size}>
+            <FieldRow
+              className="sm:col-span-4"
+              label={`${type.unitNoun} size range`}
+              required={unitsRequired}
+              htmlFor={fid("sizeMin")}
+              {...size}
+            >
               <div className="grid grid-cols-2 gap-2">
                 <AreaInput
                   id={fid("sizeMin")}

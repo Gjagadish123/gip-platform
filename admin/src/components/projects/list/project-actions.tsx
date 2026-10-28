@@ -18,10 +18,12 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Switch } from "@/components/ui/switch"
 import { getProjectType } from "@/lib/constants"
 import { plural } from "@/lib/format"
 import { useDemo } from "@/lib/store"
 import type { Project, PublishState } from "@/lib/types"
+import { cn } from "@/lib/utils"
 import { blockers, liveSiteUrl, validateProject } from "@/lib/validate"
 
 import type { ProjectRow } from "./list-model"
@@ -46,32 +48,81 @@ function keepFocusInList(trigger: HTMLElement | null) {
   }, 0)
 }
 
-/** Row / card ⋯ menu. Always visible (not hover-only). Delete is lifted to one dialog per list. */
-export function ProjectMenu({ row, onDelete }: { row: ProjectRow; onDelete: (p: Project) => void }) {
+/**
+ * Publish-state changes from a list row: every change toasts with Undo, and publishing first checks the required
+ * fields (a project with gaps stays put and offers the editor). Shared by the ⋯ menu and the Active toggle.
+ */
+function usePublishControl(row: ProjectRow) {
   const router = useRouter()
   const { state, actions } = useDemo()
   const p = row.project
   const publish = p.publishing.state
-  const live = liveSiteUrl(p)
-  const triggerRef = React.useRef<HTMLButtonElement>(null)
 
-  const setState = (to: PublishState, message: string) => {
-    keepFocusInList(triggerRef.current)
+  const setState = (to: PublishState, message: string, from: HTMLElement | null) => {
+    keepFocusInList(from)
     actions.setPublishState(p.id, to)
     toast(message, { duration: 10_000, action: { label: "Undo", onClick: () => actions.setPublishState(p.id, publish) } })
   }
 
-  const doPublish = () => {
+  /** False when required fields are missing (nothing changes). */
+  const doPublish = (from: HTMLElement | null, message = `${p.name} is published`) => {
     const missing = blockers(validateProject(p, row.type, state.units[p.id] ?? [], state.projects))
     if (missing.length) {
       toast.error(`${p.name} can't be published yet`, {
         description: `${plural(missing.length, "required field is", "required fields are")} missing. ${missing[0].message}`,
         action: { label: "Open editor", onClick: () => router.push(`/projects/${p.id}`) },
       })
-      return
+      return false
     }
-    setState("published", `${p.name} is published`)
+    setState("published", message, from)
+    return true
   }
+
+  return { publish, setState, doPublish }
+}
+
+/**
+ * Active / Inactive: whether the project shows on the website. On publishes it (after the required-field check), off
+ * moves it to drafts; both toast with Undo. Archived projects read "Archived" and switch straight to published.
+ */
+export function ActiveToggle({ row, className }: { row: ProjectRow; className?: string }) {
+  const p = row.project
+  const { publish, setState, doPublish } = usePublishControl(row)
+  const ref = React.useRef<HTMLButtonElement>(null)
+  const active = publish === "published"
+  const id = React.useId()
+
+  return (
+    <div className={cn("flex items-center gap-2", className)}>
+      <Switch
+        ref={ref}
+        id={id}
+        checked={active}
+        className="data-checked:bg-success"
+        aria-label={`Show ${p.name} on the website`}
+        onCheckedChange={(on) => {
+          if (on) doPublish(ref.current, `${p.name} is active on the website`)
+          else setState("draft", `${p.name} is inactive: hidden from the website`, ref.current)
+        }}
+      />
+      <span aria-hidden className={cn("text-xs font-medium", active ? "text-success" : "text-muted-foreground")}>
+        {active ? "Active" : publish === "archived" ? "Archived" : "Inactive"}
+      </span>
+    </div>
+  )
+}
+
+/** Row / card ⋯ menu. Always visible (not hover-only). Delete is lifted to one dialog per list. */
+export function ProjectMenu({ row, onDelete }: { row: ProjectRow; onDelete: (p: Project) => void }) {
+  const router = useRouter()
+  const { actions } = useDemo()
+  const p = row.project
+  const live = liveSiteUrl(p)
+  const triggerRef = React.useRef<HTMLButtonElement>(null)
+  const control = usePublishControl(row)
+  const { publish } = control
+  const setState = (to: PublishState, message: string) => control.setState(to, message, triggerRef.current)
+  const doPublish = () => control.doPublish(triggerRef.current)
 
   const duplicate = () => {
     const id = actions.duplicateProject(p.id)

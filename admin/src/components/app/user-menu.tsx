@@ -15,7 +15,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useSession } from "@/lib/store"
+import { requestLeave } from "@/lib/leave-guard"
+import { useDemo, useSession } from "@/lib/store"
+import { BACKEND } from "@/lib/supabase/client"
 
 function initials(name: string) {
   return name
@@ -28,6 +30,7 @@ function initials(name: string) {
 
 export function UserMenu() {
   const router = useRouter()
+  const { actions } = useDemo()
   const { username } = useSession()
   const name = username?.trim() || "Admin"
   const [resetOpen, setResetOpen] = useState(false)
@@ -51,12 +54,21 @@ export function UserMenu() {
             <span className="block truncate font-medium text-foreground">{name}</span>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onSelect={() => setResetOpen(true)}>
-            <RotateCcw />
-            Reset demo data
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onSelect={() => router.push("/login")}>
+          {!BACKEND && (
+            <>
+              <DropdownMenuItem onSelect={() => setResetOpen(true)}>
+                <RotateCcw />
+                Reset demo data
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </>
+          )}
+          <DropdownMenuItem
+            onSelect={() =>
+              // a dirty form asks first; Save or Discard then finishes the sign-out
+              requestLeave("/login", () => void actions.signOut().then((out) => out && router.push("/login")))
+            }
+          >
             <LogOut />
             Sign out
           </DropdownMenuItem>

@@ -5,7 +5,7 @@ import * as React from "react"
 import { Captions, GripVertical, ImageIcon, MoreHorizontal, Star, Trash2, TriangleAlert } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import { saveUpload } from "@/lib/media-store"
+import { saveUpload, UploadError } from "@/lib/media-store"
 import type { Asset } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 import {
@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import { AssetImage } from "./asset-image"
-import { Dropzone } from "./dropzone"
+import { Dropzone, IMAGE_ACCEPT } from "./dropzone"
 import { FieldMessage } from "./field-row"
 import { Sortable, SortableItem } from "./sortable"
 
@@ -98,7 +98,12 @@ export function GalleryField({
     setPending((n) => n - files.length)
     const saved = results.flatMap((r) => (r.status === "fulfilled" ? [r.value] : []))
     const failed = results.length - saved.length
-    if (failed) setError(`${failed} ${failed === 1 ? noun : `${noun}s`} couldn't be stored in the browser.`)
+    const reason = results.find((r) => r.status === "rejected")?.reason
+    if (failed) {
+      setError([...rejected, reason instanceof UploadError // keep the up-front rejections too
+        ? `${failed} ${failed === 1 ? noun : `${noun}s`} not uploaded. ${reason.message}`
+        : `${failed} ${failed === 1 ? noun : `${noun}s`} couldn't be stored in the browser.`].join(". "))
+    }
     if (saved.length) onChange([...latest.current, ...saved])
   }
 
@@ -268,7 +273,7 @@ export function GalleryField({
 
       <Dropzone
         ref={dropRef}
-        accept="image/*"
+        accept={IMAGE_ACCEPT}
         multiple
         busy={pending > 0 && value.length === 0}
         onFiles={upload}

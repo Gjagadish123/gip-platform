@@ -72,6 +72,9 @@ export function sameValue(a: unknown, b: unknown): boolean {
   return true
 }
 
+/** Same content, whatever version each was read at (a dirty draft keeps the rev it started from). */
+const sameContent = (draft: Project, saved: Project) => sameValue({ ...draft, rev: saved.rev }, saved)
+
 /** Fields the store owns (publish state, inventory stamps). A draft always carries the saved values. */
 function rebase(d: Project, s: Project): Project {
   return {
@@ -137,12 +140,12 @@ export function EditorProvider({ project, children }: { project: Project; childr
   let { draft } = st
   if (st.saved !== project) {
     draft =
-      st.saved.id === project.id && !sameValue(st.draft, st.saved) ? rebase(st.draft, project) : structuredClone(project)
+      st.saved.id === project.id && !sameContent(st.draft, st.saved) ? rebase(st.draft, project) : structuredClone(project)
     setSt({ saved: project, draft })
   }
 
   const type = getProjectType(draft.typeId)
-  const dirty = React.useMemo(() => !sameValue(draft, project), [draft, project])
+  const dirty = React.useMemo(() => !sameContent(draft, project), [draft, project])
   const issues = React.useMemo(() => validateProject(draft, type, units, projects), [draft, type, units, projects])
 
   // A new draft starts calm. Required gaps turn red after a publish attempt (a live project has had one) or once
@@ -222,7 +225,7 @@ export function EditorProvider({ project, children }: { project: Project; childr
   }
 
   /* Leaving with unsaved edits: links (capture phase, before Next's <Link> handler) and the command menu ask. */
-  const [leaving, setLeaving] = React.useState<string | null>(null)
+  const [leaving, setLeaving] = React.useState<{ go: () => void } | null>(null) // the navigation on hold
 
   React.useEffect(() => {
     if (!dirty) return
@@ -236,14 +239,15 @@ export function EditorProvider({ project, children }: { project: Project; childr
       const url = new URL(a.href)
       if (url.origin !== window.location.origin || stays(url)) return // other sites: beforeunload asks
       e.preventDefault()
-      setLeaving(url.pathname + url.search + url.hash)
+      const href = url.pathname + url.search + url.hash
+      setLeaving({ go: () => router.push(href) })
     }
     const guard = (e: BeforeUnloadEvent) => e.preventDefault()
     document.addEventListener("click", onClick, true)
     window.addEventListener("beforeunload", guard)
-    const clearGuard = setLeaveGuard((href) => {
+    const clearGuard = setLeaveGuard((href, go) => {
       if (stays(new URL(href, window.location.href))) return true
-      setLeaving(href)
+      setLeaving({ go })
       return false
     })
     return () => {
@@ -251,15 +255,15 @@ export function EditorProvider({ project, children }: { project: Project; childr
       window.removeEventListener("beforeunload", guard)
       clearGuard()
     }
-  }, [dirty, project.id])
+  }, [dirty, project.id, router])
 
   function leave(how: "save" | "discard") {
-    const href = leaving
+    const go = leaving?.go
     setLeaving(null)
-    if (!href) return
-    if (how === "save") return requestSave(() => router.push(href))
+    if (!go) return
+    if (how === "save") return requestSave(go)
     setSt({ saved: project, draft: structuredClone(project) })
-    router.push(href)
+    go()
   }
 
   // Next keeps hidden routes mounted (Activity): close the dialogs when this route is hidden.

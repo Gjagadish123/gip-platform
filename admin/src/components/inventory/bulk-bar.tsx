@@ -1,7 +1,7 @@
 // Adapted from 21st.dev: uvain/data-table-bulk-actions (demo 33506)
 // Kept: the "{n} selected" count beside the bulk actions, ghost buttons.
 // Changed: floats at the bottom of the content column (sticky, opaque, shadow-overlay; no blur), actions are
-// the four statuses in client order with their 1–4 key hints, plus Open (single unit), Remove and Clear. The
+// the statuses in client order with their 1–5 key hints, plus Open (single unit), Remove and Clear. The
 // count is announced by the inventory screen (a live region mounted with its text is never spoken).
 "use client"
 

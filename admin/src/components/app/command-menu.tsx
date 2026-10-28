@@ -3,7 +3,7 @@
 "use client"
 
 import { useEffect, useMemo, useState, type ReactNode } from "react"
-import { Building2, LayoutDashboard, LayoutGrid, Plus, RotateCcw, Search, SunMoon } from "lucide-react"
+import { Building2, LayoutDashboard, LayoutGrid, Map as MapIcon, Plus, RotateCcw, Search, SunMoon } from "lucide-react"
 import { useTheme } from "next-themes"
 import { useRouter } from "next/navigation"
 
@@ -21,8 +21,9 @@ import {
 import { Kbd } from "@/components/ui/kbd"
 import { UNIT_STATUS_META, getProjectType, projectTypeLabel } from "@/lib/constants"
 import { formatArea } from "@/lib/format"
-import { canLeave } from "@/lib/leave-guard"
+import { requestLeave } from "@/lib/leave-guard"
 import { useDemo } from "@/lib/store"
+import { BACKEND } from "@/lib/supabase/client"
 import type { Project, Unit } from "@/lib/types"
 
 /** "Global City VI" -> "GC VI", "Kompally County III" -> "KC III": initials, roman numerals and digits kept. */
@@ -101,10 +102,13 @@ function Palette({ close, onReset }: { close: () => void; onReset: () => void })
 
   const go = (href: string) => {
     close()
-    if (canLeave(href)) router.push(href) // a dirty editor may prompt first, then navigate itself
+    // A dirty form may prompt first. Next tick: the Enter that picked this item would otherwise land on the prompt's
+    // focused Stay button and close it at once.
+    setTimeout(() => requestLeave(href, () => router.push(href)))
   }
   const actions = [
     { id: "dashboard", label: "Go to dashboard", icon: <LayoutDashboard />, run: () => go("/dashboard") },
+    { id: "layouts", label: "Go to live layouts", icon: <MapIcon />, run: () => go("/live-layouts") },
     { id: "new", label: "New project", icon: <Plus />, run: () => go("/projects/new") },
     {
       id: "theme",
@@ -115,7 +119,7 @@ function Palette({ close, onReset }: { close: () => void; onReset: () => void })
         setTheme(resolvedTheme === "dark" ? "light" : "dark")
       },
     },
-    { id: "reset", label: "Reset demo data", icon: <RotateCcw />, run: onReset },
+    ...(BACKEND ? [] : [{ id: "reset", label: "Reset demo data", icon: <RotateCcw />, run: onReset }]),
   ].filter((a) => !q || a.label.toLowerCase().includes(q))
 
   return (
