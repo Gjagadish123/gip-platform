@@ -648,29 +648,27 @@ export default function MasterPlan({ project, items, site, model, stats, plan, o
         )}
       </AnimatePresence>
 
-      {/* ---- availability: live counts that double as the status filter (makes way for an open plot) */}
-      <AnimatePresence>
-        {!selPlot && (
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 8 }}
-            transition={{ duration: 0.18 }}
-            className="absolute bottom-[120px] left-3 right-3 z-10 sm:bottom-[72px] sm:left-5 sm:right-auto lg:bottom-6"
-          >
-            <StatusCard
-              counts={stats?.counts}
-              total={stats?.total}
-              asOf={stats?.asOf}
-              sample={stats?.sample}
-              live={live}
-              recent={recent}
-              selected={filters.status}
-              onToggle={(s) => setFilters((f) => ({ ...f, status: toggleIn(f.status, s) }))}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* ---- availability: live counts that double as the status filter. An open plot card takes its corner: on wide
+           screens the counts move to the right (compact) and stay in view; on phones and tablets they make way for the
+           card. One element throughout, moved by its classes, so a focused status toggle keeps focus when the plot closes. */}
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.18 }}
+        className={`absolute z-10 ${selPlot ? 'hidden lg:bottom-[84px] lg:right-5 lg:block' : 'bottom-[120px] left-3 right-3 sm:bottom-[72px] sm:left-5 sm:right-auto lg:bottom-6'}`}
+      >
+        <StatusCard
+          counts={stats?.counts}
+          total={stats?.total}
+          asOf={stats?.asOf}
+          sample={stats?.sample}
+          live={live}
+          recent={recent}
+          selected={filters.status}
+          onToggle={(s) => setFilters((f) => ({ ...f, status: toggleIn(f.status, s) }))}
+          compact={Boolean(selPlot)}
+        />
+      </motion.div>
 
       {/* ---- mode switch, tour, compass, scale */}
       <div className="absolute bottom-[68px] right-3 z-10 flex items-end gap-2 sm:right-5 sm:gap-3 lg:bottom-6">

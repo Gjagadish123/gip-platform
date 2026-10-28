@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Icon from '../components/Icon.jsx';
-import { COMPANY } from '../data/project.js';
+import { COMPANY, OFFICES } from '../data/project.js';
 import { directionsUrl } from '../lib/projects.js';
 
 export default function Contact({ project, model, pin }) {
@@ -110,18 +110,28 @@ export default function Contact({ project, model, pin }) {
               </div>
             </div>
 
-            <div className="mt-8 flex gap-4 border-t border-line pt-6">
-              <Icon name="pin" size={20} className="mt-1 shrink-0 text-navy-600" />
-              <div>
-                <h3 className="text-[17px] font-bold">
-                  {COMPANY.name} <span className="ml-1 text-sm font-medium text-ink-muted">Head office</span>
-                </h3>
-                <p className="mt-1 text-ink-soft">{COMPANY.office}</p>
-                <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${COMPANY.name}, ${COMPANY.office}`)}`} target="_blank" rel="noreferrer" className="mt-1.5 inline-flex items-center gap-1.5 text-sm font-semibold text-navy-600 hover:text-navy-500">
-                  Open in Google Maps <Icon name="external" size={14} />
-                </a>
-              </div>
-            </div>
+            <ul className="mt-8 divide-y divide-line border-t border-line">
+              {OFFICES.map((o) => (
+                <li key={o.place} className="flex gap-4 py-5">
+                  <Icon name="pin" size={20} className="mt-1 shrink-0 text-navy-600" />
+                  <div>
+                    <h3 className="text-[17px] font-bold">
+                      {o.place} <span className="ml-1 text-sm font-medium text-ink-muted">{o.kind}</span>
+                    </h3>
+                    <address className="mt-1 not-italic leading-relaxed text-ink-soft">
+                      {o.lines.map((l) => (
+                        <span key={l} className="block">
+                          {l}
+                        </span>
+                      ))}
+                    </address>
+                    <a href={o.maps} target="_blank" rel="noreferrer" className="mt-1.5 inline-flex items-center gap-1.5 text-sm font-semibold text-navy-600 hover:text-navy-500">
+                      Open in Google Maps <Icon name="external" size={14} />
+                    </a>
+                  </div>
+                </li>
+              ))}
+            </ul>
             <p className="mt-6 text-sm text-ink-muted">
               <a href={`https://wa.me/${COMPANY.whatsapp}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 font-semibold text-navy-700 hover:text-navy-500">
                 <Icon name="whatsapp" size={16} /> WhatsApp sales

@@ -351,6 +351,42 @@ def trees(doc, grid, avoid_pts, seed=7, spacing=6.5, strip=15.0, clear=1.8):
     return got
 
 
+def avenue(doc, lines, avoid_pts, seed=11, every=15.0, start=6.0):
+    """Street trees along each road's verge, like the demo's GC VI (layout_demo/tools/build_masterplan.py): every 15 m
+    on both sides, w/2 - 0.9 m off the centre line, kept off crossings, plots, the gate and outside the boundary.
+    Flagged [x, y, s, 1]: the renderer draws them taller and casts their shadows on the plot layer."""
+    rng = np.random.default_rng(seed)
+    roads = doc["roads"] + [dict(outer=a["xy"]) for a in doc["access"]]
+    plots = [(q["xy"], np.min(q["xy"], axis=0), np.max(q["xy"], axis=0)) for q in doc["plots"]]
+    ws = [c for c in lines if c.get("w")]
+    out = []
+    for c in ws:
+        off = c["w"] / FT / 2 - 0.9
+        pts = np.array(c["pts"], float)
+        segs = [(pts[i], pts[i + 1] - pts[i]) for i in range(len(pts) - 1)]
+        total = sum(float(np.linalg.norm(d)) for _, d in segs)
+        s, done = start, 0.0
+        for a, d in segs:
+            L = float(np.linalg.norm(d))
+            if L < 1e-6:
+                continue
+            u = d / L
+            n = np.array([-u[1], u[0]])
+            while s <= done + L and s < total - start:
+                base = a + u * (s - done)
+                for side in (-1, 1):
+                    q = (base + n * off * side).tolist()
+                    if (pip(q, doc["boundary"]) and in_polys(q, roads)
+                            and not any(lo[0] - 1 <= q[0] <= hi[0] + 1 and lo[1] - 1 <= q[1] <= hi[1] + 1 and pip(q, xy) for xy, lo, hi in plots)
+                            and all(math.dist(q, f) > 8.0 for f in avoid_pts)
+                            and seg_dir(c["pts"], q)[0] >= off - 0.25  # a bend in its own road: the next leg's lane
+                            and all(seg_dir(o["pts"], q)[0] > o["w"] / FT / 2 + 1.0 for o in ws if o is not c)):
+                        out.append([r2(q[0]), r2(q[1]), round(float(rng.uniform(0.6, 0.85)), 2), 1])
+                s += every
+            done += L
+    return out
+
+
 # ---------------------------------------------------------------- plots
 
 def frontage_normals(doc):
@@ -452,6 +488,7 @@ def export(doc):
         features["revealFrom"] = pts2([min(doc["boundary"], key=lambda q: math.dist(q, pin))])[0]
 
     tr = trees(doc, grid, [f["at"] for k, f in features.items() if k in ("tank", "park")])
+    tr += avenue(doc, lines, [f["at"] for k, f in features.items() if k in ("gate", "tank")])
     plots = []
     for p in doc["plots"]:
         rec = dict(n=p["n"], a=p["a"], xy=pts2(p["xy"]), c=pts2([p["c"]])[0], la=p["la"], f=p["f"], rw=p["rw"], fn=fn[p["n"]])
@@ -497,14 +534,18 @@ def validate(mp, doc, path):
     on = sum(in_polys(q, rp) for q in S) / max(len(S), 1)
     assert on >= 0.95, f"only {on:.1%} of centre-line samples on a road"
     assert len({c["id"] for c in mp["centerlines"]}) == len(mp["centerlines"])
-    bad = [t for t in mp["trees"] if in_polys(t[:2], rp) or any(pip(t[:2], p["xy"]) for p in mp["plots"])]
+    # street trees (t[3] == 1) stand on the road verge by design; every other tree keeps off roads
+    bad = [t for t in mp["trees"] if (not t[3] and in_polys(t[:2], rp)) or any(pip(t[:2], p["xy"]) for p in mp["plots"])]
     assert not bad, f"{len(bad)} trees on plots/roads, e.g. {bad[:3]}"
-    assert all(0.8 <= t[2] <= 1.25 for t in mp["trees"])
+    assert all((0.6 <= t[2] <= 0.85) if t[3] else (0.8 <= t[2] <= 1.25) for t in mp["trees"])
+    # ...on the verge only: never nearer any road's axis than its half-width less 1.2 m (cars drive within that)
+    lane = [t for t in mp["trees"] if t[3] and any(seg_dir(c["pts"], t[:2])[0] < c["w"] / FT / 2 - 1.2 for c in mp["centerlines"] if c.get("w"))]
+    assert not lane, f"{len(lane)} street trees in a carriageway, e.g. {lane[:3]}"
     kb = os.path.getsize(path) / 1024
     assert kb < 300, f"{kb:.0f} KB"
     assert all(abs(math.hypot(*p["fn"]) - 1) < 0.01 for p in mp["plots"])
     return dict(plots=len(mp["plots"]), area=round(a1, 2), area_v2=round(a2, 2), landUse_plotted=mp["landUse"]["plotted"],
-                centerlines=len(mp["centerlines"]), on_road=round(on, 4), trees=len(mp["trees"]), kb=round(kb, 1),
+                centerlines=len(mp["centerlines"]), on_road=round(on, 4), trees=len(mp["trees"]), street_trees=sum(t[3] for t in mp["trees"]), kb=round(kb, 1),
                 fn_matches_f=sum(compass(*p["fn"]) == p["f"] for p in mp["plots"]), features=sorted(mp["features"]))
 
 
