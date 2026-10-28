@@ -68,7 +68,8 @@ export function Segmented<T extends string>({
             onKeyDown={(e) => rovingTabKey(e, ids, value, onChange, idOf)}
             className={cn(
               "inline-flex h-10 shrink-0 grow items-center justify-center gap-2 rounded-sm px-3 text-ui font-medium whitespace-nowrap transition-[background-color,color,box-shadow] duration-300 ease-(--ease-out) sm:px-4",
-              on ? "bg-white text-navy shadow-raise" : "text-muted hover:text-navy",
+              // The selected segment carries a navy hairline: white on mist alone is too faint a cue (1.06:1).
+              on ? "bg-white text-navy shadow-raise ring-1 ring-navy/60" : "text-muted hover:text-navy",
             )}
           >
             {o.label}
