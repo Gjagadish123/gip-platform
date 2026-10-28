@@ -25,6 +25,13 @@ export const COMPANY = {
   },
 } as const;
 
+/* ---------- live layouts: a separate app (gip-platform/layouts), the approved layouts plot by plot on the map ---------- */
+
+export const LAYOUTS_URL = process.env.NEXT_PUBLIC_LAYOUTS_URL || 'https://gjagadish123.github.io/gip-platform/layouts/';
+/** The projects whose approved layout is drawn in that app. */
+export const LIVE_LAYOUT_IDS: readonly string[] = ['global-city-vi', 'global-city-v', 'global-city-rrr', 'western-county'];
+export const liveLayoutUrl = (projectId: string) => `${LAYOUTS_URL}?project=${encodeURIComponent(projectId)}`;
+
 /* ---------- unit statuses (client order everywhere: Available, Sold Out, Mortgaged, Registered, Hold) ---------- */
 
 export const UNIT_STATUSES: UnitStatus[] = ['available', 'sold_out', 'mortgaged', 'registered', 'hold'];

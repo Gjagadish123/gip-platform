@@ -1,8 +1,7 @@
 // Project → card data for the Projects page (and anything else that lists projects as cards). Server-side, pure.
 import { firstPlace } from "@/components/project/content";
-import { AREA_UNIT_LABEL, getProjectType } from "@/lib/constants";
+import { AREA_UNIT_LABEL, getProjectType, LIVE_LAYOUT_IDS, liveLayoutUrl } from "@/lib/constants";
 import { formatLandArea, formatNumber } from "@/lib/format";
-import { isLiveLayout } from "@/lib/layouts";
 import { hasDetailPage, type InventorySummary } from "@/lib/projects";
 import type { Project } from "@/lib/types";
 
@@ -62,11 +61,11 @@ export function toCard(p: Project, s: InventorySummary): ProjectCardData {
     status: p.lifecycle === "completed" ? "completed" : p.lifecycle === "upcoming" ? "upcoming" : "selling",
     photo: realCover(p),
     facts,
-    // A mapped project without its own page opens on the live layouts page.
+    // A mapped project without its own page opens in the live layouts app.
     ...(p.publishing.externalUrl || hasDetailPage(p)
       ? { href: p.publishing.externalUrl ?? `/projects/${p.publishing.slug}` }
-      : isLiveLayout(p.id) && p.lifecycle !== "completed"
-        ? { href: `/layouts?project=${p.id}`, action: "View live layout" }
+      : LIVE_LAYOUT_IDS.includes(p.id) && p.lifecycle !== "completed"
+        ? { href: liveLayoutUrl(p.id), action: "View live layout" }
         : {}),
   };
 }

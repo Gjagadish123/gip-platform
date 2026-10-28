@@ -1,6 +1,6 @@
 """
-Builds the live-layout geometry (format v2) for the four projects on the website's /layouts page and the admin's
-Layout view, from traceable sources in tools/layouts/source/<project-id>/:
+Builds the live-layout geometry (format v2) for the four projects in the live layouts app and the admin's Layout
+view, from traceable sources in tools/layouts/source/<project-id>/:
 
   global-city-vi   masterplan.json  the GC VI demo plan (layout_demo, already georeferenced: 1.96 m rms)
   global-city-v    plots_px.json + site_px.json (digitised from the HMDA layout copy) + georef.json (control points)
@@ -9,7 +9,7 @@ Layout view, from traceable sources in tools/layouts/source/<project-id>/:
 
 Everything is emitted in local ENU metres (x east, y north) around `origin`; the apps convert to lat/lng.
 Run:  python -P -E tools/layouts/build_layouts.py [extra output dir ...]
-Writes admin/src/lib/layouts/<id>.json and, when it exists, the website worktree's src/lib/data/layouts/<id>.json.
+Writes admin/src/lib/layouts/<id>.json and index.json (and the same into any extra output dir given).
 """
 import json, math, os, re, sys
 
@@ -18,11 +18,7 @@ import numpy as np
 HERE = os.path.dirname(os.path.abspath(__file__))
 SRC = os.path.join(HERE, "source")
 REPO = os.path.abspath(os.path.join(HERE, "..", ".."))
-OUTS = [os.path.join(REPO, "admin", "src", "lib", "layouts")]
-WEBSITE = os.path.abspath(os.path.join(REPO, "..", "gip-platform-website", "website", "src", "lib", "data"))
-if os.path.isdir(WEBSITE):
-    OUTS.append(os.path.join(WEBSITE, "layouts"))
-OUTS += sys.argv[1:]
+OUTS = [os.path.join(REPO, "admin", "src", "lib", "layouts"), *sys.argv[1:]]
 
 R = 6378137.0
 FT = 3.28084
@@ -515,8 +511,7 @@ if __name__ == "__main__":
         for z in d["zones"]:
             z["c"], z["room"] = label_spot(z["xy"], [k["xy"] for k in d["zones"] if k.get("partOf") == z["id"]])
         write(d)
-    # What the apps say about each drawing without loading the geometry (the admin's Layout view and Live layouts
-    # screen; the website's project facts on first paint).
+    # What the admin says about each drawing without loading the geometry (its Layout view and Live layouts screen).
     index = {d["id"]: dict(plots=len(d["plots"]), plotCount=d["plotCount"], fit=(d["georef"] or {}).get("rmsMetres"),
                            source={k: v for k, v in d["source"].items() if k in ("title", "reference", "pending")},
                            landArea=d["landArea"])

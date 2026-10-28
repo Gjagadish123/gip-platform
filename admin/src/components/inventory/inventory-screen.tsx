@@ -19,7 +19,7 @@ import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from "@/components/ui/empty"
 import { Kbd } from "@/components/ui/kbd"
-import { getProjectType, UNIT_STATUS_META, WEBSITE_URL } from "@/lib/constants"
+import { getProjectType, liveLayoutUrl, UNIT_STATUS_META } from "@/lib/constants"
 import { canTransition, compressRanges, isGuarded, naturalCompare, statusCounts } from "@/lib/inventory"
 import { isLiveLayout } from "@/lib/layouts"
 import { GC6_PROJECT_ID } from "@/lib/mock"
@@ -454,7 +454,7 @@ function InventoryBody({ project, type, units }: { project: Project; type: Proje
         onClearFilters={() => setFilters(NO_FILTERS)}
         updatedAt={project.inventoryUpdatedAt}
         sampleNote={sampleNoteFor(project, units)}
-        liveHref={WEBSITE_URL && live && project.publishing.state === "published" ? `${WEBSITE_URL}/layouts?project=${project.id}` : undefined}
+        liveHref={live && project.publishing.state === "published" ? liveLayoutUrl(project.id) : undefined}
       />
 
       <div className="flex flex-col gap-3">

@@ -87,7 +87,7 @@ export function ProjectCard({ card, priority }: { card: ProjectCardData; priorit
 function CardLink({ card, className, children }: { card: ProjectCardData; className?: string; children: ReactNode }) {
   const cover = cn("after:absolute after:inset-0 after:rounded-2xl after:content-['']", className);
   return isExternal(card.href!) ? (
-    <a href={card.href} target="_blank" rel="noreferrer" aria-label={`Visit the ${card.name} website (opens in a new tab)`} className={cover}>
+    <a href={card.href} target="_blank" rel="noreferrer" aria-label={`${card.action ? `${card.action}: ${card.name}` : `Visit the ${card.name} website`} (opens in a new tab)`} className={cover}>
       {children}
     </a>
   ) : (

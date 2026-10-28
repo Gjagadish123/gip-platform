@@ -1,0 +1,234 @@
+{
+ "generated": "2026-10-28",
+ "source": "Google Places API (New) + Routes API, driving without live traffic, from the site pin",
+ "site": {
+  "lat": 17.4742058,
+  "lng": 78.1389772
+ },
+ "places": [
+  {
+   "category": "Education",
+   "name": "ICFAI Foundation for Higher Education (IFHE) University",
+   "googleName": "ICFAI Foundation for Higher Education (IFHE) University",
+   "address": "C699+GG6, Donthanpalle, Telangana 501203",
+   "type": "University",
+   "location": {
+    "lat": 17.4187801,
+    "lng": 78.2187755
+   },
+   "mapsUrl": "https://maps.google.com/?cid=8796015134649237198&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 12.8,
+   "driveMin": 23
+  },
+  {
+   "category": "Education",
+   "name": "GITAM University, Hyderabad campus",
+   "googleName": "GITAM Deemed to be University Hyderabad",
+   "address": "Rudraram, Patancheru, Telangana 502329",
+   "type": "University",
+   "location": {
+    "lat": 17.549778099999997,
+    "lng": 78.1655871
+   },
+   "mapsUrl": "https://maps.google.com/?cid=14751291371855763967&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 16.6,
+   "driveMin": 32
+  },
+  {
+   "category": "Education",
+   "name": "KIDZEE Shankarpally",
+   "googleName": "KIDZEE Shankarpally",
+   "address": "Sangareddy Road, near Canara Bank, Shankarpalle, Telangana 501203",
+   "type": "Preschool",
+   "location": {
+    "lat": 17.4627972,
+    "lng": 78.1326898
+   },
+   "mapsUrl": "https://maps.google.com/?cid=15024932835196754949&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 1.7,
+   "driveMin": 4
+  },
+  {
+   "category": "Connectivity",
+   "name": "Shankarpalli railway station",
+   "googleName": "Shankarpalli",
+   "address": "SHANKARPALLY, Railway Station Rd, Hyderabad, Shankarpalle, Telangana 501203",
+   "type": "Train Station",
+   "location": {
+    "lat": 17.4505019,
+    "lng": 78.13067769999999
+   },
+   "mapsUrl": "https://maps.google.com/?cid=2383319435604607853&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 3.0,
+   "driveMin": 10
+  },
+  {
+   "category": "Connectivity",
+   "name": "Shankarpalli bus stop",
+   "googleName": "Shankarpally Bus Stop",
+   "address": "Shankarpalle, Telangana 501203",
+   "type": "Transportation Service",
+   "location": {
+    "lat": 17.4557742,
+    "lng": 78.13136089999999
+   },
+   "mapsUrl": "https://maps.google.com/?cid=4970548060549404931&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 2.5,
+   "driveMin": 7
+  },
+  {
+   "category": "Connectivity",
+   "name": "Outer Ring Road, Exit 2",
+   "googleName": "Edulanagulapalli Toll Booth Exit 2",
+   "address": "F67X+7M7, Nehru Outer Ring Rd, Nagulapalli, Edulnagulapally, Hyderabad, Telangana 502300",
+   "type": "Toll Booth",
+   "location": {
+    "lat": 17.4631571,
+    "lng": 78.24918629999999
+   },
+   "mapsUrl": "https://maps.google.com/?cid=1663776973338780645&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 18.1,
+   "driveMin": 32
+  },
+  {
+   "category": "Connectivity",
+   "name": "Lingampally railway station",
+   "googleName": "Lingampalli",
+   "address": "Hyderabad, 500019, Rail Vihar, Serilingampally, Hyderabad, Serilingampalle (M), Telangana 500019",
+   "type": "Train Station",
+   "location": {
+    "lat": 17.483132299999998,
+    "lng": 78.31759009999999
+   },
+   "mapsUrl": "https://maps.google.com/?cid=221369228267295781&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 27.0,
+   "driveMin": 49
+  },
+  {
+   "category": "Connectivity",
+   "name": "Raidurg metro station",
+   "googleName": "Raidurg",
+   "address": "Mindspace, Hitech City Rd, Phase 2, HITEC City, Hyderabad, Telangana 500081",
+   "type": "Subway Station",
+   "location": {
+    "lat": 17.4420806,
+    "lng": 78.3771549
+   },
+   "mapsUrl": "https://maps.google.com/?cid=5800377143803982408&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 39.1,
+   "driveMin": 55
+  },
+  {
+   "category": "Connectivity",
+   "name": "Rajiv Gandhi International Airport",
+   "googleName": "Rajiv Gandhi International Airport",
+   "address": "Shamshabad, Hyderabad, Telangana 500409",
+   "type": "International Airport",
+   "location": {
+    "lat": 17.240282699999998,
+    "lng": 78.429358
+   },
+   "mapsUrl": "https://maps.google.com/?cid=5989833598862796881&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 57.3,
+   "driveMin": 68
+  },
+  {
+   "category": "Work hubs",
+   "name": "Financial District, Gachibowli",
+   "googleName": "Financial District",
+   "address": "Financial District, Nanakramguda, Telangana",
+   "type": null,
+   "location": {
+    "lat": 17.4117312,
+    "lng": 78.3424898
+   },
+   "mapsUrl": "https://maps.google.com/?cid=18286672786433890820&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 28.4,
+   "driveMin": 48
+  },
+  {
+   "category": "Work hubs",
+   "name": "HITEC City",
+   "googleName": "HITEC City",
+   "address": "HITEC City, Hyderabad, Telangana",
+   "type": null,
+   "location": {
+    "lat": 17.4470457,
+    "lng": 78.3778342
+   },
+   "mapsUrl": "https://maps.google.com/?cid=1830867091394109678&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 39.7,
+   "driveMin": 56
+  },
+  {
+   "category": "Work hubs",
+   "name": "Kokapet",
+   "googleName": "Kokapet",
+   "address": "Kokapet, Hyderabad, Telangana 500075",
+   "type": null,
+   "location": {
+    "lat": 17.3967663,
+    "lng": 78.33477239999999
+   },
+   "mapsUrl": "https://maps.google.com/?cid=4793365806712110381&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 26.0,
+   "driveMin": 44
+  },
+  {
+   "category": "Healthcare",
+   "name": "SHREE AIRA HOSPITAL",
+   "googleName": "SHREE AIRA HOSPITAL",
+   "address": "Shankarpalle, Telangana 501203",
+   "type": "Hospital",
+   "location": {
+    "lat": 17.4588699,
+    "lng": 78.13153729999999
+   },
+   "mapsUrl": "https://maps.google.com/?cid=15976267735242099623&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 2.2,
+   "driveMin": 6
+  },
+  {
+   "category": "Healthcare",
+   "name": "Continental Hospitals",
+   "googleName": "Continental Hospitals",
+   "address": "Plot No 3, Road No. 2, Financial District, Gachibowli, Nanakramguda, Telangana 500032",
+   "type": "General Hospital",
+   "location": {
+    "lat": 17.4175264,
+    "lng": 78.3394579
+   },
+   "mapsUrl": "https://maps.google.com/?cid=200983805608306591&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 29.1,
+   "driveMin": 50
+  },
+  {
+   "category": "Town",
+   "name": "Shankarpalli town",
+   "googleName": "Shankarpalle",
+   "address": "Shankarpalle, Telangana 501203",
+   "type": null,
+   "location": {
+    "lat": 17.455124299999998,
+    "lng": 78.13150639999999
+   },
+   "mapsUrl": "https://maps.google.com/?cid=18082756693394926197&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 2.6,
+   "driveMin": 7
+  },
+  {
+   "category": "Town",
+   "name": "Mokila",
+   "googleName": "Mokila",
+   "address": "Mokila, Telangana 501203",
+   "type": null,
+   "location": {
+    "lat": 17.4393361,
+    "lng": 78.1849427
+   },
+   "mapsUrl": "https://maps.google.com/?cid=1153328233888762964&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 10.4,
+   "driveMin": 21
+  }
+ ]
+}

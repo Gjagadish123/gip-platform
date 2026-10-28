@@ -1,0 +1,248 @@
+{
+ "generated": "2026-10-28",
+ "source": "Google Places API (New) + Routes API, driving without live traffic, from the site pin",
+ "site": {
+  "lat": 17.5889915,
+  "lng": 78.0067475
+ },
+ "places": [
+  {
+   "category": "Education",
+   "name": "IIT Hyderabad",
+   "googleName": "Indian Institute of Technology, Hyderabad",
+   "address": "Kandi, Telangana 502284",
+   "type": "University",
+   "location": {
+    "lat": 17.5947027,
+    "lng": 78.1230401
+   },
+   "mapsUrl": "https://maps.google.com/?cid=8305007107326644625&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 16.1,
+   "driveMin": 32
+  },
+  {
+   "category": "Education",
+   "name": "GITAM University, Hyderabad campus",
+   "googleName": "GITAM Deemed to be University Hyderabad",
+   "address": "Rudraram, Patancheru, Telangana 502329",
+   "type": "University",
+   "location": {
+    "lat": 17.549778099999997,
+    "lng": 78.1655871
+   },
+   "mapsUrl": "https://maps.google.com/?cid=14751291371855763967&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 20.8,
+   "driveMin": 39
+  },
+  {
+   "category": "Education",
+   "name": "GENIUS SCHOOL OF EXCELLENCE",
+   "googleName": "GENIUS SCHOOL OF EXCELLENCE",
+   "address": "JXC6+4RR, Sadashivpet, Telangana 502291",
+   "type": "Educational Institution",
+   "location": {
+    "lat": 17.6203538,
+    "lng": 77.96200549999999
+   },
+   "mapsUrl": "https://maps.google.com/?cid=18360245957817546270&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 9.5,
+   "driveMin": 17
+  },
+  {
+   "category": "Connectivity",
+   "name": "Sadasivpet bus station",
+   "googleName": "Sadasivpet BUS STAND",
+   "address": "JX83+6WR, Rahmathnagar, Sadashivpet, Telangana 502291",
+   "type": "Transit depot",
+   "location": {
+    "lat": 17.6156239,
+    "lng": 77.9547599
+   },
+   "mapsUrl": "https://maps.google.com/?cid=3299647124190302164&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 12.1,
+   "driveMin": 25
+  },
+  {
+   "category": "Connectivity",
+   "name": "Sangareddy bus station",
+   "googleName": "Sangareddy New Bus Stand",
+   "address": "J38J+4VR, Veerabhadra Nagar, Sangareddy, Telangana 502001",
+   "type": "Transportation Service",
+   "location": {
+    "lat": 17.6153561,
+    "lng": 78.0821266
+   },
+   "mapsUrl": "https://maps.google.com/?cid=11258185781176125598&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 13.1,
+   "driveMin": 26
+  },
+  {
+   "category": "Connectivity",
+   "name": "Outer Ring Road, Exit 3 (Muthangi)",
+   "googleName": "ORR EXIT 3 KYASARAM TOLL ఓ ఆర్ ఆర్ ఎక్జిట్ 3",
+   "address": "G6QM+4V3, Muthangi, Hyderabad, Telangana 502300",
+   "type": "Point of interest",
+   "location": {
+    "lat": 17.53775,
+    "lng": 78.2346845
+   },
+   "mapsUrl": "https://maps.google.com/?cid=11707889170140191393&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 27.7,
+   "driveMin": 54
+  },
+  {
+   "category": "Connectivity",
+   "name": "Patancheru bus station",
+   "googleName": "Patancheruvu BS",
+   "address": "H no 11-73 /1, Shanthi Nagar, Patancheruvu, Telangana 502319",
+   "type": "Bus Station",
+   "location": {
+    "lat": 17.528784299999998,
+    "lng": 78.2640965
+   },
+   "mapsUrl": "https://maps.google.com/?cid=7586143443649363737&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 31.3,
+   "driveMin": 62
+  },
+  {
+   "category": "Connectivity",
+   "name": "Lingampally railway station",
+   "googleName": "Lingampalli",
+   "address": "Hyderabad, 500019, Rail Vihar, Serilingampally, Hyderabad, Serilingampalle (M), Telangana 500019",
+   "type": "Train Station",
+   "location": {
+    "lat": 17.483132299999998,
+    "lng": 78.31759009999999
+   },
+   "mapsUrl": "https://maps.google.com/?cid=221369228267295781&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 39.6,
+   "driveMin": 78
+  },
+  {
+   "category": "Connectivity",
+   "name": "Rajiv Gandhi International Airport",
+   "googleName": "Rajiv Gandhi International Airport",
+   "address": "Shamshabad, Hyderabad, Telangana 500409",
+   "type": "International Airport",
+   "location": {
+    "lat": 17.240282699999998,
+    "lng": 78.429358
+   },
+   "mapsUrl": "https://maps.google.com/?cid=5989833598862796881&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 76.1,
+   "driveMin": 98
+  },
+  {
+   "category": "Work hubs",
+   "name": "Sultanpur Medical Devices Park",
+   "googleName": "Medical Devices Park, Dayara",
+   "address": "EXIT NO 4, Sultanpur, Hyderabad, Telangana 502319",
+   "type": "Store",
+   "location": {
+    "lat": 17.566523699999998,
+    "lng": 78.3143217
+   },
+   "mapsUrl": "https://maps.google.com/?cid=6036258060655996103&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 37.5,
+   "driveMin": 65
+  },
+  {
+   "category": "Work hubs",
+   "name": "Pashamylaram industrial area",
+   "googleName": "Industrial Park",
+   "address": "Industrial Park, Pashamylaram, Telangana 502307",
+   "type": null,
+   "location": {
+    "lat": 17.53817,
+    "lng": 78.1745235
+   },
+   "mapsUrl": "https://maps.google.com/?cid=14391731149754259750&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 28.3,
+   "driveMin": 55
+  },
+  {
+   "category": "Work hubs",
+   "name": "ICRISAT, Patancheru",
+   "googleName": "International Crops Research Institute for the Semi-arid Tropics",
+   "address": "Patancheru, Hyderabad, Patancheruvu, Telangana 502324",
+   "type": "Research Institute",
+   "location": {
+    "lat": 17.5178392,
+    "lng": 78.2790229
+   },
+   "mapsUrl": "https://maps.google.com/?cid=12712677214243471034&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 32.7,
+   "driveMin": 64
+  },
+  {
+   "category": "Work hubs",
+   "name": "Financial District, Gachibowli",
+   "googleName": "Financial District",
+   "address": "Financial District, Nanakramguda, Telangana",
+   "type": null,
+   "location": {
+    "lat": 17.4117312,
+    "lng": 78.3424898
+   },
+   "mapsUrl": "https://maps.google.com/?cid=18286672786433890820&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 50.5,
+   "driveMin": 77
+  },
+  {
+   "category": "Healthcare",
+   "name": "MNR Hospital",
+   "googleName": "MNR Hospital",
+   "address": "MNR Hospital, Mohd.Shapur, Telangana 502294",
+   "type": null,
+   "location": {
+    "lat": 17.622316599999998,
+    "lng": 78.127045
+   },
+   "mapsUrl": "https://maps.google.com/?cid=15451566057706542793&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 20.2,
+   "driveMin": 37
+  },
+  {
+   "category": "Healthcare",
+   "name": "SRI Aadya Multispeciality Hospital",
+   "googleName": "SRI Aadya Multispeciality Hospital",
+   "address": "JW9V+3M4, Ravindra Nagar, Sadashivpet, Telangana 502291",
+   "type": "Hospital",
+   "location": {
+    "lat": 17.618092,
+    "lng": 77.94476900000001
+   },
+   "mapsUrl": "https://maps.google.com/?cid=17981640163257165287&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 13.5,
+   "driveMin": 20
+  },
+  {
+   "category": "Town",
+   "name": "Sadasivpet town",
+   "googleName": "Sadashivpet",
+   "address": "Sadashivpet, Telangana 502291",
+   "type": null,
+   "location": {
+    "lat": 17.6160052,
+    "lng": 77.9541739
+   },
+   "mapsUrl": "https://maps.google.com/?cid=9318683179349406812&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 9.1,
+   "driveMin": 17
+  },
+  {
+   "category": "Town",
+   "name": "Sangareddy Collectorate",
+   "googleName": "Office of District Collector, Sangareddy",
+   "address": "H3VM+RCF, Vidya Nagar Colony, Pothreddipalle, Sangareddy, Telangana 502001",
+   "type": "Government Office",
+   "location": {
+    "lat": 17.594566,
+    "lng": 78.0835417
+   },
+   "mapsUrl": "https://maps.google.com/?cid=17642137958009849640&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
+   "driveKm": 10.7,
+   "driveMin": 20
+  }
+ ]
+}

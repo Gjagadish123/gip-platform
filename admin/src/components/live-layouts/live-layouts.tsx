@@ -1,5 +1,5 @@
 "use client"
-// /live-layouts: the admin side of the website's live layouts page, and only its four projects (LIVE_LAYOUT_IDS).
+// /live-layouts: the admin side of the live layouts app (LAYOUTS_URL), and only its four projects (LIVE_LAYOUT_IDS).
 // Their inventory is what that page shows: a status change reaches open pages within a second (supabase migration
 // live_layouts), so this screen says per project what visitors see now and opens the place to change it.
 import { useId } from "react"
@@ -12,7 +12,7 @@ import { StatusBar, StatusSwatch } from "@/components/form/status"
 import { setInventoryView } from "@/components/inventory/use-selection"
 import { LifecycleBadge, PublishBadge } from "@/components/projects/list/project-badges"
 import { Button } from "@/components/ui/button"
-import { getProjectType, UNIT_STATUSES, UNIT_STATUS_META, WEBSITE_URL } from "@/lib/constants"
+import { getProjectType, LAYOUTS_URL, liveLayoutUrl, UNIT_STATUSES, UNIT_STATUS_META } from "@/lib/constants"
 import { formatDate, formatNumber } from "@/lib/format"
 import { statusCounts } from "@/lib/inventory"
 import { layoutInfo, LIVE_LAYOUT_IDS } from "@/lib/layouts"
@@ -28,17 +28,15 @@ export function LiveLayouts() {
     <PageContainer>
       <PageHeader
         title="Live layouts"
-        description={`The approved layouts on the website, plot by plot, coloured by status · ${listed} of ${LIVE_LAYOUT_IDS.length} on the page now`}
+        description={`The approved layouts on the live map, plot by plot, coloured by status · ${listed} of ${LIVE_LAYOUT_IDS.length} on the page now`}
         actions={
-          WEBSITE_URL ? (
-            <Button asChild variant="outline">
-              <a href={`${WEBSITE_URL}/layouts`} target="_blank" rel="noopener noreferrer">
-                Open the live page
-                <ArrowUpRight data-icon="inline-end" />
-                <span className="sr-only">(opens in a new tab)</span>
-              </a>
-            </Button>
-          ) : null
+          <Button asChild variant="outline">
+            <a href={LAYOUTS_URL} target="_blank" rel="noopener noreferrer">
+              Open the live page
+              <ArrowUpRight data-icon="inline-end" />
+              <span className="sr-only">(opens in a new tab)</span>
+            </a>
+          </Button>
         }
       />
 
@@ -71,7 +69,7 @@ function LayoutCard({ project, units }: { project: Project; units: Unit[] }) {
   const sample = units.some((u) => u.sample)
   const listed = project.publishing.state === "published"
   const drawn = !!info?.plots
-  const liveHref = WEBSITE_URL && listed ? `${WEBSITE_URL}/layouts?project=${project.id}` : null
+  const liveHref = listed ? liveLayoutUrl(project.id) : null
 
   return (
     <article aria-labelledby={id} className="flex h-full flex-col rounded-xl border bg-card text-card-foreground">
@@ -100,7 +98,7 @@ function LayoutCard({ project, units }: { project: Project; units: Unit[] }) {
           <dd className="mt-0.5">
             {drawn && info
               ? `${formatNumber(info.plots)} ${nouns} from the ${info.source.title}${info.fit ? `, on the map within about ${Math.max(1, Math.round(info.fit))} m` : ""}`
-              : `Pending: the ${info?.source.title ?? "approved layout"} isn't digitised, so the page shows the site pin and the ${nouns} as a list`}
+              : `Pending: the ${info?.source.title ?? "approved layout"} isn't digitised, so the page shows the site pin and its status counts`}
           </dd>
         </div>
       </dl>

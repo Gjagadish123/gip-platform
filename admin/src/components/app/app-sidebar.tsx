@@ -121,7 +121,7 @@ function NavMain({ pathname }: { pathname: string | null }) {
           </Collapsible>
         )}
 
-        {/* The four projects on the website's live layouts page (the screen lists them; one fill, no repeats). */}
+        {/* The four projects in the live layouts app (the screen lists them; one fill, no repeats). */}
         <SidebarMenuItem>
           <SidebarMenuButton asChild isActive={pathname === "/live-layouts"} tooltip="Live layouts" className="font-medium">
             <Link href="/live-layouts" onClick={close}>

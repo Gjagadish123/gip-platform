@@ -63,7 +63,7 @@ export function InventorySummary({
   onClearFilters: () => void
   updatedAt?: string
   sampleNote?: string
-  /** The website's live layouts page for this project: status changes show there within seconds. */
+  /** The live layouts app for this project: status changes show there within seconds. */
   liveHref?: string
 }) {
   const noun = type.unitNounPlural.toLowerCase()
@@ -83,7 +83,7 @@ export function InventorySummary({
                 href={liveHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                title="Status changes show on the website's live layouts page within seconds"
+                title="Status changes show on the live layouts page within seconds"
                 className="font-medium text-foreground underline-offset-4 hover:underline"
               >
                 Live layout ↗
