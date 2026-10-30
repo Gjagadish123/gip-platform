@@ -27,7 +27,7 @@
   --color-teal: var(--teal); /* teal: the secondary colour (accents, rules, indexes, CTAs on navy) */
   --color-teal-deep: var(--teal-deep); /* teal for small text and marks on white / mist */
   --color-teal-soft: var(--teal-soft); /* a teal tint for quiet fills */
-  --color-go: var(--go); /* "Available", "Selling now" */
+  --color-go: var(--go); /* "Available", "Ongoing" */
   --color-go-soft: var(--go-soft);
   --color-on-navy: var(--on-navy);
   --color-on-navy-2: var(--on-navy-2);
@@ -273,15 +273,6 @@
 @keyframes film-settle {
   from {
     transform: scale(1.14);
-  }
-}
-/* Aurora lights drift and breathe behind the light sections (each light carries its own --dx / --dy). */
-@keyframes aurora-drift {
-  50% {
-    transform: translate3d(var(--dx), var(--dy), 0) scale(1.18);
-  }
-  100% {
-    transform: translate3d(calc(var(--dx) * -0.5), calc(var(--dy) * 0.6), 0) scale(0.92);
   }
 }
 /* A light that runs down the hero's scroll cue. */

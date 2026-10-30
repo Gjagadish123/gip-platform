@@ -1,9 +1,8 @@
 "use client";
 
-import { CalendarDays, Download, Phone } from "lucide-react";
+import { CalendarDays, Download } from "lucide-react";
 import { useSyncExternalStore } from "react";
 
-import { COMPANY } from "@/lib/constants";
 import { WHATSAPP_TEXT, whatsappUrl } from "@/lib/enquiry";
 import { cn } from "@/lib/utils";
 
@@ -26,8 +25,8 @@ const cell = "flex h-15 flex-col items-center justify-center gap-1 text-label fo
 const dock = "inline-flex h-10 items-center gap-2 rounded-md px-3.5 text-small font-medium text-navy transition-colors duration-300 hover:bg-mist";
 
 /**
- * One tap to a person, everywhere. Phones: a navy bar fixed to the foot with Call, WhatsApp and Site visit. Desktop: a
- * small white dock in the bottom-right corner (the brochure on project pages, WhatsApp, the phone number) that appears
+ * One tap to a person, everywhere. Phones: a navy bar fixed to the foot with WhatsApp and Site visit. Desktop: a
+ * small white dock in the bottom-right corner (the brochure on project pages, then WhatsApp) that appears
  * once the first screen has scrolled away; the minimal header carries Book a site visit and the menu. Both hide while
  * the enquiry drawer is open.
  */
@@ -46,11 +45,7 @@ export function ActionBar() {
         )}
         style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       >
-        <div className="grid grid-cols-3 divide-x divide-white/12">
-          <a href={`tel:${COMPANY.phoneE164}`} className={cell}>
-            <Phone aria-hidden className="size-[18px]" />
-            Call
-          </a>
+        <div className="grid grid-cols-2 divide-x divide-white/12">
           <a href={whatsappUrl(text)} target="_blank" rel="noreferrer" className={cell}>
             <WhatsAppIcon className="size-[18px]" />
             WhatsApp
@@ -76,13 +71,9 @@ export function ActionBar() {
               Brochure
             </a>
           ) : null}
-          <a href={whatsappUrl(text)} target="_blank" rel="noreferrer" className={dock}>
-            <WhatsAppIcon className="size-4 text-whatsapp" />
+          <a href={whatsappUrl(text)} target="_blank" rel="noreferrer" className={cn(dock, "bg-brand text-white hover:bg-navy-deep")}>
+            <WhatsAppIcon className="size-4" />
             WhatsApp
-          </a>
-          <a href={`tel:${COMPANY.phoneE164}`} className={cn(dock, "bg-brand text-white hover:bg-navy-deep")}>
-            <Phone aria-hidden className="size-4" />
-            <span className="tabular-nums">{COMPANY.phone}</span>
           </a>
         </div>
       </div>

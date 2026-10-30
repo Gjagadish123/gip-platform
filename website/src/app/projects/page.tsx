@@ -16,7 +16,7 @@ const PATH = "/projects";
 
 export const metadata: Metadata = pageMeta({ title: TITLE, description: DESCRIPTION, path: PATH });
 
-// The listing: the full-screen film hero (H1, live counts, the record), the current projects as a card grid, the delivered layouts as a second
+// The listing: the full-screen film hero (H1, live counts, the record), the ongoing projects as a card grid, the delivered layouts as a second
 // grid (`#delivered`, linked from the header, footer and home), the FAQ as a sticky split, the navy close.
 export default async function ProjectsPage() {
   const projects = await getProjects();
@@ -65,10 +65,9 @@ export default async function ProjectsPage() {
 
       <ProjectGrid
         id="current"
-        title="Current projects"
+        title="Ongoing projects"
         lede="Layouts open for booking today, with their approvals and plot sizes where we have them on record."
         cards={current}
-        scene="b"
         priority
       />
       <ProjectGrid
@@ -81,7 +80,6 @@ export default async function ProjectsPage() {
           </>
         }
         cards={deliveredCards}
-        scene="d"
       />
       <ProjectsFaq />
       <Closing />

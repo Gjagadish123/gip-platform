@@ -1,5 +1,5 @@
 import { Choreo } from "@/components/motion/choreo";
-import { Aurora } from "@/components/site/aurora";
+import { Backdrop } from "@/components/site/backdrop";
 import { Container } from "@/components/site/container";
 import { LineArt } from "@/components/site/line-art";
 import { SectionChip } from "@/components/site/typography";
@@ -18,7 +18,7 @@ import { WhyFilm } from "./why-film";
 export function Why() {
   return (
     <Choreo as="section" aria-labelledby="why-title" className="relative isolate py-28 lg:py-44">
-      <Aurora scene="f" />
+      <Backdrop />
       <Container>
         <div data-anim="fade-up">
           <SectionChip>{WHY.label}</SectionChip>

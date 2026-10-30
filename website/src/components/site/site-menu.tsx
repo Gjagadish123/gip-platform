@@ -173,7 +173,7 @@ function MenuPanel({ onClosed }: { onClosed: () => void }) {
                               {s.label}
                               {s.selling ? (
                                 <StatusChip tone="go-navy" className="h-6">
-                                  Selling now
+                                  Ongoing
                                 </StatusChip>
                               ) : null}
                             </Link>
@@ -190,14 +190,6 @@ function MenuPanel({ onClosed }: { onClosed: () => void }) {
           <div className="relative flex flex-col gap-10 border-t border-white/12 pt-10 lg:col-span-5 lg:justify-between lg:border-t-0 lg:pt-0 lg:pl-12 xl:pl-16">
             <span data-menu-line aria-hidden className="absolute inset-y-0 left-0 hidden w-px origin-top bg-white/12 lg:block" />
             <dl className="grid gap-6">
-              <div data-menu-fade>
-                <dt className="text-label text-on-navy-2">Call</dt>
-                <dd>
-                  <a href={`tel:${COMPANY.phoneE164}`} className={cn(contact, "text-h3 tabular-nums")}>
-                    {COMPANY.phone}
-                  </a>
-                </dd>
-              </div>
               <div data-menu-fade>
                 <dt className="text-label text-on-navy-2">Email</dt>
                 <dd>

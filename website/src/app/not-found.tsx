@@ -6,7 +6,7 @@ import { Logo } from "@/components/site/logo";
 import { TextLink } from "@/components/site/text-link";
 import { Lede } from "@/components/site/typography";
 import { Arrow, Button } from "@/components/ui/button";
-import { COMPANY } from "@/lib/constants";
+import { WHATSAPP_TEXT, whatsappUrl } from "@/lib/enquiry";
 
 export const metadata: Metadata = {
   title: "Page not found",
@@ -35,7 +35,7 @@ export default function NotFound() {
             </Button>
           </div>
           <p className="mt-8">
-            <TextLink href={`tel:${COMPANY.phoneE164}`}>Call {COMPANY.phone}</TextLink>
+            <TextLink href={whatsappUrl(WHATSAPP_TEXT.home)} external>Message us on WhatsApp</TextLink>
           </p>
         </div>
         <Logo mark variant="navy" width={420} className="hidden w-[420px] justify-self-end opacity-8 lg:col-span-5 lg:block" />

@@ -1,15 +1,16 @@
-import { Clock, Mail, Phone, type LucideIcon } from "lucide-react";
-import type { ReactNode } from "react";
+import { Clock, Mail } from "lucide-react";
+import type { ComponentType, ReactNode } from "react";
 
 import { Container } from "@/components/site/container";
 import { EnquiryForm } from "@/components/site/enquiry-form";
+import { WhatsAppIcon } from "@/components/site/icons";
 import { Reveal } from "@/components/site/reveal";
 import { Section } from "@/components/site/section";
 import { COMPANY } from "@/lib/constants";
-import type { InterestId } from "@/lib/enquiry";
+import { WHATSAPP_TEXT, whatsappUrl, type InterestId } from "@/lib/enquiry";
 import { OFFICE } from "@/lib/site";
 
-function Row({ icon: Icon, label, children }: { icon: LucideIcon; label: string; children: ReactNode }) {
+function Row({ icon: Icon, label, children }: { icon: ComponentType<{ className?: string }>; label: string; children: ReactNode }) {
   return (
     <li className="flex items-center gap-4">
       <span aria-hidden className="inline-flex size-10 shrink-0 items-center justify-center rounded-md bg-mist text-navy-soft">
@@ -37,9 +38,9 @@ export function Enquire({ name, interest }: { name: string; interest: InterestId
             phone, and there is no obligation to book.
           </p>
           <ul className="mt-10 space-y-5">
-            <Row icon={Phone} label="Call">
-              <a href={`tel:${COMPANY.phoneE164}`} className="tabular-nums transition-colors hover:text-navy-soft">
-                {COMPANY.phone}
+            <Row icon={WhatsAppIcon} label="WhatsApp">
+              <a href={whatsappUrl(WHATSAPP_TEXT.project(name, "Hyderabad"))} target="_blank" rel="noreferrer" className="transition-colors hover:text-navy-soft">
+                Message us on WhatsApp
               </a>
             </Row>
             <Row icon={Mail} label="Email">

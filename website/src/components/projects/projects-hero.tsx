@@ -68,7 +68,7 @@ export function ProjectsHero({ selling, delivered }: { selling: number; delivere
   const acres = stat("Acres");
   const customers = stat("Happy");
   const record = [
-    { value: formatNumber(selling), label: [selling === 1 ? "Layout" : "Layouts", "selling now"], live: true },
+    { value: formatNumber(selling), label: ["Ongoing", selling === 1 ? "project" : "projects"], live: true },
     { value: formatNumber(delivered), label: [delivered === 1 ? "Layout" : "Layouts", "delivered"] },
     { value: `${formatNumber(acres.value)}${acres.suffix}`, label: acres.label },
     { value: `${formatNumber(customers.value)}${customers.suffix}`, label: customers.label },
@@ -129,7 +129,7 @@ export function ProjectsHero({ selling, delivered }: { selling: number; delivere
               />
               <div className="motion-safe:animate-[fade-rise_1.1s_var(--ease-out)_850ms_both]">
                 <p className="mt-5 max-w-[32rem] text-lede text-white">
-                  {formatNumber(selling)} {selling === 1 ? "layout" : "layouts"} selling now and {formatNumber(delivered)} delivered,
+                  {formatNumber(selling)} ongoing {selling === 1 ? "project" : "projects"} and {formatNumber(delivered)} delivered,
                   each with clear titles and an approved plan.
                 </p>
                 <div className="mt-7 grid gap-3 sm:flex sm:flex-wrap sm:items-center lg:mt-[clamp(1.5rem,3.5svh,2.25rem)]">
@@ -140,7 +140,7 @@ export function ProjectsHero({ selling, delivered }: { selling: number; delivere
                   </Magnetic>
                   <Button asChild variant="outline-light" size="lg" className="max-sm:w-full">
                     <a href="#current">
-                      See current projects <Arrow />
+                      See ongoing projects <Arrow />
                     </a>
                   </Button>
                 </div>

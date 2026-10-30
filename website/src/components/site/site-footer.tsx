@@ -4,7 +4,7 @@ import { COMPANY, LAYOUTS_URL } from "@/lib/constants";
 import { COPYRIGHT_YEAR, OFFICE } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
-import { Aurora } from "./aurora";
+import { Backdrop } from "./backdrop";
 import { Container } from "./container";
 import { DisclaimerDialog } from "./disclaimer-dialog";
 import { FacebookIcon, InstagramIcon, WhatsAppIcon } from "./icons";
@@ -34,7 +34,7 @@ const social =
 export function SiteFooter() {
   return (
     <footer className="relative isolate border-t border-line pb-[calc(3.75rem+env(safe-area-inset-bottom))] lg:pb-0">
-      <Aurora scene="a" />
+      <Backdrop />
       <Container className="grid gap-14 py-16 lg:grid-cols-12 lg:gap-10 lg:py-20">
         <div className="lg:col-span-4">
           <Logo variant="navy" width={150} className="w-[132px] lg:w-[150px]" />
@@ -93,11 +93,6 @@ export function SiteFooter() {
             </address>
             <p className="mt-3 text-small text-muted">{OFFICE.hours}</p>
             <ul className="mt-4 flex flex-col gap-2">
-              <li>
-                <a href={`tel:${COMPANY.phoneE164}`} className={cn(link, "font-medium text-navy tabular-nums")}>
-                  {COMPANY.phone}
-                </a>
-              </li>
               <li>
                 <a href={`mailto:${COMPANY.email}`} className={cn(link, "break-all")}>
                   {COMPANY.email}

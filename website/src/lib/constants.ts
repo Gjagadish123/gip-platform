@@ -6,15 +6,13 @@ import {
 } from 'lucide-react';
 import type { AreaUnit, IconKey, Lifecycle, Project, ProjectType, UnitStatus } from './types';
 
-/* ---------- company (from the live /contact page; the old site's +91 98765 43210 is a placeholder) ---------- */
+/* ---------- company (from the live /contact page) ---------- */
 
 export const COMPANY = {
   name: 'Greater Infra Projects',
   shortName: 'GIP',
   legalName: 'Greater Infra Projects',
-  phone: '+91 97001 23900',
-  phoneE164: '+919700123900',
-  whatsappE164: '919700123900',
+  whatsappE164: '919700123900', // the official WhatsApp Business number; no phone number is shown on the site
   email: 'Gip@greaterinfraprojects.in',
   office: 'Ameerpet, Hyderabad, Telangana',
   city: 'Hyderabad',

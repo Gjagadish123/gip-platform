@@ -129,13 +129,12 @@ export const NEARBY: { id: string; label: string; places: { name: string; time: 
 
 /* ---------- FAQ: answers only from the approvals, the inventory and the brochure ---------- */
 
-export function faqItems({ hmda, rera, plots, min, max, phone, hours }: {
+export function faqItems({ hmda, rera, plots, min, max, hours }: {
   hmda?: Approval;
   rera?: Approval;
   plots: number;
   min: number;
   max: number;
-  phone: string;
   hours: string;
 }) {
   const approvals = [
@@ -155,7 +154,7 @@ export function faqItems({ hmda, rera, plots, min, max, phone, hours }: {
     },
     {
       q: "How do I visit the site?",
-      a: `Use Schedule site visit at the bottom of the page, call ${phone} or message us on WhatsApp (${hours}). We arrange the visit at a time that suits you.`,
+      a: `Use Schedule site visit at the bottom of the page or message us on WhatsApp (${hours}). We arrange the visit at a time that suits you.`,
     },
     {
       q: "Do you build villas on the plots?",

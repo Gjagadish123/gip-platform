@@ -1,6 +1,6 @@
 "use client";
 
-import { Phone, X } from "lucide-react";
+import { Mail, X } from "lucide-react";
 
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { COMPANY } from "@/lib/constants";
@@ -40,8 +40,8 @@ export function EnquirySheet() {
           <EnquiryForm key={`${interest}-${options.plot?.number ?? ""}`} interest={interest} plot={options.plot} compact />
         </div>
         <p className="mt-auto flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-t border-line bg-mist px-6 py-5 text-small text-muted sm:px-10">
-          <a href={`tel:${COMPANY.phoneE164}`} className="inline-flex items-center gap-2 text-ui font-medium text-navy tabular-nums">
-            <Phone aria-hidden className="size-4 text-navy-soft" /> {COMPANY.phone}
+          <a href={`mailto:${COMPANY.email}`} className="inline-flex items-center gap-2 text-ui font-medium break-all text-navy">
+            <Mail aria-hidden className="size-4 text-navy-soft" /> {COMPANY.email}
           </a>
           {OFFICE.hours}
         </p>

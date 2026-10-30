@@ -26,7 +26,7 @@ export function SectionChip({ children, tone = "light", className }: { children:
   );
 }
 
-/** A small status chip with a dot: "Selling now", "Completed"; `go-navy` is the hairline version for navy surfaces. */
+/** A small status chip with a dot: "Ongoing", "Completed"; `go-navy` is the hairline version for navy surfaces. */
 export function StatusChip({
   children,
   tone = "go",
