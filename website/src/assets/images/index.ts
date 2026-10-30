@@ -2,7 +2,8 @@
 // client's brochure: gcvi-arch, villa-east/west) are artist's impressions and carry the chip (<Plate impression />).
 // gcvi-layout-copy is page 2 of the client's layout PDF (the HMDA layout copy). touch-villa is the live home's own
 // Get in touch picture (greaterinfraprojects.in/images/img-.png, re-encoded). projects-hero is a kie.ai Seedream render
-// (source in website/assets-src/kie/projects-hero-1.jpeg).
+// with its boulder hills swapped for a city skyline by a nano-banana-2 edit (source in
+// website/assets-src/kie/projects-hero-buildings-a.jpg; the original is projects-hero-1.jpeg).
 import anniversaryCollage from "./anniversary-collage.webp";
 import avenueRoad from "./avenue-road.webp";
 import clubhousePool from "./clubhouse-pool.webp";
