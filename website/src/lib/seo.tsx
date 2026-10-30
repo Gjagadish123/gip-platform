@@ -64,7 +64,6 @@ export function organizationJsonLd() {
     alternateName: COMPANY.shortName,
     url: SITE_URL,
     logo: `${SITE_URL}/brand/gip-lockup-navy.svg`,
-    telephone: COMPANY.phoneE164,
     email: COMPANY.email,
     address: {
       "@type": "PostalAddress",
@@ -86,7 +85,7 @@ export function organizationJsonLd() {
     contactPoint: [
       {
         "@type": "ContactPoint",
-        telephone: COMPANY.phoneE164,
+        email: COMPANY.email,
         contactType: "sales",
         areaServed: "IN",
         availableLanguage: ["en", "te"],

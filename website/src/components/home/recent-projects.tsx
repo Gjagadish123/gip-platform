@@ -8,7 +8,7 @@ import { useRef, type ReactNode } from "react";
 import { Choreo } from "@/components/motion/choreo";
 import { DESKTOP, gsap, MOTION_OK, useGSAP } from "@/components/motion/gsap";
 import { Magnetic } from "@/components/motion/magnetic";
-import { Aurora } from "@/components/site/aurora";
+import { Backdrop } from "@/components/site/backdrop";
 import { Container } from "@/components/site/container";
 import { useEnquiry } from "@/components/site/enquiry-provider";
 import { ImpressionChip } from "@/components/site/plate";
@@ -147,7 +147,7 @@ export function RecentProjects() {
   return (
     <section ref={ref} aria-labelledby="recent-title" className="lg:h-[300vh] motion-reduce:lg:h-auto">
       <Choreo className="relative isolate py-24 lg:sticky lg:top-0 lg:flex lg:h-svh lg:flex-col lg:overflow-clip lg:pt-28 lg:pb-12 motion-reduce:lg:static motion-reduce:lg:block motion-reduce:lg:h-auto motion-reduce:lg:overflow-visible motion-reduce:lg:py-36">
-        <Aurora scene="e" />
+        <Backdrop />
         <Container className="lg:flex lg:min-h-0 lg:flex-1 lg:flex-col motion-reduce:lg:block">
           <div className="flex flex-wrap items-end justify-between gap-6">
             <div>

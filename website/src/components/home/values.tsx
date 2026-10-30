@@ -1,5 +1,5 @@
 import { Choreo } from "@/components/motion/choreo";
-import { Aurora } from "@/components/site/aurora";
+import { Backdrop } from "@/components/site/backdrop";
 import { Container } from "@/components/site/container";
 import { LineArt } from "@/components/site/line-art";
 import { SectionChip } from "@/components/site/typography";
@@ -21,7 +21,7 @@ import { ValuesSwitch } from "./values-switch";
 export function Values() {
   return (
     <Choreo as="section" aria-labelledby="values-title" className="relative isolate py-28 lg:py-44">
-      <Aurora scene="d" />
+      <Backdrop />
       <Container>
         <ValuesSwitch className="grid gap-12 lg:grid-cols-12 lg:gap-14">
           {/* Capped to the screen under the header so on short laptops the well shrinks instead of hanging below the fold. */}

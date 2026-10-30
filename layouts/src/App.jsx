@@ -144,9 +144,6 @@ function NoLayouts() {
           Our project layouts will be back here soon. For plot availability today, please talk to our sales team.
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-2.5">
-          <a href={`tel:${COMPANY.tel}`} className={`num ${link}`}>
-            <Icon name="phone" size={17} /> {COMPANY.phone}
-          </a>
           <a href={`https://wa.me/${COMPANY.whatsapp}`} target="_blank" rel="noreferrer" className={link}>
             <Icon name="whatsapp" size={17} /> WhatsApp sales
           </a>

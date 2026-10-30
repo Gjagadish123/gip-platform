@@ -2,7 +2,6 @@ import { Container } from "@/components/site/container";
 import { FaqList } from "@/components/site/faq-list";
 import { Section } from "@/components/site/section";
 import { TextLink } from "@/components/site/text-link";
-import { COMPANY } from "@/lib/constants";
 import { WHATSAPP_TEXT, whatsappUrl } from "@/lib/enquiry";
 import { OFFICE } from "@/lib/site";
 
@@ -30,7 +29,7 @@ export const FAQ = [
   },
   {
     q: "How do I arrange a site visit?",
-    a: `Call or WhatsApp ${COMPANY.phone} (${OFFICE.hours}) or use Schedule site visit, and we'll arrange a time to walk the plots with you. If you live abroad, a family member can visit for you while we share the layout copy and site photos on WhatsApp.`,
+    a: `Message us on WhatsApp (${OFFICE.hours}) or use Schedule site visit, and we'll arrange a time to walk the plots with you. If you live abroad, a family member can visit for you while we share the layout copy and site photos on WhatsApp.`,
   },
 ] as const;
 
@@ -45,7 +44,6 @@ export function ProjectsFaq() {
           </h2>
           <p className="mt-5 max-w-[34ch] text-body text-text">Your question isn&rsquo;t here? Ask us directly.</p>
           <div className="mt-5 flex flex-wrap gap-x-6 gap-y-3">
-            <TextLink href={`tel:${COMPANY.phoneE164}`}>Call {COMPANY.phone}</TextLink>
             <TextLink href={whatsappUrl(WHATSAPP_TEXT.home)} external>
               WhatsApp us
             </TextLink>

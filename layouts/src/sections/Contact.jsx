@@ -84,9 +84,6 @@ export default function Contact({ project, model, pin }) {
                 <button type="submit" className="flex h-12 items-center gap-2 rounded-xl bg-navy-700 px-6 text-[15px] font-semibold text-white hover:bg-navy-800">
                   <Icon name="whatsapp" size={19} /> Book a site visit
                 </button>
-                <a href={`tel:${COMPANY.tel}`} className="num flex h-12 items-center gap-2 rounded-xl border border-line px-5 text-[17px] font-semibold text-navy-700 hover:border-navy-500">
-                  <Icon name="phone" size={18} /> {COMPANY.phone}
-                </a>
               </div>
             </form>
           </div>

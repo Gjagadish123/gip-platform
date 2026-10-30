@@ -1,4 +1,4 @@
-import { Clock, Mail, Phone } from "lucide-react";
+import { Clock, Mail } from "lucide-react";
 import type { Metadata } from "next";
 import type { ComponentType } from "react";
 
@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
 
 const TITLE = "Contact — Ameerpet, Hyderabad";
 const DESCRIPTION =
-  "Call +91 97001 23900, WhatsApp, or visit Vasavi MPM Grand, Metro Junction, Ameerpet. Mon–Sat 10:00–19:00 IST.";
+  "Message us on WhatsApp, email us, or visit Vasavi MPM Grand, Metro Junction, Ameerpet. Mon–Sat 10:00–19:00 IST.";
 const PATH = "/contact";
 
 export const metadata: Metadata = pageMeta({ title: TITLE, description: DESCRIPTION, path: PATH });
@@ -35,7 +35,6 @@ const jsonLd = {
 type Method = { icon: ComponentType<{ className?: string }>; title: string; detail: string; href?: string; external?: boolean };
 
 const METHODS: Method[] = [
-  { icon: Phone, title: "Call us", detail: COMPANY.phone, href: `tel:${COMPANY.phoneE164}` },
   {
     icon: WhatsAppIcon,
     title: "Message us on WhatsApp",

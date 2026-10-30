@@ -72,7 +72,7 @@ export function toCard(p: Project, s: InventorySummary): ProjectCardData {
 
 export const isExternal = (href: string) => /^https?:\/\//.test(href);
 export const STATUS_LABEL: Record<ProjectCardData["status"], string> = {
-  selling: "Selling now",
+  selling: "Ongoing",
   upcoming: "Upcoming",
   completed: "Completed",
 };

@@ -1,10 +1,9 @@
 "use client";
 
-import { CalendarDays, Phone } from "lucide-react";
+import { CalendarDays } from "lucide-react";
 import type { ComponentType, ReactNode } from "react";
 
 import { Arrow } from "@/components/ui/button";
-import { COMPANY } from "@/lib/constants";
 import { WHATSAPP_TEXT, whatsappUrl, type InterestId } from "@/lib/enquiry";
 import { CLOSING_CTA, OFFICE } from "@/lib/site";
 
@@ -64,13 +63,8 @@ export function Closing({
           </div>
           <ul className="mt-10 divide-y divide-white/12 border-y border-white/12 lg:col-span-6 lg:col-start-7 lg:mt-0 lg:self-center">
             <li>
-              <a href={`tel:${COMPANY.phoneE164}`} className={row}>
-                <Row icon={Phone} title={`Call ${COMPANY.phone}`} detail={OFFICE.hours} />
-              </a>
-            </li>
-            <li>
               <a href={whatsappUrl(whatsapp)} target="_blank" rel="noreferrer" className={row}>
-                <Row icon={WhatsAppIcon} title="Message us on WhatsApp" detail="Send a plot size, a facing or a question" />
+                <Row icon={WhatsAppIcon} title="Message us on WhatsApp" detail={`Send a plot size, a facing or a question · ${OFFICE.hours}`} />
               </a>
             </li>
             <li>

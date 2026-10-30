@@ -27,7 +27,7 @@ import { MasterPlan } from "@/components/project/master-plan";
 import { PlotSizes } from "@/components/project/plot-sizes";
 import { VillaDesigns } from "@/components/project/villas";
 import { PageEnquiryContext } from "@/components/site/enquiry-provider";
-import { COMPANY, LIFECYCLE_LABEL } from "@/lib/constants";
+import { LIFECYCLE_LABEL } from "@/lib/constants";
 import { INTERESTS, WHATSAPP_TEXT, type InterestId } from "@/lib/enquiry";
 import { formatDate, formatLandArea, formatNumber } from "@/lib/format";
 import { getPlan, getProject, getProjects, getUnits, hasDetailPage, summarize } from "@/lib/projects";
@@ -233,7 +233,7 @@ async function ProjectContent({ params }: Params) {
       {slides.length ? <Gallery slides={slides} /> : null}
       <Approvals hmda={hmda} rera={rera} documents={project.legal.documents} brochure={brochure} layout={layoutPdf} />
       <Faq
-        items={faqItems({ hmda, rera, plots: units.length, min, max, phone: COMPANY.phone, hours: OFFICE.hours })}
+        items={faqItems({ hmda, rera, plots: units.length, min, max, hours: OFFICE.hours })}
         whatsapp={WHATSAPP_TEXT.project(project.name, project.location.short)}
       />
       <Enquire name={project.name} interest={interest} />

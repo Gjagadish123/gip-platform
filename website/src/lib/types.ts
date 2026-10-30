@@ -212,7 +212,7 @@ export interface Cta {
   subheading: string;
   title: string;
   description: string;
-  phone?: string;                   // E.164 '+91…'; empty → COMPANY.phone
+  phone?: string;                   // E.164 '+91…'; not shown: the site publishes no phone number
   whatsapp?: string;                // E.164; empty → phone
   urgency?: string;
   thankYou?: string;

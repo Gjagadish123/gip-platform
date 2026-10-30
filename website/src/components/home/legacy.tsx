@@ -6,7 +6,7 @@ import { useRef, useState, useSyncExternalStore } from "react";
 
 import { Choreo } from "@/components/motion/choreo";
 import { DESKTOP, gsap, MOTION_OK, PHONE, useGSAP } from "@/components/motion/gsap";
-import { Aurora } from "@/components/site/aurora";
+import { Backdrop } from "@/components/site/backdrop";
 import { Container } from "@/components/site/container";
 import { ImpressionChip } from "@/components/site/plate";
 import { SectionChip } from "@/components/site/typography";
@@ -99,7 +99,7 @@ export function Legacy() {
       <div ref={runway} className="py-24 lg:h-[240vh] lg:py-0 motion-reduce:lg:h-auto motion-reduce:lg:py-36">
         <div className="relative isolate lg:sticky lg:top-0 lg:flex lg:h-svh lg:flex-col lg:pt-26 lg:pb-8 motion-reduce:lg:static motion-reduce:lg:h-auto motion-reduce:lg:pt-0 motion-reduce:lg:pb-0">
           {/* In the stage itself, so the light stays put while the stage holds. */}
-          <Aurora scene="c" className="max-lg:-inset-y-24" />
+          <Backdrop className="max-lg:-inset-y-24" />
           <Container className="lg:flex lg:min-h-0 lg:flex-1 lg:flex-col">
             <div className="grid gap-6 lg:grid-cols-12 lg:items-end lg:gap-14">
               <div className="lg:col-span-8">

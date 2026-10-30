@@ -156,14 +156,9 @@ export default function PlotPanel({ plot, plots, project, onClose, onSelect }) {
           <a href={wa} target="_blank" rel="noreferrer" className="flex h-12 items-center justify-center gap-2 rounded-xl bg-navy-700 text-[15px] font-semibold text-white hover:bg-navy-800">
             <Icon name="whatsapp" size={19} /> Enquire on WhatsApp
           </a>
-          <div className="grid grid-cols-2 gap-2">
-            <a href={`tel:${COMPANY.tel}`} className="flex h-11 items-center justify-center gap-2 rounded-xl border border-line bg-white text-sm font-semibold text-navy-700 hover:border-navy-300">
-              <Icon name="phone" size={17} /> Call
-            </a>
-            <button type="button" onClick={share} className="flex h-11 items-center justify-center gap-2 rounded-xl border border-line bg-white text-sm font-semibold text-navy-700 hover:border-navy-300">
-              <Icon name={copied ? 'check' : 'share'} size={17} /> {copied ? 'Link copied' : 'Share'}
-            </button>
-          </div>
+          <button type="button" onClick={share} className="flex h-11 items-center justify-center gap-2 rounded-xl border border-line bg-white text-sm font-semibold text-navy-700 hover:border-navy-300">
+            <Icon name={copied ? 'check' : 'share'} size={17} /> {copied ? 'Link copied' : 'Share this plot'}
+          </button>
           <p className="sr-only" aria-live="polite">
             {copied ? 'Link to this plot copied.' : ''}
           </p>

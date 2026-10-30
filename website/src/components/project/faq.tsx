@@ -2,7 +2,6 @@ import { Container } from "@/components/site/container";
 import { FaqList } from "@/components/site/faq-list";
 import { Section } from "@/components/site/section";
 import { TextLink } from "@/components/site/text-link";
-import { COMPANY } from "@/lib/constants";
 import { WHATSAPP_TEXT, whatsappUrl } from "@/lib/enquiry";
 
 /** FAQ: the heading and a way to reach a person hold on the left; the questions open on the right. */
@@ -16,13 +15,9 @@ export function Faq({ items, whatsapp = WHATSAPP_TEXT.home }: { items: { q: stri
               Frequently asked questions
             </h2>
             <p className="mt-6 max-w-[32ch] text-body text-text">
-              Still deciding? Call{" "}
-              <TextLink href={`tel:${COMPANY.phoneE164}`} arrow={false} className="tabular-nums">
-                {COMPANY.phone}
-              </TextLink>{" "}
-              or{" "}
+              Still deciding?{" "}
               <TextLink href={whatsappUrl(whatsapp)} external arrow={false}>
-                message us on WhatsApp
+                Message us on WhatsApp
               </TextLink>
               .
             </p>

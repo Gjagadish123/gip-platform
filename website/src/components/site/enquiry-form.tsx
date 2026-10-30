@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUpRight, ChevronDown, Mail, Phone } from "lucide-react";
+import { ArrowUpRight, ChevronDown, Mail } from "lucide-react";
 import { useId, useState, useSyncExternalStore, type FormEvent, type ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -266,7 +266,7 @@ export function EnquiryForm({
           {state === "opening" ? "Opening WhatsApp…" : state === "done" ? "Send again on WhatsApp" : "Send on WhatsApp"}
         </Button>
         <p className="max-w-[46ch] text-small text-muted">
-          Opens WhatsApp with your message to {COMPANY.phone}. By sending, you agree that {COMPANY.name} may contact you
+          Opens WhatsApp with your message to us. By sending, you agree that {COMPANY.name} may contact you
           about this enquiry.
         </p>
       </div>
@@ -275,10 +275,6 @@ export function EnquiryForm({
         {state === "done" && last ? (
           <>
             If WhatsApp didn&rsquo;t open,{" "}
-            <a href={`tel:${COMPANY.phoneE164}`} className={link}>
-              <Phone className="size-3.5" aria-hidden /> call {COMPANY.phone}
-            </a>{" "}
-            or{" "}
             <a href={buildMailto(last)} className={link}>
               <Mail className="size-3.5" aria-hidden /> email us <ArrowUpRight className="size-3.5" aria-hidden />
             </a>

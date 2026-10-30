@@ -4,7 +4,7 @@ import Link from "next/link";
 import { villaWest } from "@/assets/images";
 import { Choreo } from "@/components/motion/choreo";
 import { Magnetic } from "@/components/motion/magnetic";
-import { Aurora } from "@/components/site/aurora";
+import { Backdrop } from "@/components/site/backdrop";
 import { Container } from "@/components/site/container";
 import { ImpressionChip } from "@/components/site/plate";
 import { SectionChip } from "@/components/site/typography";
@@ -27,7 +27,7 @@ export function About() {
       aria-labelledby="about-title"
       className="relative isolate z-10 rounded-t-[28px] bg-white py-28 shadow-[0_-40px_80px_-40px_rgb(1_20_38/0.55)] motion-safe:-mt-[100svh] lg:rounded-t-[44px] lg:py-44"
     >
-      <Aurora scene="a" className="rounded-t-[28px] lg:rounded-t-[44px]" />
+      <Backdrop className="rounded-t-[28px] lg:rounded-t-[44px]" />
       <Container>
         <div data-anim="fade-up">
           <SectionChip>{ABOUT.label}</SectionChip>

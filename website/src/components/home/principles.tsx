@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react";
 
 import { Choreo } from "@/components/motion/choreo";
-import { Aurora } from "@/components/site/aurora";
+import { Backdrop } from "@/components/site/backdrop";
 import { Container } from "@/components/site/container";
 import { LineArt } from "@/components/site/line-art";
 import { SectionChip } from "@/components/site/typography";
@@ -28,7 +28,7 @@ export function Principles() {
 
   return (
     <Choreo as="section" aria-labelledby="principles-title" className="relative isolate py-24 lg:py-36">
-      <Aurora scene="b" />
+      <Backdrop />
       <Container>
         <div data-anim="fade-up">
           <SectionChip>{PRINCIPLES_BLOCK.label}</SectionChip>
