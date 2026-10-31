@@ -3,7 +3,7 @@
 // gcvi-layout-copy is page 2 of the client's layout PDF (the HMDA layout copy). touch-villa is the live home's own
 // Get in touch picture (greaterinfraprojects.in/images/img-.png, re-encoded). projects-hero is a kie.ai Seedream render
 // whose boulder hills and scrub were replaced by developed city in three nano-banana-2 edits (source in
-// website/assets-src/kie/projects-hero-city-c1-r2.jpg; the original is projects-hero-1.jpeg).
+// website/assets-src/kie/projects-hero-city-c4-r2.jpg; the original is projects-hero-1.jpeg).
 import anniversaryCollage from "./anniversary-collage.webp";
 import avenueRoad from "./avenue-road.webp";
 import clubhousePool from "./clubhouse-pool.webp";
