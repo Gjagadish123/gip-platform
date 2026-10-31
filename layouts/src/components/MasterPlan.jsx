@@ -86,7 +86,7 @@ function Compass({ heading, onClick }) {
  * model: the live per-project model (plots with statuses); stats: live counts (also without a layout).
  * plan: 'loading' | 'ready' | 'missing' | 'failed'.
  */
-export default function MasterPlan({ project, items, site, model, stats, plan, onRetryPlan, live, onSwitch, initialPlot, outsideNotice }) {
+export default function MasterPlan({ project, items, site, model, stats, plan, onRetryPlan, live, onSwitch, neighbours = [], initialPlot, outsideNotice }) {
   const wrapRef = useRef(null);
   const googleEl = useRef(null);
   const soloEl = useRef(null);
@@ -463,6 +463,13 @@ export default function MasterPlan({ project, items, site, model, stats, plan, o
     onSwitch(id);
   };
 
+  // ---- layouts next door: outlined on the Google map (a click there opens them), and the Next door control below
+  const exploreRef = useRef(switchTo);
+  exploreRef.current = switchTo;
+  useEffect(() => {
+    gRef.current?.setNeighbours(neighbours, (id) => exploreRef.current(id));
+  }, [neighbours, engine, site]);
+
   const selPlot = selected != null ? model?.plotByNumber.get(selected) : null;
   const hovPlot = hover != null && hover !== selected ? model?.plotByNumber.get(hover) : null;
   const canBasemap = ready && engine !== 'standalone' && !soloOn;
@@ -510,6 +517,38 @@ export default function MasterPlan({ project, items, site, model, stats, plan, o
       <div className="pointer-events-none absolute left-3 top-3 z-30 sm:left-5 sm:top-5">
         <ProjectCard project={project} plotCount={plotCount} items={items} onSwitch={switchTo} />
       </div>
+
+      {/* ---- layouts next door (Global City V beside VI): the way in, under the title (desktop: until a plot opens there) */}
+      {plan === 'ready' && neighbours.length > 0 && (
+        <div className={`absolute left-3 top-[84px] z-20 flex-col gap-2 sm:left-5 sm:top-[168px] ${selPlot ? 'flex sm:hidden' : 'flex'}`}>
+          {neighbours.map((n) => (
+            <button
+              key={n.id}
+              type="button"
+              onClick={() => switchTo(n.id)}
+              onMouseEnter={() => gRef.current?.highlightNeighbour(n.id)}
+              onMouseLeave={() => gRef.current?.highlightNeighbour(null)}
+              onFocus={() => gRef.current?.highlightNeighbour(n.id)}
+              onBlur={() => gRef.current?.highlightNeighbour(null)}
+              className="glass flex max-w-[180px] items-center gap-2.5 rounded-xl py-2 pl-2 pr-3 text-left shadow-panel hover:bg-white sm:max-w-none"
+            >
+              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-survey text-navy-900" aria-hidden="true">
+                <Icon name="pin" size={16} />
+              </span>
+              <span className="min-w-0">
+                <span className="block text-[10.5px] font-bold uppercase tracking-[0.08em] text-ink-soft">
+                  Next door · <span className="num">{n.km < 1 ? `${Math.round(n.km * 1000)} m` : `${n.km.toFixed(1)} km`}</span>
+                </span>
+                <span className="flex items-center gap-1 text-[14px] font-bold leading-tight text-navy-900">
+                  <span className="truncate"><span className="hidden sm:inline">Explore </span>{n.name}</span>
+                  <Icon name="chevron" size={14} className="shrink-0 -rotate-90" />
+                </span>
+                {n.sub && <span className="num hidden text-[12px] text-ink-soft sm:block">{n.sub}</span>}
+              </span>
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* ---- loading / missing layout */}
       {plan === 'loading' && engine && (

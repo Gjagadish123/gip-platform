@@ -637,5 +637,23 @@ def main():
             render(mp, os.path.join(png, f"{pid}.png"), ref=ref)
 
 
+def write_outlines():
+    """layouts/src/data/outlines.json: each layout's origin and boundary in lat/lng (simplified to ~1 m), so the app can
+    find and draw the layouts next door (Global City V beside VI) without loading their whole masterplans."""
+    out = {}
+    for pid in sorted(EXPORT + ("global-city-vi",)):
+        mp = json.load(open(os.path.join(OUT, f"{pid}.json"), encoding="utf-8"))
+        lat0, lng0 = mp["origin"]["lat"], mp["origin"]["lng"]
+        ring = cv2.approxPolyDP(np.array(mp["boundary"], np.float32).reshape(-1, 1, 2), 1.0, True).reshape(-1, 2)
+        k = 180 / math.pi / 6378137.0
+        out[pid] = dict(origin=mp["origin"], ring=[[round(lat0 + float(y) * k, 6), round(lng0 + float(x) * k / math.cos(math.radians(lat0)), 6)] for x, y in ring])
+        assert len(out[pid]["ring"]) >= 4, pid
+    path = os.path.join(OUT, "..", "outlines.json")
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(out, f, separators=(",", ":"))
+    print("outlines:", {k: len(v["ring"]) for k, v in out.items()}, os.path.getsize(path), "bytes")
+
+
 if __name__ == "__main__":
     main()
+    write_outlines()

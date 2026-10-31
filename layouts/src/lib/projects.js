@@ -1,5 +1,8 @@
 // The four projects this app can show, their per-project files, and small readers for public_content.
 
+import OUTLINES from '../data/outlines.json';
+import { haversineKm } from './geo.js';
+
 /** Listed in the order Supabase gives (sort_order); this order is only used when Supabase can't be read. */
 export const PROJECT_IDS = ['global-city-vi', 'global-city-rrr', 'global-city-v', 'western-county'];
 export const isProjectId = (id) => PROJECT_IDS.includes(id);
@@ -33,6 +36,20 @@ export function monogram(name = '') {
 // has not been exported yet fail as "not ready" instead of breaking the build.
 const masterplans = import.meta.glob('../data/masterplans/*.json', { import: 'default' });
 const landmarkFiles = import.meta.glob('../data/landmarks/*.json', { import: 'default' });
+
+/**
+ * The other mapped layouts within `km` of this one, nearest first, with their outlines as {lat, lng} rings
+ * (outlines.json, written by tools/layouts/export_masterplans.py). Global City V and VI are 1.3 km apart.
+ */
+export function neighboursOf(id, km = 3) {
+  const me = OUTLINES[id];
+  if (!me) return [];
+  return Object.entries(OUTLINES)
+    .filter(([other]) => other !== id)
+    .map(([other, o]) => ({ id: other, km: haversineKm(me.origin, o.origin), ring: o.ring.map(([lat, lng]) => ({ lat, lng })) }))
+    .filter((n) => n.km <= km)
+    .sort((a, b) => a.km - b.km);
+}
 
 export class MissingLayout extends Error {}
 export function loadMasterplan(id) {
