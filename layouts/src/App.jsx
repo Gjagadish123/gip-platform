@@ -8,7 +8,7 @@ import Amenities, { hasAmenities } from './sections/Amenities.jsx';
 import Location, { hasLocation } from './sections/Location.jsx';
 import Contact from './sections/Contact.jsx';
 import { BACKEND, useLive } from './lib/live.js';
-import { FALLBACK_LIST, LOGOS, MissingLayout, PROJECT_IDS, asset, isProjectId, loadLandmarks, loadMasterplan, pinOf, readUrl, writeUrl } from './lib/projects.js';
+import { FALLBACK_LIST, LOGOS, MissingLayout, PROJECT_IDS, asset, isProjectId, loadLandmarks, loadMasterplan, neighboursOf, pinOf, readUrl, writeUrl } from './lib/projects.js';
 import { buildGeo, buildModel, statsOf } from './lib/plots.js';
 import Icon from './components/Icon.jsx';
 import { COMPANY } from './data/project.js';
@@ -85,6 +85,12 @@ export default function App() {
     return { id: p.id, name: p.name, location: p.content?.location?.short, counts: st?.counts, total: st?.total, available: st?.counts.available, unknown: live.loadFailed };
   });
   const pin = pinOf(project.content, geo?.data);
+  // listed layouts next door (Global City V beside VI), highlighted on the map with a way in
+  const near = useMemo(() => neighboursOf(activeId), [activeId]);
+  const neighbours = near.flatMap((n) => {
+    const it = items.find((i) => i.id === n.id);
+    return it ? [{ ...n, name: it.name, sub: it.total ? `${it.available} of ${it.total} available` : '' }] : [];
+  });
 
   const switchTo = (id) => {
     setNotice(null);
@@ -116,6 +122,7 @@ export default function App() {
         onRetryPlan={() => setPlanTry((n) => n + 1)}
         live={{ ...live, backend: BACKEND }}
         onSwitch={switchTo}
+        neighbours={neighbours}
         initialPlot={initial.plot ? { project: isProjectId(initial.project) ? initial.project : null, plot: initial.plot } : null}
         outsideNotice={notice}
       />

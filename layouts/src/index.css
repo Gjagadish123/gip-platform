@@ -119,6 +119,36 @@
   box-shadow: 0 8px 22px -8px rgba(0, 0, 0, 0.6);
 }
 
+/* A layout next door (Global City V beside VI): its name and the way in, on the map */
+.gc-neighbour-pin {
+  display: grid;
+  gap: 3px;
+  padding: 8px 14px 9px;
+  border-radius: 14px;
+  border: 2px solid var(--survey);
+  background: rgba(3, 25, 46, 0.86);
+  color: #fff;
+  font: 500 12px/1.1 'Archivo', sans-serif;
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: 0 10px 26px -10px rgba(0, 0, 0, 0.7);
+  transition: transform 0.2s ease;
+}
+.gc-neighbour-pin b {
+  font-size: 15px;
+  font-weight: 800;
+}
+.gc-neighbour-pin span {
+  color: var(--survey);
+  font-weight: 600;
+}
+.gc-neighbour-pin:hover {
+  transform: translateY(-2px);
+}
+.gc-neighbour-label {
+  font: 700 13px 'Archivo', sans-serif !important;
+}
+
 /* Google Maps chrome we do not want fighting our own controls */
 .gm-style iframe + div {
   border: none !important;

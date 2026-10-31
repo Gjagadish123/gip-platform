@@ -37,6 +37,7 @@ export class GoogleRenderer {
     this.reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     this.clock = new THREE.Clock();
     this.listeners = [];
+    this.neighbours = [];
     this._init(center || HYDERABAD_WEST);
   }
 
@@ -395,6 +396,55 @@ export class GoogleRenderer {
     }
     this.placeLine = this.placeMarker = null;
   }
+  /**
+   * The layouts next door (Global City V beside VI): each outline highlighted on the map, with an Explore label at the
+   * edge nearest this layout. A click on either opens that project. `list` items: {id, name, sub, ring: [{lat, lng}]}.
+   */
+  setNeighbours(list, onExplore) {
+    const sig = JSON.stringify([this.data?.origin, list.map((n) => [n.id, n.name, n.sub])]);
+    if (sig === this._nSig) return;
+    this._clearNeighbours();
+    this._nSig = sig;
+    if (!this.data) return;
+    const { google } = this.gm;
+    const here = this.data.origin;
+    for (const n of list) {
+      const poly = new google.maps.Polygon({ map: this.map, paths: n.ring, strokeColor: '#f2c14e', strokeWeight: 3, strokeOpacity: 0.95, fillColor: '#f2c14e', fillOpacity: 0.16, zIndex: 1 });
+      poly.addListener('click', () => onExplore(n.id));
+      // the label sits just inside the outline's nearest point to this layout, where the eye already is
+      const near = n.ring.reduce((a, b) => ((b.lat - here.lat) ** 2 + (b.lng - here.lng) ** 2 < (a.lat - here.lat) ** 2 + (a.lng - here.lng) ** 2 ? b : a));
+      const mid = n.ring.reduce((m, q) => ({ lat: m.lat + q.lat / n.ring.length, lng: m.lng + q.lng / n.ring.length }), { lat: 0, lng: 0 });
+      const at = { lat: near.lat + (mid.lat - near.lat) * 0.2, lng: near.lng + (mid.lng - near.lng) * 0.2 };
+      const el = document.createElement('div');
+      el.className = 'gc-neighbour-pin';
+      el.innerHTML = '<b></b><span></span>';
+      el.firstChild.textContent = n.name;
+      el.lastChild.textContent = `${n.sub ? `${n.sub} · ` : ''}Explore →`;
+      let marker;
+      if (this.gm.AdvancedMarkerElement) {
+        marker = new this.gm.AdvancedMarkerElement({ map: this.map, position: at, content: el, title: `Explore ${n.name}`, gmpClickable: true, zIndex: 5 });
+        marker.addListener('gmp-click', () => onExplore(n.id));
+      } else {
+        marker = new google.maps.Marker({ map: this.map, position: at, title: `Explore ${n.name}`, label: { text: n.name, className: 'gc-neighbour-label' } });
+        marker.addListener('click', () => onExplore(n.id));
+      }
+      this.neighbours.push({ id: n.id, poly, marker });
+    }
+  }
+  /** brighter while the Next door control is hovered or focused */
+  highlightNeighbour(id) {
+    for (const n of this.neighbours) n.poly.setOptions(n.id === id ? { fillOpacity: 0.34, strokeWeight: 4 } : { fillOpacity: 0.16, strokeWeight: 3 });
+  }
+  _clearNeighbours() {
+    for (const { poly, marker } of this.neighbours) {
+      poly.setMap(null);
+      if (typeof marker.setMap === 'function') marker.setMap(null);
+      else marker.map = null;
+    }
+    this.neighbours = [];
+    this._nSig = null;
+  }
+
   /** back from a landmark view to the whole layout */
   home() {
     this.clearPlace();
@@ -485,6 +535,7 @@ export class GoogleRenderer {
     clearTimeout(this._tourTimer);
     this.anim = null;
     this.clearPlace();
+    this._clearNeighbours();
     this.listeners.forEach((l) => l.remove());
     this.overlays?.forEach((o) => o.setMap(null));
     this.overlay?.setMap(null);
