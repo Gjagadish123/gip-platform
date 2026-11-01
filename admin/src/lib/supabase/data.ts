@@ -36,6 +36,7 @@ async function allRows<T extends { id: string | number }>(page: (after: T['id'] 
 export function describeError(e: unknown): string {
   const { code, message } = (e ?? {}) as { code?: string; message?: string };
   if (code === '23505') return 'another project or unit already uses that slug or number';
+  if (code === '23503' && /bookings/.test(message ?? '')) return 'it has bookings: delete them under Bookings first';
   if (code === '42501' || code === 'PGRST301') return 'your session has no permission for this; sign in again';
   if (code === '22P02') return 'a value is not in a form the database accepts (floor and bedrooms are whole numbers)';
   return (message || 'unknown error').replace(/\.$/, ''); // 40001 (changed by another admin) carries its own wording

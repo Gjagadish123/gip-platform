@@ -38,7 +38,7 @@ export function projectToRow(p: Project): ProjectWrite {
   };
   return {
     id, name, slug, type_id: typeId, lifecycle, publish_state: state, homepage_slot: homepageSlot, sort_order: sortOrder,
-    content: content as unknown as Json,
+    content: content as unknown as NonNullable<Json>,
   };
 }
 

@@ -3,7 +3,7 @@
 "use client"
 
 import { Suspense, useEffect, useRef } from "react"
-import { ArrowUpRight, Building2, ChevronRight, Globe, LayoutDashboard, Map as MapIcon } from "lucide-react"
+import { ArrowUpRight, Building2, ChartColumn, ChevronRight, Globe, Handshake, LayoutDashboard, Map as MapIcon, Sheet } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -133,6 +133,24 @@ function NavMain({ pathname }: { pathname: string | null }) {
             </Link>
           </SidebarMenuButton>
         </SidebarMenuItem>
+
+        {/* CRM: sales the admin records, every lead from the website and the live layouts, and the reports. */}
+        {(
+          [
+            ["/bookings", "Bookings", Handshake],
+            ["/sheet", "Common sheet", Sheet],
+            ["/reports", "Reports", ChartColumn],
+          ] as const
+        ).map(([href, label, Icon]) => (
+          <SidebarMenuItem key={href}>
+            <SidebarMenuButton asChild isActive={pathname === href} tooltip={label} className="font-medium">
+              <Link href={href} onClick={close}>
+                <Icon />
+                <span>{label}</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        ))}
       </SidebarMenu>
     </SidebarGroup>
   )

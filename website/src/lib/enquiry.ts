@@ -1,6 +1,6 @@
-// The enquiry hand-off. No backend yet: a valid form opens WhatsApp with the message prefilled (the channel plot
-// buyers in Telangana already use) and offers the same body as a mailto link.
-// Add the Supabase insert here when the backend ships; keep the WhatsApp hand-off as the visible confirmation.
+// The enquiry hand-off: a valid form opens WhatsApp with the message prefilled (the channel plot buyers in Telangana
+// already use) and offers the same body as a mailto link. The lead also goes to the admin's Common sheet
+// (saveEnquiry), so WhatsApp stays the visible confirmation and nothing is lost if the save fails.
 import { COMPANY } from "./constants";
 import { formatArea } from "./format";
 import type { Unit } from "./types";
@@ -102,6 +102,35 @@ export function enquiryBody(e: Enquiry): string {
   ]
     .filter(Boolean)
     .join("\n");
+}
+
+/** E.164 without spaces, as the database keeps it: "+91 98765 43210" -> "+919876543210". */
+const e164 = (dial: DialCode, phone: string) => fullPhone(dial, phone).replace(/[^\d+]/g, "");
+
+/**
+ * Puts the lead in the admin's Common sheet (public.submit_enquiry: validated, deduplicated, rate limited). supabase-js
+ * loads only now, so pages don't carry it. Resolves to the enquiry id, or null without a backend.
+ */
+export async function saveEnquiry(e: Enquiry, page: string): Promise<number | null> {
+  const { BACKEND, supabase } = await import("./supabase");
+  if (!BACKEND) return null;
+  const { data, error } = await supabase().rpc("submit_enquiry", {
+    p: {
+      source: "website",
+      form: e.plot ? "plot" : "enquiry",
+      page: page.slice(0, 200),
+      project_id: e.interest, // the live layouts' project ids; anything else is kept as the interest
+      interest: interestLabel(e.interest),
+      plot_number: e.plot?.number ?? null,
+      similar: e.plot?.similar ?? false,
+      name: e.name.trim(),
+      phone: e164(e.dial, e.phone),
+      email: e.email?.trim() || null,
+      message: e.message?.trim() || null,
+    },
+  });
+  if (error) throw error;
+  return data as number;
 }
 
 export const whatsappUrl = (text: string) => `https://wa.me/${COMPANY.whatsappE164}?text=${encodeURIComponent(text)}`;

@@ -29,6 +29,30 @@ const db = () =>
       throw e;
     }));
 
+/** '98765 43210', '098765 43210', '+91 98765 43210' -> '+919876543210' (any + number is kept); null if not a number. */
+export function toE164(raw) {
+  const t = String(raw).trim();
+  let d = t.replace(/\D/g, '');
+  if (t.startsWith('+')) return /^\d{7,15}$/.test(d) ? `+${d}` : null;
+  if (d.length === 11 && d.startsWith('0')) d = d.slice(1);
+  if (d.length === 12 && d.startsWith('91')) d = d.slice(2);
+  return /^[6-9]\d{9}$/.test(d) ? `+91${d}` : null;
+}
+
+/**
+ * Puts a lead in the admin's Common sheet (public.submit_enquiry: validated, deduplicated, rate limited). The caller
+ * opens WhatsApp first, so the visitor reaches sales even when this fails. fields: {form, project_id, plot_number,
+ * similar, name, phone, message, visit_when}.
+ */
+export async function saveEnquiry(fields) {
+  if (!BACKEND) return null;
+  const { data, error } = await (await db()).rpc('submit_enquiry', {
+    p: { source: 'live_layout', page: `${window.location.pathname}${window.location.search}`.slice(0, 200), ...fields },
+  });
+  if (error) throw error;
+  return data;
+}
+
 const PROJECT_COLS = 'id, slug, name, type_id, lifecycle, publish_state, sort_order, public_content, inventory_updated_at, status_sample, sample, published_at, updated_at';
 const UNIT_COLS = 'number, block, area, width_ft, depth_ft, facing, facing2, road_width_ft, road_width2_ft, corner, status, status_date, sample';
 const STATUS_COLS = 'number, status, status_date, sample'; // the other projects: enough for the switcher's counts

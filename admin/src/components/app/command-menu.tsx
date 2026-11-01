@@ -3,7 +3,7 @@
 "use client"
 
 import { useEffect, useMemo, useState, type ReactNode } from "react"
-import { Building2, LayoutDashboard, LayoutGrid, Map as MapIcon, Plus, RotateCcw, Search, SunMoon } from "lucide-react"
+import { Building2, ChartColumn, Handshake, LayoutDashboard, LayoutGrid, Map as MapIcon, Plus, RotateCcw, Search, Sheet, SunMoon } from "lucide-react"
 import { useTheme } from "next-themes"
 import { useRouter } from "next/navigation"
 
@@ -109,6 +109,9 @@ function Palette({ close, onReset }: { close: () => void; onReset: () => void })
   const actions = [
     { id: "dashboard", label: "Go to dashboard", icon: <LayoutDashboard />, run: () => go("/dashboard") },
     { id: "layouts", label: "Go to live layouts", icon: <MapIcon />, run: () => go("/live-layouts") },
+    { id: "bookings", label: "Go to bookings", icon: <Handshake />, run: () => go("/bookings") },
+    { id: "sheet", label: "Go to the common sheet", icon: <Sheet />, run: () => go("/sheet") },
+    { id: "reports", label: "Go to reports", icon: <ChartColumn />, run: () => go("/reports") },
     { id: "new", label: "New project", icon: <Plus />, run: () => go("/projects/new") },
     {
       id: "theme",

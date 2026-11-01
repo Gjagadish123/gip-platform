@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Icon from '../components/Icon.jsx';
 import { COMPANY, OFFICES } from '../data/project.js';
 import { directionsUrl } from '../lib/projects.js';
+import { saveEnquiry, toE164 } from '../lib/live.js';
 
 export default function Contact({ project, model, pin }) {
   const [form, setForm] = useState({ name: '', phone: '', plot: '', when: 'This weekend' });
@@ -10,15 +11,16 @@ export default function Contact({ project, model, pin }) {
 
   const submit = (e) => {
     e.preventDefault();
-    const phone = form.phone.replace(/\D/g, '');
+    const name = form.name.trim().replace(/\s+/g, ' ');
+    const phone = toE164(form.phone);
     const plot = form.plot.replace(/^0+(?=\d)/, '');
-    if (!form.name.trim()) return setError('Add your name so the sales team knows who to ask for.');
-    if (phone.length < 10) return setError('Enter a 10 digit mobile number.');
+    if (name.length < 2) return setError('Add your name so the sales team knows who to ask for.');
+    if (!phone) return setError('Enter a 10 digit mobile number, or the full number with + and the country code.');
     if (plot && model && !model.plotByNumber.has(plot)) return setError(`There is no plot ${plot}. Plots run from ${model.firstPlot} to ${model.lastPlot}.`);
     setError('');
     const msg = [
       `Hi, I would like to book a site visit to ${project.name}.`,
-      `Name: ${form.name.trim()}`,
+      `Name: ${name}`,
       `Mobile: ${phone}`,
       plot ? `Interested in plot: ${plot}` : null,
       `Preferred time: ${form.when}`,
@@ -26,6 +28,10 @@ export default function Contact({ project, model, pin }) {
       .filter(Boolean)
       .join('\n');
     window.open(`https://wa.me/${COMPANY.whatsapp}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener');
+    // the admin's Common sheet gets it too; WhatsApp already has it if this fails
+    saveEnquiry({ form: 'site_visit', project_id: project.id, plot_number: plot || null, name, phone, visit_when: form.when }).catch((err) =>
+      console.warn('Enquiry not saved to the sheet', err)
+    );
   };
 
   const field = 'h-12 w-full rounded-xl border border-line bg-white px-4 text-[16px] text-ink placeholder:text-ink-muted focus:border-navy-500 focus:outline-none';

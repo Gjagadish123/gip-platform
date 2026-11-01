@@ -4,6 +4,7 @@ import Icon from './Icon.jsx';
 import { STATUS_LABEL, inr, inrShort, sqyd, facingText, roadText, plotPrice } from '../lib/plots.js';
 import { fmtDate, shareUrl } from '../lib/projects.js';
 import { COMPANY } from '../data/project.js';
+import { saveEnquiry, toE164 } from '../lib/live.js';
 
 // text colours chosen for WCAG AA on each fill
 const STATUS_STYLE = {
@@ -32,6 +33,15 @@ const NOT_AVAILABLE = {
 
 export default function PlotPanel({ plot, plots, project, onClose, onSelect }) {
   const [copied, setCopied] = useState(false);
+  // the enquiry: name and mobile first, so the lead reaches the admin's Common sheet as well as WhatsApp
+  const [asking, setAsking] = useState(false);
+  const [lead, setLead] = useState({ name: '', phone: '' });
+  const [leadError, setLeadError] = useState('');
+  const [sent, setSent] = useState(false);
+  const leadName = useRef(null);
+  useEffect(() => {
+    if (asking) leadName.current?.focus();
+  }, [asking]);
   const ref = useRef(null);
   const opener = useRef(null);
 
@@ -49,7 +59,24 @@ export default function PlotPanel({ plot, plots, project, onClose, onSelect }) {
   };
   const similar = useMemo(() => (plot.status && plot.status !== 'available' ? similarTo(plot, plots) : []), [plot, plots]);
   const price = plotPrice(plot, project.content);
-  const wa = `https://wa.me/${COMPANY.whatsapp}?text=${encodeURIComponent(`Hi, I'm interested in plot ${plot.n} at ${project.name}`)}`;
+  const sendLead = (e) => {
+    e.preventDefault();
+    const name = lead.name.trim().replace(/\s+/g, ' ');
+    const phone = toE164(lead.phone);
+    if (name.length < 2) return setLeadError('Add your name so sales know who to ask for.');
+    if (!phone) return setLeadError('Enter a 10 digit mobile number, or the full number with + and the country code.');
+    setLeadError('');
+    const wantsSimilar = Boolean(plot.status && plot.status !== 'available');
+    const text = [
+      wantsSimilar ? `Hi, I'm looking for plots like plot ${plot.n} at ${project.name}.` : `Hi, I'm interested in plot ${plot.n} at ${project.name}.`,
+      `Name: ${name}`,
+      `Mobile: ${phone}`,
+    ].join('\n');
+    window.open(`https://wa.me/${COMPANY.whatsapp}?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
+    // WhatsApp already has it; a failed save is reported, not hidden
+    saveEnquiry({ form: 'plot', project_id: project.id, plot_number: plot.n, similar: wantsSimilar, name, phone }).catch((err) => console.warn('Enquiry not saved to the sheet', err));
+    setSent(true);
+  };
 
   const share = async () => {
     const url = shareUrl(project.id, plot.n);
@@ -153,9 +180,31 @@ export default function PlotPanel({ plot, plots, project, onClose, onSelect }) {
         )}
 
         <div className="mt-4 grid gap-2 pb-1">
-          <a href={wa} target="_blank" rel="noreferrer" className="flex h-12 items-center justify-center gap-2 rounded-xl bg-navy-700 text-[15px] font-semibold text-white hover:bg-navy-800">
-            <Icon name="whatsapp" size={19} /> Enquire on WhatsApp
-          </a>
+          {!asking ? (
+            <button type="button" onClick={() => setAsking(true)} className="flex h-12 items-center justify-center gap-2 rounded-xl bg-navy-700 text-[15px] font-semibold text-white hover:bg-navy-800">
+              <Icon name="whatsapp" size={19} /> Enquire on WhatsApp
+            </button>
+          ) : (
+            <form onSubmit={sendLead} noValidate className="grid gap-2.5 rounded-xl border border-line bg-white p-3.5">
+              <p className="text-sm font-semibold text-navy-900">{sent ? 'Sent. Sales will reply on WhatsApp.' : 'Your details, so sales can reply'}</p>
+              <label className="grid gap-1 text-[13px] font-medium text-ink-soft">
+                Your name
+                <input ref={leadName} autoComplete="name" value={lead.name} onChange={(e) => setLead({ ...lead, name: e.target.value })} className="h-11 rounded-lg border border-line px-3 text-[16px] text-ink focus:border-navy-500 focus:outline-none" />
+              </label>
+              <label className="grid gap-1 text-[13px] font-medium text-ink-soft">
+                Mobile number
+                <input type="tel" inputMode="tel" autoComplete="tel" placeholder="10 digit mobile" value={lead.phone} onChange={(e) => setLead({ ...lead, phone: e.target.value })} className="num h-11 rounded-lg border border-line px-3 text-[16px] text-ink placeholder:text-ink-muted focus:border-navy-500 focus:outline-none" />
+              </label>
+              {leadError && (
+                <p role="alert" className="text-[13px] font-medium text-[#a3241d]">
+                  {leadError}
+                </p>
+              )}
+              <button type="submit" className="flex h-12 items-center justify-center gap-2 rounded-xl bg-navy-700 text-[15px] font-semibold text-white hover:bg-navy-800">
+                <Icon name="whatsapp" size={19} /> {sent ? 'Send again on WhatsApp' : 'Send on WhatsApp'}
+              </button>
+            </form>
+          )}
           <button type="button" onClick={share} className="flex h-11 items-center justify-center gap-2 rounded-xl border border-line bg-white text-sm font-semibold text-navy-700 hover:border-navy-300">
             <Icon name={copied ? 'check' : 'share'} size={17} /> {copied ? 'Link copied' : 'Share this plot'}
           </button>

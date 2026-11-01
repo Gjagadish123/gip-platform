@@ -22,6 +22,7 @@ export type Database = {
           to_status: Database["public"]["Enums"]["unit_status"] | null
           unit_numbers: string[] | null
         }
+        ComputedFields: never
         Insert: {
           actor_id?: string | null
           actor_name?: string
@@ -48,9 +49,145 @@ export type Database = {
         }
         Relationships: []
       }
+      bookings: {
+        Row: {
+          agent_name: string
+          area: number
+          booked_on: string
+          channel: string
+          created_at: string
+          created_by: string | null
+          created_by_name: string
+          customer_name: string
+          customer_phone: string
+          id: string
+          note: string | null
+          plot_number: string
+          price: number
+          project_id: string
+          unit_id: string | null
+          updated_at: string
+        }
+        ComputedFields: never
+        Insert: {
+          agent_name: string
+          area: number
+          booked_on?: string
+          channel: string
+          created_at?: string
+          created_by?: string | null
+          created_by_name?: string
+          customer_name: string
+          customer_phone: string
+          id?: string
+          note?: string | null
+          plot_number: string
+          price: number
+          project_id: string
+          unit_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          agent_name?: string
+          area?: number
+          booked_on?: string
+          channel?: string
+          created_at?: string
+          created_by?: string | null
+          created_by_name?: string
+          customer_name?: string
+          customer_phone?: string
+          id?: string
+          note?: string | null
+          plot_number?: string
+          price?: number
+          project_id?: string
+          unit_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_unit_id_fkey"
+            columns: ["unit_id"]
+            isOneToOne: false
+            referencedRelation: "units"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      enquiries: {
+        Row: {
+          client_hash: string | null
+          created_at: string
+          email: string | null
+          form: string
+          id: number
+          interest: string | null
+          message: string | null
+          name: string
+          page: string | null
+          phone: string
+          plot_number: string | null
+          project_id: string | null
+          source: string
+          visit_when: string | null
+          wants_similar: boolean
+        }
+        ComputedFields: never
+        Insert: {
+          client_hash?: string | null
+          created_at?: string
+          email?: string | null
+          form: string
+          id?: never
+          interest?: string | null
+          message?: string | null
+          name: string
+          page?: string | null
+          phone: string
+          plot_number?: string | null
+          project_id?: string | null
+          source: string
+          visit_when?: string | null
+          wants_similar?: boolean
+        }
+        Update: {
+          client_hash?: string | null
+          created_at?: string
+          email?: string | null
+          form?: string
+          id?: never
+          interest?: string | null
+          message?: string | null
+          name?: string
+          page?: string | null
+          phone?: string
+          plot_number?: string | null
+          project_id?: string | null
+          source?: string
+          visit_when?: string | null
+          wants_similar?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "enquiries_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       projects: {
         Row: {
-          content: Json
+          content: NonNullable<Json>
           created_at: string
           homepage_slot: string | null
           id: string
@@ -67,15 +204,16 @@ export type Database = {
           type_id: string
           updated_at: string
         }
+        ComputedFields: never
         Insert: {
-          content?: Json
+          content?: NonNullable<Json>
           created_at?: string
           homepage_slot?: string | null
           id: string
           inventory_updated_at?: string | null
           lifecycle?: Database["public"]["Enums"]["project_lifecycle"]
           name: string
-          public_content?: Json | null
+          public_content?: never
           publish_state?: Database["public"]["Enums"]["publish_state"]
           published_at?: string | null
           sample?: boolean
@@ -86,14 +224,14 @@ export type Database = {
           updated_at?: string
         }
         Update: {
-          content?: Json
+          content?: NonNullable<Json>
           created_at?: string
           homepage_slot?: string | null
           id?: string
           inventory_updated_at?: string | null
           lifecycle?: Database["public"]["Enums"]["project_lifecycle"]
           name?: string
-          public_content?: Json | null
+          public_content?: never
           publish_state?: Database["public"]["Enums"]["publish_state"]
           published_at?: string | null
           sample?: boolean
@@ -118,6 +256,7 @@ export type Database = {
           to_status: Database["public"]["Enums"]["unit_status"]
           unit_id: string
         }
+        ComputedFields: never
         Insert: {
           actor_id?: string | null
           actor_name?: string
@@ -182,6 +321,7 @@ export type Database = {
           updated_at: string
           width_ft: number | null
         }
+        ComputedFields: never
         Insert: {
           area: number
           bedrooms?: number | null
@@ -252,7 +392,27 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      crm_sheet: {
+        Row: {
+          agent: string | null
+          area: number | null
+          at: string | null
+          booked_on: string | null
+          details: string | null
+          email: string | null
+          id: string | null
+          kind: string | null
+          name: string | null
+          phone: string | null
+          plot_number: string | null
+          price: number | null
+          project_id: string | null
+          project_name: string | null
+          source: string | null
+        }
+        ComputedFields: never
+        Relationships: []
+      }
     }
     Functions: {
       replace_units: {
@@ -265,6 +425,10 @@ export type Database = {
           p_remove_from?: Database["public"]["Enums"]["unit_status"][]
         }
         Returns: undefined
+      }
+      save_booking: {
+        Args: { p: Json; p_mark_sold?: boolean }
+        Returns: string
       }
       save_unit: {
         Args: { p_message?: string; p_project_id: string; p_unit: Json }
@@ -285,6 +449,7 @@ export type Database = {
         }
         Returns: number
       }
+      submit_enquiry: { Args: { p: Json }; Returns: number }
       undo_batch: {
         Args: {
           p_add?: Json
@@ -320,12 +485,12 @@ export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends (DefaultSchemaTableNameOrOptions extends {
+  TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never) = never,
+    : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -349,11 +514,11 @@ export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends (DefaultSchemaTableNameOrOptions extends {
+  TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never) = never,
+    : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -374,11 +539,11 @@ export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends (DefaultSchemaTableNameOrOptions extends {
+  TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never) = never,
+    : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -399,11 +564,11 @@ export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
     | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never) = never,
+    : never = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -416,11 +581,11 @@ export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never) = never,
+    : never = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -438,4 +603,3 @@ export const Constants = {
     },
   },
 } as const
-

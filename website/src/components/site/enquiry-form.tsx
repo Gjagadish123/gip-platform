@@ -12,6 +12,7 @@ import {
   DIAL_CODES,
   INTERESTS,
   phoneError,
+  saveEnquiry,
   type DialCode,
   type Enquiry,
   type EnquiryPlot,
@@ -105,7 +106,8 @@ export function EnquiryForm({
     if (n.length < 2 || n.length > 60) e.name = "Please enter your name (2–60 characters).";
     const phoneErr = phoneError(dial, phone);
     if (phoneErr) e.phone = phoneErr;
-    if (email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) e.email = "That email doesn't look right.";
+    if (email.trim() && (email.trim().length > 120 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())))
+      e.email = "That email doesn't look right.";
     return e;
   }
 
@@ -121,7 +123,9 @@ export function EnquiryForm({
     const enquiry: Enquiry = { name, dial, phone, email, interest, plot, message };
     setLast(enquiry);
     setState("opening");
-    window.open(buildWhatsAppUrl(enquiry), "_blank", "noopener");
+    window.open(buildWhatsAppUrl(enquiry), "_blank", "noopener"); // first, inside the click, or it's blocked
+    // the message is on its way via WhatsApp regardless; a failed save is reported, not hidden
+    saveEnquiry(enquiry, window.location.pathname).catch((err) => console.warn("Enquiry not saved to the sheet", err));
     window.setTimeout(() => {
       setState("done");
       onDone?.();
