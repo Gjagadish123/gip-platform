@@ -431,22 +431,11 @@ export default function MasterPlan({ project, items, site, model, stats, plan, o
       toTop();
       active()?.focusXY(e.detail.xy);
     };
-    const onFilter = (e) => {
-      stopTour();
-      setSelected(null);
-      leavePlace();
-      const f = emptyFilters();
-      Object.entries(e.detail).forEach(([k, v]) => (f[k] = k === 'corner' ? Boolean(v) : new Set(v)));
-      setFilters(f);
-      toTop();
-    };
     mapBus.addEventListener('place', onPlace);
     mapBus.addEventListener('focus', onFocus);
-    mapBus.addEventListener('filter', onFilter);
     return () => {
       mapBus.removeEventListener('place', onPlace);
       mapBus.removeEventListener('focus', onFocus);
-      mapBus.removeEventListener('filter', onFilter);
     };
   }, [active, stopTour, leavePlace]);
 

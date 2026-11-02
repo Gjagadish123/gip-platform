@@ -3,7 +3,6 @@ import { MotionConfig } from 'framer-motion';
 import MasterPlan from './components/MasterPlan.jsx';
 import { SectionNav, Footer } from './sections/SiteChrome.jsx';
 import Overview from './sections/Overview.jsx';
-import Insights from './sections/Insights.jsx';
 import Amenities, { hasAmenities } from './sections/Amenities.jsx';
 import Location, { hasLocation } from './sections/Location.jsx';
 import Contact from './sections/Contact.jsx';
@@ -128,7 +127,6 @@ export default function App() {
   const content = project.content || {};
   const sections = activeId === ALL ? [['projects', 'Projects'], ['contact', 'Contact']] : [
     ['overview', 'Overview'],
-    model && ['insights', 'Insights'],
     hasAmenities(content) && ['amenities', 'Amenities'],
     hasLocation(content, landmarks.id === activeId && landmarks.data) && ['location', 'Location'],
     ['contact', 'Contact'],
@@ -161,7 +159,6 @@ export default function App() {
         ) : (
           <>
             <Overview project={project} model={model} stats={stats} data={geo?.data} />
-            {model && <Insights model={model} stats={stats} />}
             {hasAmenities(content) && <Amenities project={project} data={geo?.data} />}
             <Location project={project} landmarks={landmarks.id === activeId ? landmarks.data : null} pin={pin} />
           </>
