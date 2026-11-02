@@ -1,45 +1,8 @@
-// A project's entrance gate for the map: an oblique-projection 3D arch in the in-scene arch's materials (grey stone
-// plinths, ivory pillars, a navy beam) with gold trim and lamp-lit finials, carrying the project's logo on a medallion,
-// a plaque with its name and live availability, and a stem down to the site. layoutGates (below) places it clear of the
-// other gates and the map's controls, moving the body and redrawing the leader to the site dot.
-
-// Faces: front lit, right side in shade, top catching the light. Depth recedes up and to the right (+7, -5).
-const GATE_SVG = `<svg class="gc-gate__svg" viewBox="0 0 132 100" aria-hidden="true">
-  <ellipse cx="68" cy="94" rx="56" ry="5" fill="#000" opacity=".28"/>
-  <polygon points="44,96 88,96 79,62 55,62" fill="#3a414b"/>
-  <line x1="66" y1="94" x2="67" y2="64" stroke="#f2c14e" stroke-width="1.4" stroke-dasharray="4 4"/>
-  <circle cx="8" cy="89" r="5" fill="#2f7d4a"/><circle cx="126" cy="89" r="5" fill="#2f7d4a"/>
-  <g>
-    <rect x="12" y="80" width="26" height="12" fill="#7b7f86"/>
-    <polygon points="38,80 45,75 45,87 38,92" fill="#5d6168"/>
-    <polygon points="12,80 19,75 45,75 38,80" fill="#9ba1a9"/>
-    <rect x="16" y="34" width="18" height="46" fill="#f6f3ec"/>
-    <polygon points="34,34 41,29 41,75 34,80" fill="#d6cebd"/>
-    <line x1="21" y1="40" x2="21" y2="76" stroke="#e4ddcf"/><line x1="29" y1="40" x2="29" y2="76" stroke="#e4ddcf"/>
-  </g>
-  <g>
-    <rect x="92" y="80" width="26" height="12" fill="#7b7f86"/>
-    <polygon points="118,80 125,75 125,87 118,92" fill="#5d6168"/>
-    <polygon points="92,80 99,75 125,75 118,80" fill="#9ba1a9"/>
-    <rect x="96" y="34" width="18" height="46" fill="#f6f3ec"/>
-    <polygon points="114,34 121,29 121,75 114,80" fill="#d6cebd"/>
-    <line x1="101" y1="40" x2="101" y2="76" stroke="#e4ddcf"/><line x1="109" y1="40" x2="109" y2="76" stroke="#e4ddcf"/>
-  </g>
-  <polygon points="8,30 15,25 131,25 124,30" fill="#0e5a9c"/>
-  <rect x="8" y="30" width="116" height="16" fill="#033967"/>
-  <polygon points="124,30 131,25 131,41 124,46" fill="#021f3a"/>
-  <path d="M34 46 Q66 60 96 46 Z" fill="#033967"/>
-  <path d="M34 46 Q66 60 96 46" fill="none" stroke="#f2c14e" stroke-width="1.4"/>
-  <rect x="8" y="30" width="116" height="1.6" fill="#f2c14e"/><rect x="8" y="44.4" width="116" height="1.6" fill="#f2c14e"/>
-  <g>
-    <polygon points="16,25 25,12 34,25" fill="#e9e1d0"/><polygon points="25,12 34,25 38,22 29,10" fill="#cfc6b3"/>
-    <circle class="gc-gate__halo" cx="25" cy="8" r="6" fill="#ffd76a"/><circle class="gc-gate__lamp" cx="25" cy="8" r="2.6" fill="#ffe7a3"/>
-  </g>
-  <g>
-    <polygon points="96,25 105,12 114,25" fill="#e9e1d0"/><polygon points="105,12 114,25 118,22 109,10" fill="#cfc6b3"/>
-    <circle class="gc-gate__halo" cx="105" cy="8" r="6" fill="#ffd76a"/><circle class="gc-gate__lamp" cx="105" cy="8" r="2.6" fill="#ffe7a3"/>
-  </g>
-</svg>`;
+// A project's entrance gate for the map: a photoreal scale model of a gated-community entrance (a render cut out of
+// its studio backdrop) with its lanterns glowing, the project's logo or monogram on the crest, a plaque with its name and live availability, and a stem down to the site.
+// layoutGates (below) places it clear of the other gates and the map's controls, moving the body and redrawing the
+// leader to the site dot.
+import GATE_IMG from './gate.webp';
 
 /**
  * n: {name, sub, logo (url) | mono ({top, main}), index}. Text goes in as text: names come from the database.
@@ -50,7 +13,8 @@ export function gateElement({ name, sub, logo, mono, index = 0 }) {
   el.className = 'gc-gate';
   el.style.setProperty('--i', String(index));
   el.innerHTML = `<div class="gc-gate__body"><div class="gc-gate__rise">
-      <div class="gc-gate__arch">${GATE_SVG}<span class="gc-gate__shine"></span><span class="gc-gate__crest"></span></div>
+      <div class="gc-gate__arch"><img class="gc-gate__img" src="${GATE_IMG}" alt="" draggable="false">
+        <span class="gc-gate__glow"></span><span class="gc-gate__glow is-r"></span><span class="gc-gate__crest"></span></div>
       <div class="gc-gate__plate"><b></b><span class="gc-gate__sub"></span><span class="gc-gate__go">Explore &rarr;</span></div>
     </div></div>
     <span class="gc-gate__stem"></span><span class="gc-gate__dot"></span>
