@@ -41,16 +41,15 @@ export default function StatusCard({ counts, total, asOf, sample, live, recent, 
           ))}
         </ul>
       ) : (
-        <div className={`grid grid-cols-5 gap-0.5 ${sm('sm:grid-cols-1')}`} role="group" aria-label="Show plots by status">
+        <div className={`grid grid-cols-5 gap-0.5 ${sm('sm:grid-cols-1')}`} role="group" aria-label={onToggle ? 'Show plots by status' : 'Plots by status'}>
           {STATUSES.map((s) => {
             const on = selected.has(s);
             const zero = counts[s] === 0;
+            const Tag = onToggle ? 'button' : 'div'; // All projects: counts only, nothing on the map to filter
             return (
-              <button
+              <Tag
                 key={s}
-                type="button"
-                aria-pressed={on}
-                onClick={() => onToggle(s)}
+                {...(onToggle ? { type: 'button', 'aria-pressed': on, onClick: () => onToggle(s) } : {})}
                 className={`flex min-h-11 flex-col items-center justify-center gap-0.5 rounded-xl px-0.5 py-1 transition-colors ${sm('sm:flex-row sm:justify-start sm:gap-2.5 sm:px-2')} ${on ? 'bg-navy-700 text-white' : 'hover:bg-navy-100'} ${zero && !on ? 'opacity-45' : ''}`}
               >
                 <span className={`flex items-center gap-1.5 ${sm('sm:contents')}`}>
@@ -58,7 +57,7 @@ export default function StatusCard({ counts, total, asOf, sample, live, recent, 
                   <span className={`num text-[17px] font-bold leading-none ${sm('sm:w-9 sm:text-right sm:text-[19px]')}`}>{counts[s]}</span>
                 </span>
                 <span className={`font-medium leading-tight ${compact ? 'text-xs' : 'text-[10.5px] sm:text-sm'}`}>{STATUS_LABEL[s]}</span>
-              </button>
+              </Tag>
             );
           })}
         </div>
@@ -72,7 +71,7 @@ export default function StatusCard({ counts, total, asOf, sample, live, recent, 
             </p>
           ) : (
             <p className="flex flex-wrap justify-between gap-x-2">
-              {counts && <span className="num font-semibold text-navy-900">{total} plots</span>}
+              {counts && <span className="num font-semibold text-navy-900">{total} plots{onToggle ? '' : ' in all'}</span>}
               {asOf && <span>Status as of {fmtDate(asOf)}</span>}
             </p>
           )}

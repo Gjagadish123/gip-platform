@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import Icon from '../components/Icon.jsx';
 import { ProjectMark } from '../components/StatusParts.jsx';
 import { COMPANY } from '../data/project.js';
-import { LOGOS, approvals, asset, directionsUrl, fmtDate } from '../lib/projects.js';
+import { ALL, LOGOS, approvals, asset, directionsUrl, fmtDate } from '../lib/projects.js';
 
 /** sections: [[id, label]] of the sections that have something to show */
 export function SectionNav({ project, sections, pin }) {
@@ -71,7 +71,7 @@ export function Footer({ project, stats }) {
           </div>
           <div className="max-w-[64ch] text-sm leading-relaxed text-navy-300">
             <p>
-              This interactive layout is an illustration prepared from the approved layout of {project.name}
+              {project.id === ALL ? 'These interactive layouts are illustrations prepared from the approved layout of each project' : `This interactive layout is an illustration prepared from the approved layout of ${project.name}`}
               {refs.length ? ` (${refs.join(', ')})` : ''}. Plot positions are matched to satellite imagery within a few metres; trees, villas and buildings in the 3D view are
               artist&apos;s impressions. Dimensions, areas and boundaries in the registered documents prevail.
             </p>

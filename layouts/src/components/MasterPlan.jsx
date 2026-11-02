@@ -7,7 +7,7 @@ import StatusCard from './StatusCard.jsx';
 import { ProjectMark, changeText, useRecent } from './StatusParts.jsx';
 import { loadGoogleMaps } from '../lib/googleMaps.js';
 import { STATUS_LABEL, emptyFilters, filterCount, matches, sqyd } from '../lib/plots.js';
-import { asset, writeUrl } from '../lib/projects.js';
+import { ALL, asset, writeUrl } from '../lib/projects.js';
 import { mapBus } from '../lib/mapBus.js';
 
 function toggleIn(set, v) {
@@ -120,6 +120,7 @@ export default function MasterPlan({ project, items, site, model, stats, plan, o
   soloRef.current = soloOn;
 
   const ready = engine && engine !== 'none';
+  const allMode = project.id === ALL; // every layout at once: nothing plot-level to search, filter, tour or tilt
   const plots = model?.plots;
   const active = useCallback(() => (soloRef.current || !gRef.current ? sRef.current : gRef.current), []);
   const nFilters = filterCount(filters);
@@ -467,8 +468,10 @@ export default function MasterPlan({ project, items, site, model, stats, plan, o
   const exploreRef = useRef(switchTo);
   exploreRef.current = switchTo;
   useEffect(() => {
-    gRef.current?.setNeighbours(neighbours, (id) => exploreRef.current(id));
-  }, [neighbours, engine, site]);
+    const explore = (id) => exploreRef.current(id);
+    if (allMode) gRef.current?.showAll(neighbours, explore);
+    else gRef.current?.setNeighbours(neighbours, explore);
+  }, [neighbours, engine, site, allMode]);
 
   const selPlot = selected != null ? model?.plotByNumber.get(selected) : null;
   const hovPlot = hover != null && hover !== selected ? model?.plotByNumber.get(hover) : null;
@@ -519,7 +522,7 @@ export default function MasterPlan({ project, items, site, model, stats, plan, o
       </div>
 
       {/* ---- layouts next door (Global City V beside VI): the way in, under the title (desktop: until a plot opens there) */}
-      {plan === 'ready' && neighbours.length > 0 && (
+      {!allMode && plan === 'ready' && neighbours.length > 0 && (
         <div className={`absolute left-3 top-[84px] z-20 flex-col gap-2 sm:left-5 sm:top-[168px] ${selPlot ? 'flex sm:hidden' : 'flex'}`}>
           {neighbours.map((n) => (
             <button
@@ -575,7 +578,7 @@ export default function MasterPlan({ project, items, site, model, stats, plan, o
 
       {/* ---- search + tools */}
       <div className="absolute right-3 top-[84px] z-10 flex flex-col items-end gap-2 sm:right-5 sm:top-5">
-        <form onSubmit={submitSearch} role="search" className="glass flex h-11 items-center gap-2 rounded-xl pl-3 pr-1.5 shadow-panel">
+        <form onSubmit={submitSearch} role="search" className={`glass h-11 items-center gap-2 rounded-xl pl-3 pr-1.5 shadow-panel ${allMode ? 'hidden' : 'flex'}`}>
           <Icon name="search" size={17} className="text-ink-muted" />
           <label htmlFor="plot-search" className="sr-only">
             Find a plot by number
@@ -603,6 +606,7 @@ export default function MasterPlan({ project, items, site, model, stats, plan, o
             highlight={showFilters || nFilters > 0}
             disabled={!model}
             onClick={() => setShowFilters((v) => !v)}
+            className={allMode ? 'hidden' : ''}
           />
           <ToolButton icon="plus" label="Zoom in" onClick={() => active()?.zoomBy(1)} />
           <ToolButton icon="minus" label="Zoom out" onClick={() => active()?.zoomBy(-1)} />
@@ -704,7 +708,7 @@ export default function MasterPlan({ project, items, site, model, stats, plan, o
           live={live}
           recent={recent}
           selected={filters.status}
-          onToggle={(s) => setFilters((f) => ({ ...f, status: toggleIn(f.status, s) }))}
+          onToggle={allMode ? undefined : (s) => setFilters((f) => ({ ...f, status: toggleIn(f.status, s) }))}
           compact={Boolean(selPlot)}
         />
       </motion.div>
@@ -719,12 +723,12 @@ export default function MasterPlan({ project, items, site, model, stats, plan, o
           type="button"
           onClick={startTour}
           disabled={!ready || !site}
-          className={`flex h-11 items-center gap-2 rounded-full px-4 text-sm font-semibold shadow-panel disabled:opacity-60 ${touring ? 'bg-survey text-navy-900' : 'glass text-navy-900 hover:bg-white'}`}
+          className={`h-11 items-center gap-2 rounded-full px-4 text-sm font-semibold shadow-panel disabled:opacity-60 ${allMode ? 'hidden' : 'flex'} ${touring ? 'bg-survey text-navy-900' : 'glass text-navy-900 hover:bg-white'}`}
         >
           <Icon name={touring ? 'stop' : 'play'} size={16} />
           {touring ? 'Stop tour' : 'Take the tour'}
         </button>
-        <div className="glass flex rounded-full p-1 shadow-panel" role="group" aria-label="View">
+        <div className={`glass rounded-full p-1 shadow-panel ${allMode ? 'hidden' : 'flex'}`} role="group" aria-label="View">
           {['2d', '3d'].map((m) => (
             <button
               key={m}
@@ -811,11 +815,11 @@ export default function MasterPlan({ project, items, site, model, stats, plan, o
       </div>
 
       {/* ---- way out of the map: a real, labelled control on every screen size */}
-      <a href="#overview" className="glass absolute bottom-6 left-1/2 z-10 hidden h-11 -translate-x-1/2 items-center gap-2 rounded-full px-5 text-sm font-semibold text-navy-900 shadow-panel hover:bg-white lg:flex">
-        Project details <Icon name="arrowDown" size={16} />
+      <a href={allMode ? '#projects' : '#overview'} className="glass absolute bottom-6 left-1/2 z-10 hidden h-11 -translate-x-1/2 items-center gap-2 rounded-full px-5 text-sm font-semibold text-navy-900 shadow-panel hover:bg-white lg:flex">
+        {allMode ? 'All projects' : 'Project details'} <Icon name="arrowDown" size={16} />
       </a>
-      <a href="#overview" className="absolute inset-x-0 bottom-0 z-10 flex h-12 items-center justify-center gap-2 bg-white text-sm font-semibold text-navy-900 lg:hidden">
-        Project details <Icon name="arrowDown" size={16} />
+      <a href={allMode ? '#projects' : '#overview'} className="absolute inset-x-0 bottom-0 z-10 flex h-12 items-center justify-center gap-2 bg-white text-sm font-semibold text-navy-900 lg:hidden">
+        {allMode ? 'All projects' : 'Project details'} <Icon name="arrowDown" size={16} />
       </a>
     </section>
   );

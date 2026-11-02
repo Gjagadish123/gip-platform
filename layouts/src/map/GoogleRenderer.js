@@ -128,6 +128,7 @@ export class GoogleRenderer {
   /** project: {data, projector, hit, brand} or null (no layout to show). */
   setProject(project) {
     if (project === this.project) return;
+    this._allFramed = null; // coming back to All frames every layout again
     this.cancelTour();
     this.anim = null;
     this.clearPlace();
@@ -405,18 +406,18 @@ export class GoogleRenderer {
     if (sig === this._nSig) return;
     this._clearNeighbours();
     this._nSig = sig;
-    if (!this.data) return;
     const { google } = this.gm;
-    const here = this.data.origin;
+    const here = this.data?.origin; // none in the All overview: each label sits on its own layout
     for (const n of list) {
       const poly = new google.maps.Polygon({ map: this.map, paths: n.ring, strokeColor: '#f2c14e', strokeWeight: 3, strokeOpacity: 0.95, fillColor: '#f2c14e', fillOpacity: 0.16, zIndex: 1 });
       poly.addListener('click', () => onExplore(n.id));
       // the label sits just inside the outline's nearest point to this layout, where the eye already is
-      const near = n.ring.reduce((a, b) => ((b.lat - here.lat) ** 2 + (b.lng - here.lng) ** 2 < (a.lat - here.lat) ** 2 + (a.lng - here.lng) ** 2 ? b : a));
       const mid = n.ring.reduce((m, q) => ({ lat: m.lat + q.lat / n.ring.length, lng: m.lng + q.lng / n.ring.length }), { lat: 0, lng: 0 });
-      const at = { lat: near.lat + (mid.lat - near.lat) * 0.2, lng: near.lng + (mid.lng - near.lng) * 0.2 };
+      const near = here && n.ring.reduce((a, b) => ((b.lat - here.lat) ** 2 + (b.lng - here.lng) ** 2 < (a.lat - here.lat) ** 2 + (a.lng - here.lng) ** 2 ? b : a));
+      const at = near ? { lat: near.lat + (mid.lat - near.lat) * 0.2, lng: near.lng + (mid.lng - near.lng) * 0.2 } : mid;
       const el = document.createElement('div');
       el.className = 'gc-neighbour-pin';
+      if (n.below) el.style.transform = 'translateY(calc(100% + 8px))'; // the southern one of a close pair hangs below
       el.innerHTML = '<b></b><span></span>';
       el.firstChild.textContent = n.name;
       el.lastChild.textContent = `${n.sub ? `${n.sub} · ` : ''}Explore →`;
@@ -431,6 +432,34 @@ export class GoogleRenderer {
       this.neighbours.push({ id: n.id, poly, marker });
     }
   }
+  /**
+   * The All projects overview: every layout outlined with its Explore label, framed together, flat and north-up.
+   * Labels stand above their layout, except where another layout lies just north (within ~8 km: Global City V under
+   * VI, Western County under V): there the label hangs below, so stacked layouts' labels can't meet at any zoom.
+   */
+  showAll(list, onExplore) {
+    const { google } = this.gm;
+    const mids = list.map((n) => n.ring.reduce((m, q) => ({ lat: m.lat + q.lat / n.ring.length, lng: m.lng + q.lng / n.ring.length }), { lat: 0, lng: 0 }));
+    const nudged = list.map((n, i) => ({
+      ...n,
+      below: mids.some((m, k) => k !== i && Math.hypot(m.lat - mids[i].lat, m.lng - mids[i].lng) < 0.08 && m.lat > mids[i].lat),
+    }));
+    this.setNeighbours(nudged, onExplore); // labels follow live counts; the camera is framed once per visit to All
+    const ids = list.map((n) => n.id).join();
+    if (!list.length || ids === this._allFramed) return;
+    this._allFramed = ids;
+    this.cancelTour();
+    this.anim = null;
+    this.clearPlace();
+    const b = new google.maps.LatLngBounds();
+    for (const n of list) for (const q of n.ring) b.extend(q);
+    const phone = this.container.clientWidth < 640;
+    this.mode = '2d';
+    this.map.moveCamera({ tilt: 0, heading: 0 });
+    // labels stand above their layout: leave the title card plus a label's height clear at the top
+    this.map.fitBounds(b, phone ? { top: 220, bottom: 260, left: 100, right: 100 } : { top: 240, bottom: 150, left: 330, right: 170 });
+  }
+
   /** brighter while the Next door control is hovered or focused */
   highlightNeighbour(id) {
     for (const n of this.neighbours) n.poly.setOptions(n.id === id ? { fillOpacity: 0.34, strokeWeight: 4 } : { fillOpacity: 0.16, strokeWeight: 3 });

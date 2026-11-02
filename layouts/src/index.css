@@ -145,6 +145,26 @@
 .gc-neighbour-pin:hover {
   transform: translateY(-2px);
 }
+/* phones: the name and an arrow (availability is in the selector and the cards below) */
+@media (max-width: 639px) {
+  .gc-neighbour-pin {
+    padding: 6px 10px 7px;
+    border-radius: 11px;
+  }
+  .gc-neighbour-pin b {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 13px;
+  }
+  .gc-neighbour-pin b::after {
+    content: ' →';
+    color: var(--survey);
+  }
+  .gc-neighbour-pin span {
+    display: none;
+  }
+}
 .gc-neighbour-label {
   font: 700 13px 'Archivo', sans-serif !important;
 }

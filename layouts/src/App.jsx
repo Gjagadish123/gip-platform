@@ -7,46 +7,52 @@ import Insights from './sections/Insights.jsx';
 import Amenities, { hasAmenities } from './sections/Amenities.jsx';
 import Location, { hasLocation } from './sections/Location.jsx';
 import Contact from './sections/Contact.jsx';
+import AllProjects from './sections/AllProjects.jsx';
 import { BACKEND, useLive } from './lib/live.js';
-import { FALLBACK_LIST, LOGOS, MissingLayout, PROJECT_IDS, asset, isProjectId, loadLandmarks, loadMasterplan, neighboursOf, pinOf, readUrl, writeUrl } from './lib/projects.js';
+import { ALL, FALLBACK_LIST, LOGOS, MissingLayout, allProject, asset, isProjectId, loadLandmarks, loadMasterplan, neighboursOf, outlineOf, pinOf, readUrl, writeUrl } from './lib/projects.js';
 import { buildGeo, buildModel, statsOf } from './lib/plots.js';
 import Icon from './components/Icon.jsx';
 import { COMPANY } from './data/project.js';
 
 export default function App() {
   const [initial] = useState(readUrl);
-  const [active, setActive] = useState(() => (isProjectId(initial.project) ? initial.project : null));
+  // A shared link opens its project; otherwise (or ?project=all) every layout at once.
+  const [active, setActive] = useState(() => (isProjectId(initial.project) ? initial.project : ALL));
   const [notice, setNotice] = useState(null);
-  const live = useLive(active ?? PROJECT_IDS[0]);
+  const isAll = active === ALL;
+  const live = useLive(isAll ? null : active); // All: every project's statuses, no project's plot details
 
   // Published projects in sort_order; when Supabase can't be read, every layout (without statuses).
   const list = live.projects ?? (live.loadFailed ? FALLBACK_LIST : null);
   const none = list?.length === 0; // Supabase answered: nothing is published (the page recovers when something is)
-  const activeId = list ? (list.find((p) => p.id === active)?.id ?? list[0]?.id ?? null) : (active ?? PROJECT_IDS[0]);
-  const project = list?.find((p) => p.id === activeId) ?? FALLBACK_LIST.find((p) => p.id === activeId) ?? FALLBACK_LIST[0];
+  const activeId = isAll ? ALL : list ? (list.find((p) => p.id === active)?.id ?? ALL) : active;
+  const project =
+    activeId === ALL
+      ? allProject((list || FALLBACK_LIST).length)
+      : (list?.find((p) => p.id === activeId) ?? FALLBACK_LIST.find((p) => p.id === activeId) ?? FALLBACK_LIST[0]);
 
-  // A project that stops being listed while open (unpublished): move to the first one and say so.
+  // A project that stops being listed while open (unpublished): back to All, and say so.
   const listed = useRef(null);
   useEffect(() => {
     if (!list) return;
-    if (active && !list.some((p) => p.id === active) && list[0]) {
+    if (!isAll && !list.some((p) => p.id === active)) {
       const was = listed.current?.find((p) => p.id === active);
-      if (was) setNotice({ text: `${was.name} is no longer listed, so you are seeing ${list[0].name}.`, at: Date.now() });
-      setActive(list[0].id);
-    } else if (!active && list[0]) setActive(list[0].id);
+      if (was) setNotice({ text: `${was.name} is no longer listed, so you are seeing all projects.`, at: Date.now() });
+      setActive(ALL);
+    }
     listed.current = list;
-  }, [list, active]);
+  }, [list, active, isAll]);
 
   useEffect(() => {
-    if (activeId) writeUrl({ project: activeId });
-    document.title = none ? 'Live layouts | Greater Infra Projects' : `${project.name} live layout | Greater Infra Projects`;
+    writeUrl({ project: activeId === ALL ? null : activeId });
+    document.title = none || activeId === ALL ? 'Live layouts | Greater Infra Projects' : `${project.name} live layout | Greater Infra Projects`;
   }, [activeId, project.name, none]);
 
   // ---- the approved layout (lazy chunk per project)
   const [plan, setPlan] = useState({ id: null, state: 'loading', geo: null });
   const [planTry, setPlanTry] = useState(0);
   useEffect(() => {
-    if (!activeId) return;
+    if (activeId === ALL) return setPlan({ id: ALL, state: 'all', geo: null }); // no one layout: the overview
     let dead = false;
     setPlan({ id: activeId, state: 'loading', geo: null });
     loadMasterplan(activeId)
@@ -66,7 +72,7 @@ export default function App() {
   const [landmarks, setLandmarks] = useState({ id: null, data: null });
   useEffect(() => {
     let dead = false;
-    if (activeId) loadLandmarks(activeId).then((data) => !dead && setLandmarks({ id: activeId, data }));
+    if (activeId !== ALL) loadLandmarks(activeId).then((data) => !dead && setLandmarks({ id: activeId, data }));
     return () => {
       dead = true;
     };
@@ -79,18 +85,35 @@ export default function App() {
   );
   const rows = live.units[activeId];
   const model = useMemo(() => geo && buildModel(geo, rows, project), [geo, rows, project]);
-  const stats = useMemo(() => statsOf(rows, project), [rows, project]);
+  const stats = useMemo(() => (activeId === ALL ? null : statsOf(rows, project)), [activeId, rows, project]);
   const items = (list || FALLBACK_LIST).map((p) => {
     const st = statsOf(live.units[p.id], p);
     return { id: p.id, name: p.name, location: p.content?.location?.short, counts: st?.counts, total: st?.total, available: st?.counts.available, unknown: live.loadFailed };
   });
   const pin = pinOf(project.content, geo?.data);
-  // listed layouts next door (Global City V beside VI), highlighted on the map with a way in
-  const near = useMemo(() => neighboursOf(activeId), [activeId]);
-  const neighbours = near.flatMap((n) => {
-    const it = items.find((i) => i.id === n.id);
-    return it ? [{ ...n, name: it.name, sub: it.total ? `${it.available} of ${it.total} available` : '' }] : [];
-  });
+  // listed layouts next door (Global City V beside VI), highlighted on the map with a way in; in All, every layout
+  const near = useMemo(() => (activeId === ALL ? [] : neighboursOf(activeId)), [activeId]);
+  const subOf = (it) => (it.total ? `${it.available} of ${it.total} available` : '');
+  const neighbours =
+    activeId === ALL
+      ? items.flatMap((it) => (outlineOf(it.id) ? [{ id: it.id, name: it.name, sub: subOf(it), ring: outlineOf(it.id) }] : []))
+      : near.flatMap((n) => {
+          const it = items.find((i) => i.id === n.id);
+          return it ? [{ ...n, name: it.name, sub: subOf(it) }] : [];
+        });
+  // All: one availability card for every listed layout together
+  const allStats = useMemo(() => {
+    if (activeId !== ALL) return null;
+    const parts = items.map((it) => it.counts && { counts: it.counts, total: it.total });
+    if (!parts.length || parts.some((x) => !x)) return null;
+    const per = (list || []).map((p) => statsOf(live.units[p.id], p)).filter(Boolean);
+    return {
+      counts: Object.fromEntries(Object.keys(parts[0].counts).map((s) => [s, parts.reduce((t, x) => t + x.counts[s], 0)])),
+      total: parts.reduce((t, x) => t + x.total, 0),
+      sample: per.some((st) => st.sample),
+      asOf: per.reduce((m, st) => (st.asOf && st.asOf > m ? st.asOf : m), '') || null,
+    };
+  }, [activeId, items, list, live.units]);
 
   const switchTo = (id) => {
     setNotice(null);
@@ -98,7 +121,7 @@ export default function App() {
   };
 
   const content = project.content || {};
-  const sections = [
+  const sections = activeId === ALL ? [['projects', 'Projects'], ['contact', 'Contact']] : [
     ['overview', 'Overview'],
     model && ['insights', 'Insights'],
     hasAmenities(content) && ['amenities', 'Amenities'],
@@ -109,7 +132,7 @@ export default function App() {
   if (none) return <NoLayouts />;
   return (
     <MotionConfig reducedMotion="user">
-      <a href="#overview" className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-50 focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:text-navy-900">
+      <a href={activeId === ALL ? '#projects' : '#overview'} className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-50 focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:text-navy-900">
         Skip to project details
       </a>
       <MasterPlan
@@ -117,7 +140,7 @@ export default function App() {
         items={items}
         site={site}
         model={model}
-        stats={stats}
+        stats={activeId === ALL ? allStats : stats}
         plan={planState}
         onRetryPlan={() => setPlanTry((n) => n + 1)}
         live={{ ...live, backend: BACKEND }}
@@ -128,13 +151,19 @@ export default function App() {
       />
       <SectionNav project={project} sections={sections} pin={pin} />
       <main key={activeId}>
-        <Overview project={project} model={model} stats={stats} data={geo?.data} />
-        {model && <Insights model={model} stats={stats} />}
-        {hasAmenities(content) && <Amenities project={project} data={geo?.data} />}
-        <Location project={project} landmarks={landmarks.id === activeId ? landmarks.data : null} pin={pin} />
-        <Contact project={project} model={model} pin={pin} />
+        {activeId === ALL ? (
+          <AllProjects items={items} onExplore={switchTo} />
+        ) : (
+          <>
+            <Overview project={project} model={model} stats={stats} data={geo?.data} />
+            {model && <Insights model={model} stats={stats} />}
+            {hasAmenities(content) && <Amenities project={project} data={geo?.data} />}
+            <Location project={project} landmarks={landmarks.id === activeId ? landmarks.data : null} pin={pin} />
+          </>
+        )}
+        <Contact project={project} model={model} pin={pin} choices={activeId === ALL ? items : null} />
       </main>
-      <Footer project={project} stats={stats} />
+      <Footer project={project} stats={activeId === ALL ? allStats : stats} />
     </MotionConfig>
   );
 }

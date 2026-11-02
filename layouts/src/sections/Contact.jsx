@@ -4,8 +4,10 @@ import { COMPANY, OFFICES } from '../data/project.js';
 import { directionsUrl } from '../lib/projects.js';
 import { saveEnquiry, toE164 } from '../lib/live.js';
 
-export default function Contact({ project, model, pin }) {
-  const [form, setForm] = useState({ name: '', phone: '', plot: '', when: 'This weekend' });
+/** choices: in All projects, the layouts to pick from (the visit is to one of them); otherwise null. */
+export default function Contact({ project, model, pin, choices }) {
+  const [form, setForm] = useState({ name: '', phone: '', plot: '', when: 'This weekend', to: choices?.[0]?.id ?? '' });
+  const visit = choices ? (choices.find((p) => p.id === form.to) ?? choices[0]) : project; // {id, name}
   const [error, setError] = useState('');
   const c = project.content || {};
 
@@ -19,7 +21,7 @@ export default function Contact({ project, model, pin }) {
     if (plot && model && !model.plotByNumber.has(plot)) return setError(`There is no plot ${plot}. Plots run from ${model.firstPlot} to ${model.lastPlot}.`);
     setError('');
     const msg = [
-      `Hi, I would like to book a site visit to ${project.name}.`,
+      `Hi, I would like to book a site visit to ${visit?.name ?? 'one of your projects'}.`,
       `Name: ${name}`,
       `Mobile: ${phone}`,
       plot ? `Interested in plot: ${plot}` : null,
@@ -29,7 +31,7 @@ export default function Contact({ project, model, pin }) {
       .join('\n');
     window.open(`https://wa.me/${COMPANY.whatsapp}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener');
     // the admin's Common sheet gets it too; WhatsApp already has it if this fails
-    saveEnquiry({ form: 'site_visit', project_id: project.id, plot_number: plot || null, name, phone, visit_when: form.when }).catch((err) =>
+    saveEnquiry({ form: 'site_visit', project_id: visit?.id, plot_number: plot || null, name, phone, visit_when: form.when }).catch((err) =>
       console.warn('Enquiry not saved to the sheet', err)
     );
   };
@@ -46,6 +48,20 @@ export default function Contact({ project, model, pin }) {
             <p className="mt-4 max-w-[52ch] text-lg text-ink-soft">Send your details and the sales team will confirm a site visit on WhatsApp. Mention a plot number and they will have its papers ready.</p>
 
             <form onSubmit={submit} noValidate className="mt-8 grid gap-4 sm:grid-cols-2">
+              {choices && (
+                <div className="sm:col-span-2">
+                  <label htmlFor="c-project" className="mb-1.5 block text-sm font-medium text-ink-soft">
+                    Which project?
+                  </label>
+                  <select id="c-project" className={field} value={visit?.id ?? ''} onChange={(e) => setForm({ ...form, to: e.target.value, plot: '' })}>
+                    {choices.map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
               <div className="sm:col-span-2">
                 <label htmlFor="c-name" className="mb-1.5 block text-sm font-medium text-ink-soft">
                   Your name
@@ -96,10 +112,10 @@ export default function Contact({ project, model, pin }) {
 
           <div>
             <div className="rounded-2xl bg-navy-50 p-6 sm:p-8">
-              <h3 className="text-xl font-bold">Project site</h3>
+              <h3 className="text-xl font-bold">{choices ? 'Project sites' : 'Project site'}</h3>
               <p className="mt-2 text-ink-soft">
-                {project.name}
-                {c.location?.full ? `, ${c.location.full}` : ''}
+                {choices ? choices.map((p) => p.name).join(' · ') : project.name}
+                {!choices && c.location?.full ? `, ${c.location.full}` : ''}
               </p>
               <div className="mt-4 flex flex-wrap gap-2.5">
                 {pin && (

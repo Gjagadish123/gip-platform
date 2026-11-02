@@ -7,6 +7,10 @@ import { haversineKm } from './geo.js';
 export const PROJECT_IDS = ['global-city-vi', 'global-city-rrr', 'global-city-v', 'western-county'];
 export const isProjectId = (id) => PROJECT_IDS.includes(id);
 
+/** The selector's first choice and the default view: every listed layout on one map. ?project=all (or none). */
+export const ALL = 'all';
+export const allProject = (n) => ({ id: ALL, name: 'All projects', content: { location: { short: `${n} live layouts around West Hyderabad` } } });
+
 // Shown only while Supabase can't be read, so the layouts still work (without statuses or copy).
 const FALLBACK_NAMES = {
   'global-city-vi': 'Global City VI',
@@ -22,6 +26,7 @@ export const asset = (path) => `${import.meta.env.BASE_URL}${path.replace(/^\/+/
 /** Projects with their own artwork in public/brand. The others get a monogram. */
 export const LOGOS = {
   'global-city-vi': { mark: 'brand/global-city-vi-mark.svg', white: 'brand/global-city-vi-white.svg' },
+  [ALL]: { mark: 'brand/gip-mark-navy.svg', white: 'brand/gip-mark-white.svg' },
 };
 
 /** 'Global City RRR' -> {top: 'GC', main: 'RRR'}; 'Western County – Shankarpalli' -> {top: '', main: 'WC'} */
@@ -41,12 +46,16 @@ const landmarkFiles = import.meta.glob('../data/landmarks/*.json', { import: 'de
  * The other mapped layouts within `km` of this one, nearest first, with their outlines as {lat, lng} rings
  * (outlines.json, written by tools/layouts/export_masterplans.py). Global City V and VI are 1.3 km apart.
  */
+const ring = (o) => o.ring.map(([lat, lng]) => ({ lat, lng }));
+/** A layout's outline as a {lat, lng} ring (null if it has none). */
+export const outlineOf = (id) => (OUTLINES[id] ? ring(OUTLINES[id]) : null);
+
 export function neighboursOf(id, km = 3) {
   const me = OUTLINES[id];
   if (!me) return [];
   return Object.entries(OUTLINES)
     .filter(([other]) => other !== id)
-    .map(([other, o]) => ({ id: other, km: haversineKm(me.origin, o.origin), ring: o.ring.map(([lat, lng]) => ({ lat, lng })) }))
+    .map(([other, o]) => ({ id: other, km: haversineKm(me.origin, o.origin), ring: ring(o) }))
     .filter((n) => n.km <= km)
     .sort((a, b) => a.km - b.km);
 }

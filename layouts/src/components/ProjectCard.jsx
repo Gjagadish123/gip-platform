@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Icon from './Icon.jsx';
 import { ProjectMark, StatusBar } from './StatusParts.jsx';
 import { COMPANY } from '../data/project.js';
-import { keyApprovals } from '../lib/projects.js';
+import { ALL, keyApprovals } from '../lib/projects.js';
 
 /**
  * Top-left title block, which is also the project switcher. Two tiers divided by tone: identity on the light surface
@@ -56,6 +56,17 @@ export default function ProjectCard({ project, plotCount, items, onSwitch }) {
   };
 
   const authorities = [permit?.authority, rera && 'RERA'].filter(Boolean).join(' & ');
+  // "All projects" leads the list: every listed layout added up (unknown until each project's statuses are in)
+  const known = items.every((it) => it.counts);
+  const all = {
+    id: ALL,
+    name: 'All projects',
+    location: `${items.length} live layouts`,
+    counts: known ? Object.fromEntries(Object.keys(items[0]?.counts || {}).map((s) => [s, items.reduce((t, it) => t + it.counts[s], 0)])) : undefined,
+    total: known ? items.reduce((t, it) => t + it.total, 0) : undefined,
+    available: known ? items.reduce((t, it) => t + it.available, 0) : undefined,
+    unknown: items[0]?.unknown,
+  };
 
   return (
     <div ref={wrap} className="pointer-events-auto relative">
@@ -91,7 +102,10 @@ export default function ProjectCard({ project, plotCount, items, onSwitch }) {
         </button>
 
         <div className="flex items-center justify-between gap-2 rounded-b-xl bg-navy-900 px-2.5 py-[3px] sm:gap-4 sm:rounded-b-2xl sm:px-4 sm:py-2.5">
-          <p className="num whitespace-nowrap text-[9px] font-semibold uppercase tracking-[0.08em] text-navy-300 sm:hidden">{authorities ? `${authorities} approved` : 'Approved layout'}</p>
+          <p className="num whitespace-nowrap text-[9px] font-semibold uppercase tracking-[0.08em] text-navy-300 sm:hidden">
+            {project.id === ALL ? 'Approved layouts' : authorities ? `${authorities} approved` : 'Approved layout'}
+          </p>
+          {project.id === ALL && <p className="hidden text-[12px] font-semibold uppercase tracking-[0.08em] text-navy-300 sm:block">Approved layouts · live availability</p>}
           <dl className="hidden min-w-0 sm:block">
             {[permit && [permit.authority, permit.reference || cap(permit.status)], rera && ['RERA', rera.reference || cap(rera.status)]]
               .filter((x) => x && x[1])
@@ -127,7 +141,7 @@ export default function ProjectCard({ project, plotCount, items, onSwitch }) {
           >
             <p className="px-4 pb-1 pt-3 text-[12px] font-bold uppercase tracking-[0.08em] text-ink-soft">Live layouts</p>
             <ul ref={list} onKeyDown={onListKey} aria-label="Projects" className="max-h-[60svh] overflow-y-auto p-1.5">
-              {items.map((it) => {
+              {[all, ...items].map((it) => {
                 const current = it.id === project.id;
                 return (
                   <li key={it.id}>
