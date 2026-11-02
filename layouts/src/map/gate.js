@@ -42,6 +42,7 @@ export function gateElement({ name, sub, logo, mono, index = 0 }) {
  * Places gates so none overlaps another or the map's controls (elements marked data-map-ui inside `scope`), north
  * first: each tries standing above its site, beside it, higher, or below it, and takes the clearest spot that moves
  * it least. Moves only the bodies; the roots stay anchored at their sites and a leader line runs to the site dot.
+ * A gate whose site is off screen hides (it would only hang at the edge); the Next door control is the way there.
  */
 export function layoutGates(gates, scope) {
   const live = gates.filter((g) => g.el.isConnected && g.el.getBoundingClientRect().width);
@@ -57,9 +58,14 @@ export function layoutGates(gates, scope) {
     return { g, x: (r.left + r.right) / 2, y: r.bottom - 4, w: g.body.offsetWidth, h: g.body.offsetHeight, stem: g.el.querySelector('.gc-gate__stem').offsetHeight + 4 };
   });
   withAnchor.sort((a, b) => a.y - b.y); // north (higher on screen) first
+  const shown = withAnchor.filter((a) => {
+    const on = a.x >= 0 && a.x <= vw && a.y >= 0 && a.y <= vh;
+    a.g.el.style.visibility = on ? '' : 'hidden';
+    return on;
+  });
   // every site's dot stays visible: a gate may not stand over another project's site
-  const dots = withAnchor.map((a) => ({ a, left: a.x - 14, right: a.x + 14, top: a.y - 14, bottom: a.y + 14 }));
-  for (const a of withAnchor) {
+  const dots = shown.map((a) => ({ a, left: a.x - 14, right: a.x + 14, top: a.y - 14, bottom: a.y + 14 }));
+  for (const a of shown) {
     const dxs = [0, -a.w * 0.55, a.w * 0.55, -(a.w + 12), a.w + 12, -(a.w * 1.6 + 12), a.w * 1.6 + 12];
     const lifts = [0, a.h * 0.5, a.h * 1.05, a.h * 1.6, -(a.h + 2 * a.stem)]; // the last hangs the gate below its site
     let best = null;
