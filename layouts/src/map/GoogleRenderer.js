@@ -13,7 +13,7 @@ import * as THREE from 'three';
 import { buildSite, STATUS_COLOR } from './siteScene.js';
 import { tourStops } from './tour.js';
 import { MAP_ID } from '../lib/googleMaps.js';
-import { gateElement, layoutGates } from './gate.js';
+import { badgeElement, layoutBadges } from './badge.js';
 import { easeInOutCubic, haversineKm, lerp, lerpAngle } from '../lib/geo.js';
 
 const VIEWS = {
@@ -23,6 +23,7 @@ const VIEWS = {
 };
 const TOUR_CAM = { close: { zoom: 19.4, tilt: 68, dur: 3.2 }, road: { zoom: 18.9, tilt: 64, dur: 3.4 }, zone: { zoom: 19.2, tilt: 62, dur: 3.4 } };
 const HYDERABAD_WEST = { lat: 17.5, lng: 78.2 };
+const HERE_ZOOM = 14.5; // zoomed out past this, the open layout shows its own logo card among the others
 
 const signedArea = (ring) => ring.reduce((t, v, i) => t + v[0] * ring[(i + 1) % ring.length][1] - ring[(i + 1) % ring.length][0] * v[1], 0) / 2;
 
@@ -80,7 +81,7 @@ export class GoogleRenderer {
     on('dragstart', () => this._userMoved());
     on('idle', () => {
       this._emitCamera();
-      if (this.neighbours.length) this._queueGateLayout(); // the map settled: re-place the gates for this view
+      if (this.neighbours.length) this._queueBadgeLayout(); // the map settled: re-place the cards for this view
     });
     on('heading_changed', () => this._emitCamera());
     on('zoom_changed', () => this._emitCamera());
@@ -402,15 +403,16 @@ export class GoogleRenderer {
     this.placeLine = this.placeMarker = null;
   }
   /**
-   * The layouts next door (Global City V beside VI): each outline highlighted on the map, with an Explore label at the
-   * edge nearest this layout. A click on either opens that project. `list` items: {id, name, sub, ring: [{lat, lng}]}.
+   * The other layouts: each outlined on the map with its logo card, which opens that project. The open layout's own
+   * card (`here`) has no outline and shows only once the map is zoomed out, as a way back to it. `list` items:
+   * {id, name, sub, logo, ring: [{lat, lng}], here?}.
    */
   setNeighbours(list, onExplore) {
-    const sig = JSON.stringify([this.data?.origin, list.map((n) => [n.id, n.name])]);
+    const sig = JSON.stringify([this.data?.origin, list.map((n) => [n.id, n.name, n.here])]);
     if (sig === this._nSig) {
-      // same gates, new live counts: rewrite the plaques in place (no rebuild, no rise animation again)
+      // same cards, new live counts: rewrite them in place (no rebuild, no rise animation again)
       for (const n of list) {
-        const sub = this.neighbours.find((x) => x.id === n.id)?.gate?.el.querySelector('.gc-gate__sub');
+        const sub = this.neighbours.find((x) => x.id === n.id)?.badge?.el.querySelector('.gc-badge__sub');
         if (sub && n.sub) sub.textContent = n.sub;
       }
       return;
@@ -418,47 +420,58 @@ export class GoogleRenderer {
     this._clearNeighbours();
     this._nSig = sig;
     const { google } = this.gm;
-    const here = this.data?.origin; // none in the All overview: each gate stands on its own layout
+    const here = this.data?.origin; // none in the All overview: each card stands on its own layout
     list.forEach((n, index) => {
-      const poly = new google.maps.Polygon({ map: this.map, paths: n.ring, strokeColor: '#f2c14e', strokeWeight: 3, strokeOpacity: 0.95, fillColor: '#f2c14e', fillOpacity: 0.16, zIndex: 1 });
-      poly.addListener('click', () => onExplore(n.id));
-      // the label sits just inside the outline's nearest point to this layout, where the eye already is
+      const open = n.here ? () => this.home() : () => onExplore(n.id);
+      const poly = n.here
+        ? null
+        : new google.maps.Polygon({ map: this.map, paths: n.ring, strokeColor: '#f2c14e', strokeWeight: 3, strokeOpacity: 0.95, fillColor: '#f2c14e', fillOpacity: 0.16, zIndex: 1 });
+      poly?.addListener('click', open);
+      // the card stands just inside the outline's nearest point to this layout, where the eye already is
       const mid = n.ring.reduce((m, q) => ({ lat: m.lat + q.lat / n.ring.length, lng: m.lng + q.lng / n.ring.length }), { lat: 0, lng: 0 });
-      const near = here && n.ring.reduce((a, b) => ((b.lat - here.lat) ** 2 + (b.lng - here.lng) ** 2 < (a.lat - here.lat) ** 2 + (a.lng - here.lng) ** 2 ? b : a));
+      const near = here && !n.here && n.ring.reduce((a, b) => ((b.lat - here.lat) ** 2 + (b.lng - here.lng) ** 2 < (a.lat - here.lat) ** 2 + (a.lng - here.lng) ** 2 ? b : a));
       const at = near ? { lat: near.lat + (mid.lat - near.lat) * 0.2, lng: near.lng + (mid.lng - near.lng) * 0.2 } : mid;
+      const title = n.here ? `Back to ${n.name}` : `Explore ${n.name}`;
       let marker;
-      let gate = null;
+      let badge = null;
       if (this.gm.AdvancedMarkerElement) {
-        gate = gateElement({ ...n, index });
-        marker = new this.gm.AdvancedMarkerElement({ map: this.map, position: at, content: gate.el, title: `Explore ${n.name}`, gmpClickable: true, zIndex: 5 });
-        marker.addListener('gmp-click', () => onExplore(n.id));
+        badge = badgeElement({ ...n, index });
+        if (n.here) badge.el.querySelector('.gc-badge__go').textContent = 'You are here';
+        marker = new this.gm.AdvancedMarkerElement({ map: this.map, position: at, content: badge.el, title, gmpClickable: true, zIndex: 5 });
+        marker.addListener('gmp-click', open);
       } else {
-        marker = new google.maps.Marker({ map: this.map, position: at, title: `Explore ${n.name}`, label: { text: n.name, className: 'gc-neighbour-label' } });
-        marker.addListener('click', () => onExplore(n.id));
+        marker = new google.maps.Marker({ map: this.map, position: at, title, label: { text: n.name, className: 'gc-neighbour-label' } });
+        marker.addListener('click', open);
       }
-      this.neighbours.push({ id: n.id, poly, marker, gate });
+      this.neighbours.push({ id: n.id, here: n.here, poly, marker, badge });
     });
-    this._queueGateLayout();
+    this._queueBadgeLayout();
   }
-  /** after the gates are in the page and whenever the map settles: keep them clear of each other and the controls */
-  _queueGateLayout() {
-    cancelAnimationFrame(this._gateFrame);
+  /** after the cards are in the page and whenever the map settles: keep them clear of each other and the controls */
+  _queueBadgeLayout() {
+    cancelAnimationFrame(this._badgeFrame);
+    const far = (this.map.getZoom() ?? 0) < HERE_ZOOM;
+    for (const n of this.neighbours) {
+      if (!n.here) continue;
+      if (n.badge) n.badge.el.style.display = far ? '' : 'none';
+      else n.marker.setVisible?.(far);
+    }
     let tries = 0;
     const run = () => {
-      const gates = this.neighbours.map((x) => x.gate).filter(Boolean);
-      if (!gates.length) return;
+      const badges = this.neighbours.map((x) => x.badge).filter(Boolean);
+      if (!badges.length) return;
       // Google attaches marker content a frame or two after it is added
-      if (!layoutGates(gates, this.container.closest('section')) && tries++ < 20) this._gateFrame = requestAnimationFrame(run);
+      if (!layoutBadges(badges, this.container.closest('section')) && tries++ < 20) this._badgeFrame = requestAnimationFrame(run);
     };
-    this._gateFrame = requestAnimationFrame(run);
+    this._badgeFrame = requestAnimationFrame(run);
   }
   /**
-   * The All projects overview: every layout outlined, with its entrance gate standing on it (the gates keep clear of
-   * each other: see layoutGates), framed together, flat and north-up.
+   * The All projects overview: every layout outlined, with its logo card standing on it (the cards keep clear of
+   * each other: see layoutBadges), framed together, flat and north-up.
    */
   showAll(list, onExplore) {
     const { google } = this.gm;
-    this.setNeighbours(list, onExplore); // plaques follow live counts; the camera is framed once per visit to All
+    this.setNeighbours(list, onExplore); // cards follow live counts; the camera is framed once per visit to All
     const ids = list.map((n) => n.id).join();
     if (!list.length || ids === this._allFramed) return;
     this._allFramed = ids;
@@ -470,18 +483,18 @@ export class GoogleRenderer {
     const phone = this.container.clientWidth < 640;
     this.mode = '2d';
     this.map.moveCamera({ tilt: 0, heading: 0 });
-    // labels stand above their layout: leave the title card plus a label's height clear at the top
-    this.map.fitBounds(b, phone ? { top: 230, bottom: 270, left: 70, right: 70 } : { top: 240, bottom: 150, left: 330, right: 170 });
+    // cards stand above their layout: leave the title card plus a card's height clear at the top
+    this.map.fitBounds(b, phone ? { top: 200, bottom: 190, left: 60, right: 70 } : { top: 230, bottom: 150, left: 330, right: 170 });
   }
 
   /** brighter while the Next door control is hovered or focused */
   highlightNeighbour(id) {
-    for (const n of this.neighbours) n.poly.setOptions(n.id === id ? { fillOpacity: 0.34, strokeWeight: 4 } : { fillOpacity: 0.16, strokeWeight: 3 });
+    for (const n of this.neighbours) n.poly?.setOptions(n.id === id ? { fillOpacity: 0.34, strokeWeight: 4 } : { fillOpacity: 0.16, strokeWeight: 3 });
   }
   _clearNeighbours() {
-    cancelAnimationFrame(this._gateFrame);
+    cancelAnimationFrame(this._badgeFrame);
     for (const { poly, marker } of this.neighbours) {
-      poly.setMap(null);
+      poly?.setMap(null);
       if (typeof marker.setMap === 'function') marker.setMap(null);
       else marker.map = null;
     }

@@ -23,9 +23,17 @@ export const FALLBACK_LIST = PROJECT_IDS.map((id) => ({ id, name: FALLBACK_NAMES
 /** Every public file goes through the deploy base (the app is served under /gip-platform/layouts/). */
 export const asset = (path) => `${import.meta.env.BASE_URL}${path.replace(/^\/+/, '')}`;
 
-/** Projects with their own artwork in public/brand. The others get a monogram. */
+/**
+ * Each project's artwork in public/brand: `full` is the client's logo (the map cards), `mark` / `white` a square symbol
+ * for small places on light / dark grounds. The three Global Cities share the globe; Western County's small mark is its
+ * logo on a white tile. A project without an entry gets a monogram.
+ */
+const GLOBE = { mark: 'brand/global-city-vi-mark.svg', white: 'brand/global-city-vi-white.svg' };
 export const LOGOS = {
-  'global-city-vi': { mark: 'brand/global-city-vi-mark.svg', white: 'brand/global-city-vi-white.svg' },
+  'global-city-vi': { ...GLOBE, full: 'brand/logos/global-city-vi-logo.webp' },
+  'global-city-v': { ...GLOBE, full: 'brand/logos/global-city-v-logo.webp' },
+  'global-city-rrr': { ...GLOBE, full: 'brand/logos/global-city-rrr-logo.webp' },
+  'western-county': { full: 'brand/logos/western-county-logo.webp' },
   [ALL]: { mark: 'brand/gip-mark-navy.svg', white: 'brand/gip-mark-white.svg' },
 };
 
@@ -43,14 +51,14 @@ const masterplans = import.meta.glob('../data/masterplans/*.json', { import: 'de
 const landmarkFiles = import.meta.glob('../data/landmarks/*.json', { import: 'default' });
 
 /**
- * The other mapped layouts within `km` of this one, nearest first, with their outlines as {lat, lng} rings
- * (outlines.json, written by tools/layouts/export_masterplans.py). Global City V and VI are 1.3 km apart.
+ * The other mapped layouts within `km` of this one (all of them by default), nearest first, with their outlines as
+ * {lat, lng} rings (outlines.json, written by tools/layouts/export_masterplans.py). Global City V and VI are 1.3 km apart.
  */
 const ring = (o) => o.ring.map(([lat, lng]) => ({ lat, lng }));
 /** A layout's outline as a {lat, lng} ring (null if it has none). */
 export const outlineOf = (id) => (OUTLINES[id] ? ring(OUTLINES[id]) : null);
 
-export function neighboursOf(id, km = 3) {
+export function neighboursOf(id, km = Infinity) {
   const me = OUTLINES[id];
   if (!me) return [];
   return Object.entries(OUTLINES)

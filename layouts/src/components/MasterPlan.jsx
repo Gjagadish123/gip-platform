@@ -66,9 +66,9 @@ function ScaleBar({ zoom, lat }) {
   );
 }
 
-function Compass({ heading, onClick }) {
+function Compass({ heading, onClick, className = '' }) {
   return (
-    <button type="button" onClick={onClick} aria-label="Reset view to north" title="Reset to north" className="glass grid h-11 w-11 place-items-center rounded-full shadow-panel">
+    <button type="button" onClick={onClick} aria-label="Reset view to north" title="Reset to north" className={`glass h-11 w-11 place-items-center rounded-full shadow-panel ${className}`}>
       <svg width="30" height="30" viewBox="0 0 30 30" style={{ transform: `rotate(${-heading}deg)` }} aria-hidden="true">
         <path d="M15 3 19 15H11Z" fill="#c8372f" />
         <path d="M15 27 11 15h8Z" fill="#033967" />
@@ -477,6 +477,8 @@ export default function MasterPlan({ project, items, site, model, stats, plan, o
   const hovPlot = hover != null && hover !== selected ? model?.plotByNumber.get(hover) : null;
   const canBasemap = ready && engine !== 'standalone' && !soloOn;
   const plotCount = stats?.total || site?.data.plots.length;
+  const nextDoor = neighbours.filter((n) => !n.here && n.km <= 3); // the rest show on the map when zoomed out
+  const turned = Math.abs(cam.heading || 0) > 1; // phones keep the compass for a turned map only
 
   return (
     <section
@@ -517,15 +519,15 @@ export default function MasterPlan({ project, items, site, model, stats, plan, o
       <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-navy-950/60 to-transparent" />
 
       {/* ---- title block + project switcher */}
-      {/* data-map-ui: the map's own controls, which the project gates keep clear of (map/gate.js) */}
+      {/* data-map-ui: the map's own controls, which the project cards keep clear of (map/badge.js) */}
       <div data-map-ui className="pointer-events-none absolute left-3 top-3 z-30 sm:left-5 sm:top-5">
         <ProjectCard project={project} plotCount={plotCount} items={items} onSwitch={switchTo} />
       </div>
 
       {/* ---- layouts next door (Global City V beside VI): the way in, under the title (desktop: until a plot opens there) */}
-      {!allMode && plan === 'ready' && neighbours.length > 0 && (
+      {!allMode && plan === 'ready' && nextDoor.length > 0 && (
         <div className={`absolute left-3 top-[84px] z-20 flex-col gap-2 sm:left-5 sm:top-[168px] ${selPlot ? 'flex sm:hidden' : 'flex'}`}>
-          {neighbours.map((n) => (
+          {nextDoor.map((n) => (
             <button
               key={n.id}
               type="button"
@@ -609,8 +611,9 @@ export default function MasterPlan({ project, items, site, model, stats, plan, o
             onClick={() => setShowFilters((v) => !v)}
             className={allMode ? 'hidden' : ''}
           />
-          <ToolButton icon="plus" label="Zoom in" onClick={() => active()?.zoomBy(1)} />
-          <ToolButton icon="minus" label="Zoom out" onClick={() => active()?.zoomBy(-1)} />
+          {/* phones pinch to zoom: the buttons would only crowd the map there */}
+          <ToolButton icon="plus" label="Zoom in" onClick={() => active()?.zoomBy(1)} className="hidden sm:grid" />
+          <ToolButton icon="minus" label="Zoom out" onClick={() => active()?.zoomBy(-1)} className="hidden sm:grid" />
           {canBasemap && (
             <ToolButton
               icon="layers"
@@ -720,7 +723,7 @@ export default function MasterPlan({ project, items, site, model, stats, plan, o
         <div className="hidden pb-1 sm:block">
           <ScaleBar zoom={soloOn || !site ? null : cam.zoom} lat={site?.data.origin.lat} />
         </div>
-        <Compass heading={cam.heading || 0} onClick={() => active()?.resetNorth()} />
+        <Compass heading={cam.heading || 0} onClick={() => active()?.resetNorth()} className={turned ? 'grid' : 'hidden sm:grid'} />
         <button
           type="button"
           onClick={startTour}
@@ -728,7 +731,7 @@ export default function MasterPlan({ project, items, site, model, stats, plan, o
           className={`h-11 items-center gap-2 rounded-full px-4 text-sm font-semibold shadow-panel disabled:opacity-60 ${allMode ? 'hidden' : 'flex'} ${touring ? 'bg-survey text-navy-900' : 'glass text-navy-900 hover:bg-white'}`}
         >
           <Icon name={touring ? 'stop' : 'play'} size={16} />
-          {touring ? 'Stop tour' : 'Take the tour'}
+          {touring ? 'Stop tour' : <><span className="sm:hidden">Tour</span><span className="hidden sm:inline">Take the tour</span></>}
         </button>
         <div className={`glass rounded-full p-1 shadow-panel ${allMode ? 'hidden' : 'flex'}`} role="group" aria-label="View">
           {['2d', '3d'].map((m) => (

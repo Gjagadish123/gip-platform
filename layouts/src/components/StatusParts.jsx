@@ -16,10 +16,16 @@ export function StatusBar({ counts, total, className = 'h-1.5' }) {
   );
 }
 
-/** The project's own artwork (GC VI's brochure logo), else a monogram on navy. */
+/** The project's symbol (the Global City globe), else its logo on a white tile, else a monogram on navy. */
 export function ProjectMark({ id, name, size = 40, light = false }) {
   const logo = LOGOS[id];
-  if (logo) return <img src={asset(light ? logo.white : logo.mark)} alt="" width={size} height={size} className="shrink-0" style={{ width: size, height: size }} />;
+  if (logo?.mark) return <img src={asset(light ? logo.white : logo.mark)} alt="" width={size} height={size} className="shrink-0" style={{ width: size, height: size }} />;
+  if (logo?.full)
+    return (
+      <span className="grid shrink-0 place-items-center rounded-[22%] bg-white ring-1 ring-inset ring-line" style={{ width: size, height: size, padding: size * 0.08 }}>
+        <img src={asset(logo.full)} alt="" className="max-h-full max-w-full object-contain" />
+      </span>
+    );
   const m = monogram(name);
   return (
     <span

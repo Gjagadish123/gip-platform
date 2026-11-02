@@ -1,5 +1,6 @@
 import Icon from '../components/Icon.jsx';
 import { ProjectMark, StatusBar } from '../components/StatusParts.jsx';
+import { LOGOS, asset } from '../lib/projects.js';
 
 /**
  * Below the map in All projects: one card per live layout with its availability and the way in. Explore opens it on
@@ -22,7 +23,11 @@ export default function AllProjects({ items, onExplore }) {
           {items.map((it) => (
             <li key={it.id} className="flex flex-col rounded-2xl border border-line p-5 sm:p-6">
               <div className="flex items-center gap-3.5">
-                <ProjectMark id={it.id} name={it.name} size={44} />
+                {LOGOS[it.id]?.full ? (
+                  <img src={asset(LOGOS[it.id].full)} alt="" className="h-14 w-[88px] shrink-0 object-contain" />
+                ) : (
+                  <ProjectMark id={it.id} name={it.name} size={44} />
+                )}
                 <div className="min-w-0">
                   <h3 className="text-[19px] font-bold leading-tight text-navy-900">{it.name}</h3>
                   {it.location && <p className="mt-0.5 truncate text-sm text-ink-muted">{it.location}</p>}
