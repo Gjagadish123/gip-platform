@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
 import { About } from "@/components/project/about";
+import { BasicProjectPage } from "@/components/project/basic-page";
 import { Amenities } from "@/components/project/amenities";
 import { Approvals } from "@/components/project/approvals";
 import { Clubhouse } from "@/components/project/clubhouse";
@@ -27,10 +28,10 @@ import { MasterPlan } from "@/components/project/master-plan";
 import { PlotSizes } from "@/components/project/plot-sizes";
 import { VillaDesigns } from "@/components/project/villas";
 import { PageEnquiryContext } from "@/components/site/enquiry-provider";
-import { LIFECYCLE_LABEL } from "@/lib/constants";
+import { LIFECYCLE_LABEL, LIVE_LAYOUT_IDS, liveLayoutUrl } from "@/lib/constants";
 import { INTERESTS, WHATSAPP_TEXT, type InterestId } from "@/lib/enquiry";
 import { formatDate, formatLandArea, formatNumber } from "@/lib/format";
-import { getPlan, getProject, getProjects, getUnits, hasDetailPage, summarize } from "@/lib/projects";
+import { getPlan, getProject, getProjects, getUnits, hasDetailPage, hasFullPage, summarize } from "@/lib/projects";
 import { breadcrumbJsonLd, JsonLd, ORGANIZATION_ID, pageMeta, SITE_URL } from "@/lib/seo";
 import { OFFICE } from "@/lib/site";
 
@@ -54,9 +55,9 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     description:
       seo?.description ??
       [
-        `${formatNumber(units.length)} open and villa plots${project.landArea ? ` on ${formatLandArea(project.landArea)}` : ""} at ${project.location.short.split(",")[0].trim()}.`,
+        `${formatNumber(units.length)} ${hasFullPage(project) ? "open and villa plots" : "plots"}${project.landArea ? ` on ${formatLandArea(project.landArea)}` : ""} at ${project.location.short.split(",")[0].trim()}.`,
         parts.length ? `${parts.join(", ")}.` : null,
-        "Plot sizes and facing, layout copy, site photos and approvals.",
+        hasFullPage(project) ? "Plot sizes and facing, layout copy, site photos and approvals." : "The live layout with every plot's status, site photos and approvals.",
       ]
         .filter(Boolean)
         .join(" "),
@@ -84,7 +85,7 @@ async function ProjectContent({ params }: Params) {
   const plan = getPlan(project.id);
   const { hmda, rera } = approvalFacts(project);
   const photos = sitePhotos(project);
-  const interest = (INTERESTS.some((i) => i.id === slug) ? slug : "other") as InterestId;
+  const interest = (INTERESTS.some((i) => i.id === project.id) ? project.id : "other") as InterestId;
   const path = `/projects/${slug}`;
   const url = `${SITE_URL}${path}`;
   const pin = project.location.pin;
@@ -141,15 +142,46 @@ async function ProjectContent({ params }: Params) {
     ].filter(Boolean),
   };
 
+  const crumbs = breadcrumbJsonLd([
+    { name: "Home", path: "/" },
+    { name: "Projects", path: "/projects" },
+    { name: project.name, path },
+  ]);
+  const reg = [rera?.reference ? `TS RERA No: ${rera.reference}` : null, hmda?.reference ? `${hmda.authority} ${hmda.reference}` : null].filter(Boolean).join(" · ");
+  const liveLayout = LIVE_LAYOUT_IDS.includes(project.id) ? liveLayoutUrl(project.id) : undefined;
+
+  // A live layout without Global City VI's brochure content: the basic page, with the way into its live layout.
+  if (!hasFullPage(project)) {
+    return (
+      <>
+        <JsonLd data={crumbs} />
+        <JsonLd data={listing} />
+        <PageEnquiryContext
+          projectName={project.name}
+          projectLocation={project.location.short}
+          interest={interest}
+          nav={{
+            name: project.name,
+            reg,
+            links: [
+              { href: "#top", label: "Overview" },
+              { href: "#live-layout", label: "Live layout" },
+              ...(project.highlights.length ? [{ href: "#highlights", label: "Highlights" }] : []),
+              ...(slides.length ? [{ href: "#gallery", label: "Gallery" }] : []),
+              { href: "#approvals", label: "Approvals" },
+              { href: "#location", label: "Location" },
+            ],
+            brochure,
+          }}
+        />
+        <BasicProjectPage project={project} summary={summary} interest={interest} />
+      </>
+    );
+  }
+
   return (
     <>
-      <JsonLd
-        data={breadcrumbJsonLd([
-          { name: "Home", path: "/" },
-          { name: "Projects", path: "/projects" },
-          { name: project.name, path },
-        ])}
-      />
+      <JsonLd data={crumbs} />
       <JsonLd data={listing} />
       <JsonLd data={placeLd} />
       <PageEnquiryContext
@@ -158,7 +190,7 @@ async function ProjectContent({ params }: Params) {
         interest={interest}
         nav={{
           name: project.name,
-          reg: [rera?.reference ? `TS RERA No: ${rera.reference}` : null, hmda?.reference ? `HMDA ${hmda.reference}` : null].filter(Boolean).join(" · "),
+          reg,
           links: [
             { href: "#top", label: "Overview" },
             { href: "#highlights", label: "Highlights" },
@@ -182,6 +214,7 @@ async function ProjectContent({ params }: Params) {
         tagline={`Villa and open plots at ${place}, on the Mumbai Highway (NH-65)`}
         brochure={brochure}
         interest={interest}
+        liveLayout={liveLayout}
         paragraphs={[
           `${hmda ? "HMDA-approved villa" : "Villa"} and open plots${area ? ` on ${area}` : ""} at ${place}, on the Mumbai Highway (NH-65) near GITAM University.`,
           `${project.name} is a gated layout of ${units.length} plots from ${min} to ${max} sq yd, with 40 ft and 30 ft CC roads, a clubhouse with a swimming pool, and a 100 ft road on its frontage.`,

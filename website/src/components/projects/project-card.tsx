@@ -73,7 +73,7 @@ export function ProjectCard({ card, priority }: { card: ProjectCardData; priorit
           <div className="mt-auto pt-5">
             <Button asChild variant="primary" className="w-full justify-between">
               <CardLink card={card}>
-                {card.action ?? (isExternal(card.href) ? "Visit website" : "View project")} <Arrow />
+                {isExternal(card.href) ? "Visit website" : "View project"} <Arrow />
               </CardLink>
             </Button>
           </div>
@@ -87,11 +87,11 @@ export function ProjectCard({ card, priority }: { card: ProjectCardData; priorit
 function CardLink({ card, className, children }: { card: ProjectCardData; className?: string; children: ReactNode }) {
   const cover = cn("after:absolute after:inset-0 after:rounded-2xl after:content-['']", className);
   return isExternal(card.href!) ? (
-    <a href={card.href} target="_blank" rel="noreferrer" aria-label={`${card.action ? `${card.action}: ${card.name}` : `Visit the ${card.name} website`} (opens in a new tab)`} className={cover}>
+    <a href={card.href} target="_blank" rel="noreferrer" aria-label={`Visit the ${card.name} website (opens in a new tab)`} className={cover}>
       {children}
     </a>
   ) : (
-    <Link href={card.href!} aria-label={card.action ? `${card.action}: ${card.name}` : `View ${card.name}`} className={cover}>
+    <Link href={card.href!} aria-label={`View ${card.name}`} className={cover}>
       {children}
     </Link>
   );

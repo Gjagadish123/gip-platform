@@ -4,7 +4,7 @@
 // VI data stands in.
 import { loadProjects, loadUnits } from '@/lib/projects-backend';
 
-import { UNIT_STATUSES } from './constants';
+import { LIVE_LAYOUT_IDS, UNIT_STATUSES } from './constants';
 import { GLOBAL_CITY_VI } from './data/global-city-vi';
 import { GC6_PLAN, GC6_PROJECT_ID, GC6_UNITS, type Gc6Plan } from './data/units';
 import { percents } from './format';
@@ -47,12 +47,14 @@ export function getPlan(projectId: ID): Gc6Plan | null {
   return projectId === GC6_PROJECT_ID ? GC6_PLAN : null;
 }
 
-// The project page carries Global City VI's brochure copy and renders (components/project/content.ts), so
-// only projects with their own page content get one; the rest are enquired about from the list. Add an id here when
-// a project's page content lands.
+// The full project page carries Global City VI's brochure copy and renders (components/project/content.ts),
+// so only projects with that content get it; the other live layouts get the basic page (components/project/basic-page)
+// built from what the admin publishes, with the way into their live layout. The rest are enquired about from the list.
+// Add an id here when a project's page content lands.
 const PAGE_CONTENT = new Set<ID>([GC6_PROJECT_ID]);
+export const hasFullPage = (p: Project) => PAGE_CONTENT.has(p.id);
 export const hasDetailPage = (p: Project) =>
-  PAGE_CONTENT.has(p.id) && p.lifecycle !== 'completed' && !p.publishing.externalUrl;
+  (PAGE_CONTENT.has(p.id) || LIVE_LAYOUT_IDS.includes(p.id)) && p.lifecycle !== 'completed' && !p.publishing.externalUrl;
 
 export interface InventorySummary {
   total: number;

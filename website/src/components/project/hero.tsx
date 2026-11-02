@@ -1,4 +1,4 @@
-import { Download } from "lucide-react";
+import { Download, Map as MapIcon } from "lucide-react";
 
 import { Container } from "@/components/site/container";
 import { EnquireButton } from "@/components/site/enquire-button";
@@ -20,6 +20,7 @@ export function Hero({
   info,
   brochure,
   interest,
+  liveLayout,
 }: {
   name: string;
   rera?: string;
@@ -28,6 +29,8 @@ export function Hero({
   info: { type: string; plots: string; status: string; location: string };
   brochure?: string;
   interest: InterestId;
+  /** The project's live layout (every plot on the map with its status), when it has one. */
+  liveLayout?: string;
 }) {
   const facts = [
     ["Type", info.type],
@@ -60,6 +63,13 @@ export function Hero({
               <EnquireButton variant="light" arrow interest={interest}>
                 Book a site visit
               </EnquireButton>
+              {liveLayout ? (
+                <Button asChild variant="outline-light">
+                  <a href={liveLayout}>
+                    <MapIcon aria-hidden /> View live layout
+                  </a>
+                </Button>
+              ) : null}
               {brochure ? (
                 <Button asChild variant="outline-light">
                   <a href={brochure} target="_blank" rel="noreferrer" download>

@@ -1,6 +1,6 @@
 // Project → card data for the Projects page (and anything else that lists projects as cards). Server-side, pure.
 import { firstPlace } from "@/components/project/content";
-import { AREA_UNIT_LABEL, getProjectType, LIVE_LAYOUT_IDS, liveLayoutUrl } from "@/lib/constants";
+import { AREA_UNIT_LABEL, getProjectType } from "@/lib/constants";
 import { formatLandArea, formatNumber } from "@/lib/format";
 import { hasDetailPage, type InventorySummary } from "@/lib/projects";
 import type { Project } from "@/lib/types";
@@ -20,8 +20,6 @@ export interface ProjectCardData {
   facts: ProjectFact[];
   /** The project page or its own website; cards without one only inform (no Enquire, the client's call). */
   href?: string;
-  /** Button text when it isn't "View project" / "Visit website". */
-  action?: string;
 }
 
 // Stock photos came over with the old site's data; they are not the project's land, so those cards draw a
@@ -61,12 +59,8 @@ export function toCard(p: Project, s: InventorySummary): ProjectCardData {
     status: p.lifecycle === "completed" ? "completed" : p.lifecycle === "upcoming" ? "upcoming" : "selling",
     photo: realCover(p),
     facts,
-    // A mapped project without its own page opens in the live layouts app.
-    ...(p.publishing.externalUrl || hasDetailPage(p)
-      ? { href: p.publishing.externalUrl ?? `/projects/${p.publishing.slug}` }
-      : LIVE_LAYOUT_IDS.includes(p.id) && p.lifecycle !== "completed"
-        ? { href: liveLayoutUrl(p.id), action: "View live layout" }
-        : {}),
+    // The project page first (the live layouts open from there), or the project's own website.
+    ...(p.publishing.externalUrl || hasDetailPage(p) ? { href: p.publishing.externalUrl ?? `/projects/${p.publishing.slug}` } : {}),
   };
 }
 

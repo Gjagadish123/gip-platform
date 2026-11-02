@@ -28,7 +28,7 @@ export const firstPlace = (short: string) => short.split(",")[0].split("/")[0].t
 
 export function approvalFacts(project: Project) {
   const find = (a: Approval["authority"]) => project.legal.approvals.find((x) => x.authority === a);
-  const hmda = find("HMDA");
+  const hmda = find("HMDA") ?? find("DTCP"); // the layout permit: HMDA, or DTCP outside HMDA's area (Global City RRR)
   const rera = find("RERA");
   const parts = [hmda ? `${hmda.authority} approved` : null, rera ? "TS RERA registered" : null].filter((p): p is string => !!p);
   return { hmda, rera, parts };
