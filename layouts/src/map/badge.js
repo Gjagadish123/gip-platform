@@ -1,22 +1,23 @@
-// A project's logo card for the map: the client's logo on a white card, with its live availability and Explore under
-// it (desktop), and a stem down to the site. layoutBadges (below) places it clear of the other cards and the map's
+// A project's logo card for the map: the client's logo on a white card over a navy foot with the project's name (the
+// three Global City logos differ only in small print) and its live availability (desktop), and a stem down to the site. layoutBadges (below) places it clear of the other cards and the map's
 // controls, moving the body and redrawing the leader to the site dot.
 
 /**
- * n: {name, sub, logo (url), index}. Text goes in as text: names come from the database. A project without a logo
- * shows its name on the card instead.
+ * n: {name, sub, logo (url), here, index}. Text goes in as text: names come from the database. A project without a logo
+ * shows its name on the card instead. `here` tags the open project's card "You are here".
  * Returns {el, body, line}: the root (anchored at the site by its bottom centre), the movable body and the leader.
  */
-export function badgeElement({ name, sub, logo, index = 0 }) {
+export function badgeElement({ name, sub, logo, here = false, index = 0 }) {
   const el = document.createElement('div');
-  el.className = 'gc-badge';
+  el.className = here ? 'gc-badge is-here' : 'gc-badge';
   el.style.setProperty('--i', String(index));
   el.innerHTML = `<div class="gc-badge__body"><div class="gc-badge__rise">
       <div class="gc-badge__card"><span class="gc-badge__mark"></span>
-        <span class="gc-badge__meta"><span class="gc-badge__sub"></span><span class="gc-badge__go">Explore &rarr;</span></span></div>
+        <span class="gc-badge__meta"><b class="gc-badge__name"></b><span class="gc-badge__sub"></span></span></div>
     </div></div>
     <span class="gc-badge__stem"></span><span class="gc-badge__dot"></span>
     <svg class="gc-badge__leader" aria-hidden="true"><line x1="0" y1="-30" x2="0" y2="0"/></svg>`;
+  el.querySelector('.gc-badge__name').textContent = name.split(/\s+[–-]\s+/)[0]; // 'Western County – Shankarpalli' -> 'Western County'
   el.querySelector('.gc-badge__sub').textContent = sub || ''; // empty until the counts arrive (hidden by CSS)
   const mark = el.querySelector('.gc-badge__mark');
   if (logo) {

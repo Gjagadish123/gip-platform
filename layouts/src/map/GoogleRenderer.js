@@ -436,7 +436,6 @@ export class GoogleRenderer {
       let badge = null;
       if (this.gm.AdvancedMarkerElement) {
         badge = badgeElement({ ...n, index });
-        if (n.here) badge.el.querySelector('.gc-badge__go').textContent = 'You are here';
         marker = new this.gm.AdvancedMarkerElement({ map: this.map, position: at, content: badge.el, title, gmpClickable: true, zIndex: 5 });
         marker.addListener('gmp-click', open);
       } else {
