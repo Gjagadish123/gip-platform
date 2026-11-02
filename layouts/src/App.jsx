@@ -9,7 +9,7 @@ import Location, { hasLocation } from './sections/Location.jsx';
 import Contact from './sections/Contact.jsx';
 import AllProjects from './sections/AllProjects.jsx';
 import { BACKEND, useLive } from './lib/live.js';
-import { ALL, FALLBACK_LIST, LOGOS, MissingLayout, allProject, asset, isProjectId, loadLandmarks, loadMasterplan, neighboursOf, outlineOf, pinOf, readUrl, writeUrl } from './lib/projects.js';
+import { ALL, FALLBACK_LIST, LOGOS, MissingLayout, allProject, asset, isProjectId, loadLandmarks, loadMasterplan, monogram, neighboursOf, outlineOf, pinOf, readUrl, writeUrl } from './lib/projects.js';
 import { buildGeo, buildModel, statsOf } from './lib/plots.js';
 import Icon from './components/Icon.jsx';
 import { COMPANY } from './data/project.js';
@@ -93,13 +93,14 @@ export default function App() {
   const pin = pinOf(project.content, geo?.data);
   // listed layouts next door (Global City V beside VI), highlighted on the map with a way in; in All, every layout
   const near = useMemo(() => (activeId === ALL ? [] : neighboursOf(activeId)), [activeId]);
-  const subOf = (it) => (it.total ? `${it.available} of ${it.total} available` : '');
+  // each layout's gate carries its logo, or its monogram where it has none
+  const gateOf = (it) => ({ name: it.name, sub: it.total ? `${it.available} of ${it.total} available` : '', logo: LOGOS[it.id] ? asset(LOGOS[it.id].mark) : null, mono: monogram(it.name) });
   const neighbours =
     activeId === ALL
-      ? items.flatMap((it) => (outlineOf(it.id) ? [{ id: it.id, name: it.name, sub: subOf(it), ring: outlineOf(it.id) }] : []))
+      ? items.flatMap((it) => (outlineOf(it.id) ? [{ id: it.id, ...gateOf(it), ring: outlineOf(it.id) }] : []))
       : near.flatMap((n) => {
           const it = items.find((i) => i.id === n.id);
-          return it ? [{ ...n, name: it.name, sub: subOf(it) }] : [];
+          return it ? [{ ...n, ...gateOf(it) }] : [];
         });
   // All: one availability card for every listed layout together
   const allStats = useMemo(() => {

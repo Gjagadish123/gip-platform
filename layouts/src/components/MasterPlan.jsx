@@ -517,7 +517,8 @@ export default function MasterPlan({ project, items, site, model, stats, plan, o
       <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-navy-950/60 to-transparent" />
 
       {/* ---- title block + project switcher */}
-      <div className="pointer-events-none absolute left-3 top-3 z-30 sm:left-5 sm:top-5">
+      {/* data-map-ui: the map's own controls, which the project gates keep clear of (map/gate.js) */}
+      <div data-map-ui className="pointer-events-none absolute left-3 top-3 z-30 sm:left-5 sm:top-5">
         <ProjectCard project={project} plotCount={plotCount} items={items} onSwitch={switchTo} />
       </div>
 
@@ -577,7 +578,7 @@ export default function MasterPlan({ project, items, site, model, stats, plan, o
       )}
 
       {/* ---- search + tools */}
-      <div className="absolute right-3 top-[84px] z-10 flex flex-col items-end gap-2 sm:right-5 sm:top-5">
+      <div data-map-ui className="absolute right-3 top-[84px] z-10 flex flex-col items-end gap-2 sm:right-5 sm:top-5">
         <form onSubmit={submitSearch} role="search" className={`glass h-11 items-center gap-2 rounded-xl pl-3 pr-1.5 shadow-panel ${allMode ? 'hidden' : 'flex'}`}>
           <Icon name="search" size={17} className="text-ink-muted" />
           <label htmlFor="plot-search" className="sr-only">
@@ -698,6 +699,7 @@ export default function MasterPlan({ project, items, site, model, stats, plan, o
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.18 }}
+        data-map-ui
         className={`absolute z-10 ${selPlot ? 'hidden lg:bottom-[84px] lg:right-5 lg:block' : 'bottom-[120px] left-3 right-3 sm:bottom-[72px] sm:left-5 sm:right-auto lg:bottom-6'}`}
       >
         <StatusCard
@@ -714,7 +716,7 @@ export default function MasterPlan({ project, items, site, model, stats, plan, o
       </motion.div>
 
       {/* ---- mode switch, tour, compass, scale */}
-      <div className="absolute bottom-[68px] right-3 z-10 flex items-end gap-2 sm:right-5 sm:gap-3 lg:bottom-6">
+      <div data-map-ui className="absolute bottom-[68px] right-3 z-10 flex items-end gap-2 sm:right-5 sm:gap-3 lg:bottom-6">
         <div className="hidden pb-1 sm:block">
           <ScaleBar zoom={soloOn || !site ? null : cam.zoom} lat={site?.data.origin.lat} />
         </div>
@@ -815,10 +817,10 @@ export default function MasterPlan({ project, items, site, model, stats, plan, o
       </div>
 
       {/* ---- way out of the map: a real, labelled control on every screen size */}
-      <a href={allMode ? '#projects' : '#overview'} className="glass absolute bottom-6 left-1/2 z-10 hidden h-11 -translate-x-1/2 items-center gap-2 rounded-full px-5 text-sm font-semibold text-navy-900 shadow-panel hover:bg-white lg:flex">
+      <a data-map-ui href={allMode ? '#projects' : '#overview'} className="glass absolute bottom-6 left-1/2 z-10 hidden h-11 -translate-x-1/2 items-center gap-2 rounded-full px-5 text-sm font-semibold text-navy-900 shadow-panel hover:bg-white lg:flex">
         {allMode ? 'All projects' : 'Project details'} <Icon name="arrowDown" size={16} />
       </a>
-      <a href={allMode ? '#projects' : '#overview'} className="absolute inset-x-0 bottom-0 z-10 flex h-12 items-center justify-center gap-2 bg-white text-sm font-semibold text-navy-900 lg:hidden">
+      <a data-map-ui href={allMode ? '#projects' : '#overview'} className="absolute inset-x-0 bottom-0 z-10 flex h-12 items-center justify-center gap-2 bg-white text-sm font-semibold text-navy-900 lg:hidden">
         {allMode ? 'All projects' : 'Project details'} <Icon name="arrowDown" size={16} />
       </a>
     </section>

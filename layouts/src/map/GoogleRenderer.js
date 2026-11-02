@@ -13,6 +13,7 @@ import * as THREE from 'three';
 import { buildSite, STATUS_COLOR } from './siteScene.js';
 import { tourStops } from './tour.js';
 import { MAP_ID } from '../lib/googleMaps.js';
+import { gateElement, layoutGates } from './gate.js';
 import { easeInOutCubic, haversineKm, lerp, lerpAngle } from '../lib/geo.js';
 
 const VIEWS = {
@@ -77,7 +78,10 @@ export class GoogleRenderer {
     on('mousemove', (e) => this._pick(e.latLng, false));
     on('mouseout', () => this.onHover(null));
     on('dragstart', () => this._userMoved());
-    on('idle', () => this._emitCamera());
+    on('idle', () => {
+      this._emitCamera();
+      if (this.neighbours.length) this._queueGateLayout(); // the map settled: re-place the gates for this view
+    });
     on('heading_changed', () => this._emitCamera());
     on('zoom_changed', () => this._emitCamera());
   }
@@ -402,49 +406,59 @@ export class GoogleRenderer {
    * edge nearest this layout. A click on either opens that project. `list` items: {id, name, sub, ring: [{lat, lng}]}.
    */
   setNeighbours(list, onExplore) {
-    const sig = JSON.stringify([this.data?.origin, list.map((n) => [n.id, n.name, n.sub])]);
-    if (sig === this._nSig) return;
+    const sig = JSON.stringify([this.data?.origin, list.map((n) => [n.id, n.name])]);
+    if (sig === this._nSig) {
+      // same gates, new live counts: rewrite the plaques in place (no rebuild, no rise animation again)
+      for (const n of list) {
+        const sub = this.neighbours.find((x) => x.id === n.id)?.gate?.el.querySelector('.gc-gate__sub');
+        if (sub && n.sub) sub.textContent = n.sub;
+      }
+      return;
+    }
     this._clearNeighbours();
     this._nSig = sig;
     const { google } = this.gm;
-    const here = this.data?.origin; // none in the All overview: each label sits on its own layout
-    for (const n of list) {
+    const here = this.data?.origin; // none in the All overview: each gate stands on its own layout
+    list.forEach((n, index) => {
       const poly = new google.maps.Polygon({ map: this.map, paths: n.ring, strokeColor: '#f2c14e', strokeWeight: 3, strokeOpacity: 0.95, fillColor: '#f2c14e', fillOpacity: 0.16, zIndex: 1 });
       poly.addListener('click', () => onExplore(n.id));
       // the label sits just inside the outline's nearest point to this layout, where the eye already is
       const mid = n.ring.reduce((m, q) => ({ lat: m.lat + q.lat / n.ring.length, lng: m.lng + q.lng / n.ring.length }), { lat: 0, lng: 0 });
       const near = here && n.ring.reduce((a, b) => ((b.lat - here.lat) ** 2 + (b.lng - here.lng) ** 2 < (a.lat - here.lat) ** 2 + (a.lng - here.lng) ** 2 ? b : a));
       const at = near ? { lat: near.lat + (mid.lat - near.lat) * 0.2, lng: near.lng + (mid.lng - near.lng) * 0.2 } : mid;
-      const el = document.createElement('div');
-      el.className = 'gc-neighbour-pin';
-      if (n.below) el.style.transform = 'translateY(calc(100% + 8px))'; // the southern one of a close pair hangs below
-      el.innerHTML = '<b></b><span></span>';
-      el.firstChild.textContent = n.name;
-      el.lastChild.textContent = `${n.sub ? `${n.sub} · ` : ''}Explore →`;
       let marker;
+      let gate = null;
       if (this.gm.AdvancedMarkerElement) {
-        marker = new this.gm.AdvancedMarkerElement({ map: this.map, position: at, content: el, title: `Explore ${n.name}`, gmpClickable: true, zIndex: 5 });
+        gate = gateElement({ ...n, index });
+        marker = new this.gm.AdvancedMarkerElement({ map: this.map, position: at, content: gate.el, title: `Explore ${n.name}`, gmpClickable: true, zIndex: 5 });
         marker.addListener('gmp-click', () => onExplore(n.id));
       } else {
         marker = new google.maps.Marker({ map: this.map, position: at, title: `Explore ${n.name}`, label: { text: n.name, className: 'gc-neighbour-label' } });
         marker.addListener('click', () => onExplore(n.id));
       }
-      this.neighbours.push({ id: n.id, poly, marker });
-    }
+      this.neighbours.push({ id: n.id, poly, marker, gate });
+    });
+    this._queueGateLayout();
+  }
+  /** after the gates are in the page and whenever the map settles: keep them clear of each other and the controls */
+  _queueGateLayout() {
+    cancelAnimationFrame(this._gateFrame);
+    let tries = 0;
+    const run = () => {
+      const gates = this.neighbours.map((x) => x.gate).filter(Boolean);
+      if (!gates.length) return;
+      // Google attaches marker content a frame or two after it is added
+      if (!layoutGates(gates, this.container.closest('section')) && tries++ < 20) this._gateFrame = requestAnimationFrame(run);
+    };
+    this._gateFrame = requestAnimationFrame(run);
   }
   /**
-   * The All projects overview: every layout outlined with its Explore label, framed together, flat and north-up.
-   * Labels stand above their layout, except where another layout lies just north (within ~8 km: Global City V under
-   * VI, Western County under V): there the label hangs below, so stacked layouts' labels can't meet at any zoom.
+   * The All projects overview: every layout outlined, with its entrance gate standing on it (the gates keep clear of
+   * each other: see layoutGates), framed together, flat and north-up.
    */
   showAll(list, onExplore) {
     const { google } = this.gm;
-    const mids = list.map((n) => n.ring.reduce((m, q) => ({ lat: m.lat + q.lat / n.ring.length, lng: m.lng + q.lng / n.ring.length }), { lat: 0, lng: 0 }));
-    const nudged = list.map((n, i) => ({
-      ...n,
-      below: mids.some((m, k) => k !== i && Math.hypot(m.lat - mids[i].lat, m.lng - mids[i].lng) < 0.08 && m.lat > mids[i].lat),
-    }));
-    this.setNeighbours(nudged, onExplore); // labels follow live counts; the camera is framed once per visit to All
+    this.setNeighbours(list, onExplore); // plaques follow live counts; the camera is framed once per visit to All
     const ids = list.map((n) => n.id).join();
     if (!list.length || ids === this._allFramed) return;
     this._allFramed = ids;
@@ -457,7 +471,7 @@ export class GoogleRenderer {
     this.mode = '2d';
     this.map.moveCamera({ tilt: 0, heading: 0 });
     // labels stand above their layout: leave the title card plus a label's height clear at the top
-    this.map.fitBounds(b, phone ? { top: 220, bottom: 260, left: 100, right: 100 } : { top: 240, bottom: 150, left: 330, right: 170 });
+    this.map.fitBounds(b, phone ? { top: 230, bottom: 270, left: 70, right: 70 } : { top: 240, bottom: 150, left: 330, right: 170 });
   }
 
   /** brighter while the Next door control is hovered or focused */
@@ -465,6 +479,7 @@ export class GoogleRenderer {
     for (const n of this.neighbours) n.poly.setOptions(n.id === id ? { fillOpacity: 0.34, strokeWeight: 4 } : { fillOpacity: 0.16, strokeWeight: 3 });
   }
   _clearNeighbours() {
+    cancelAnimationFrame(this._gateFrame);
     for (const { poly, marker } of this.neighbours) {
       poly.setMap(null);
       if (typeof marker.setMap === 'function') marker.setMap(null);
