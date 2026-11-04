@@ -101,7 +101,8 @@ export class GoogleRenderer {
       el.innerHTML = '<span class="gc-past__dot"></span><span class="gc-past__label"><b></b><span></span></span>';
       el.querySelector('b').textContent = p.name;
       el.querySelector('.gc-past__label span').textContent = kind;
-      const marker = new this.gm.AdvancedMarkerElement({ map: this.map, position: p.at, content: el, title: `${p.name}, ${kind.toLowerCase()} project`, gmpClickable: true, zIndex: 2 });
+      // above the cards' leader lines (a line passes behind a name, not through it); names never overlap a card
+      const marker = new this.gm.AdvancedMarkerElement({ map: this.map, position: p.at, content: el, title: `${p.name}, ${kind.toLowerCase()} project`, gmpClickable: true, zIndex: 6 });
       marker.addListener('gmp-click', () => el.classList.toggle('is-open'));
       this.past.push({ marker, dot: el, label: el.querySelector('.gc-past__label') });
     }
