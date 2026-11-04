@@ -38,8 +38,9 @@ export function badgeElement({ name, sub, logo, here = false, index = 0 }) {
  * first: each tries standing above its site, beside it, higher, or below it, and takes the clearest spot that moves
  * it least. Moves only the bodies; the roots stay anchored at their sites and a leader line runs to the site dot.
  * A card whose site is off screen hides (it would only hang at the edge); the Next door control is the way there.
+ * `avoid`: screen rects of other markers to keep in sight too (the past projects' dots).
  */
-export function layoutBadges(badges, scope) {
+export function layoutBadges(badges, scope, avoid = []) {
   const live = badges.filter((g) => g.el.isConnected && g.el.getBoundingClientRect().width);
   if (!live.length) return false;
   const vw = document.documentElement.clientWidth;
@@ -58,8 +59,11 @@ export function layoutBadges(badges, scope) {
     a.g.el.style.visibility = on ? '' : 'hidden';
     return on;
   });
-  // every site's dot stays visible: a card may not stand over another project's site
-  const dots = shown.map((a) => ({ a, left: a.x - 14, right: a.x + 14, top: a.y - 14, bottom: a.y + 14 }));
+  // every site's dot stays visible: a card may not stand over another project's site, live or past
+  const dots = [
+    ...shown.map((a) => ({ a, left: a.x - 14, right: a.x + 14, top: a.y - 14, bottom: a.y + 14 })),
+    ...avoid.map((r) => ({ left: r.left - 8, right: r.right + 8, top: r.top - 8, bottom: r.bottom + 8 })),
+  ];
   for (const a of shown) {
     const dxs = [0, -a.w * 0.55, a.w * 0.55, -(a.w + 12), a.w + 12, -(a.w * 1.6 + 12), a.w * 1.6 + 12];
     const lifts = [0, a.h * 0.5, a.h * 1.05, a.h * 1.6, -(a.h + 2 * a.stem)]; // the last hangs the card below its site

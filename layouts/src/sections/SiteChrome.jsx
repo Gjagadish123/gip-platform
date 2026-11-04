@@ -64,7 +64,7 @@ export function Footer({ project, stats }) {
     <footer className="bg-navy-950 text-navy-100">
       <div className="mx-auto max-w-page px-5 py-14 sm:px-8">
         <div className="flex flex-wrap items-start justify-between gap-10">
-          <div className="flex items-center gap-8">
+          <div className="flex flex-wrap items-center gap-8">
             {LOGOS[project.id]?.white ? <img src={asset(LOGOS[project.id].white)} alt={project.name} className="h-28 w-auto" /> : <ProjectMark id={project.id} name={project.name} size={84} light />}
             {/* the lockup without its URL band: the website is a real link at the foot of this footer */}
             <img src={asset('brand/gip-lockup-white.svg')} alt="Greater Infra Projects" className="h-20 w-auto" />

@@ -15,6 +15,7 @@ import { tourStops } from './tour.js';
 import { MAP_ID } from '../lib/googleMaps.js';
 import { badgeElement, layoutBadges } from './badge.js';
 import { easeInOutCubic, haversineKm, lerp, lerpAngle } from '../lib/geo.js';
+import { PAST_PROJECTS } from '../data/project.js';
 
 const VIEWS = {
   plan: { tilt: 0, heading: 0, zoom: 17.35 },
@@ -24,6 +25,7 @@ const VIEWS = {
 const TOUR_CAM = { close: { zoom: 19.4, tilt: 68, dur: 3.2 }, road: { zoom: 18.9, tilt: 64, dur: 3.4 }, zone: { zoom: 19.2, tilt: 62, dur: 3.4 } };
 const HYDERABAD_WEST = { lat: 17.5, lng: 78.2 };
 const HERE_ZOOM = 14.5; // zoomed out past this, the open layout shows its own logo card among the others
+const COMPACT_ZOOM = 10.5; // zoomed out past this, the live sites are a few pixels apart: small cards keep near them
 
 const signedArea = (ring) => ring.reduce((t, v, i) => t + v[0] * ring[(i + 1) % ring.length][1] - ring[(i + 1) % ring.length][0] * v[1], 0) / 2;
 
@@ -81,10 +83,54 @@ export class GoogleRenderer {
     on('dragstart', () => this._userMoved());
     on('idle', () => {
       this._emitCamera();
-      if (this.neighbours.length) this._queueBadgeLayout(); // the map settled: re-place the cards for this view
+      this._queueBadgeLayout(); // the map settled: re-place the cards and the other projects' names for this view
     });
     on('heading_changed', () => this._emitCamera());
     on('zoom_changed', () => this._emitCamera());
+    this._addPast();
+  }
+
+  /** The client's other projects (PAST_PROJECTS): a small dot each, never a card; tapping one shows its name. */
+  _addPast() {
+    this.past = [];
+    if (!this.gm.AdvancedMarkerElement) return; // The raster fallback goes without them
+    for (const p of PAST_PROJECTS) {
+      const kind = p.ongoing ? 'Ongoing' : 'Completed';
+      const el = document.createElement('div');
+      el.className = 'gc-past';
+      el.innerHTML = '<span class="gc-past__dot"></span><span class="gc-past__label"><b></b><span></span></span>';
+      el.querySelector('b').textContent = p.name;
+      el.querySelector('.gc-past__label span').textContent = kind;
+      const marker = new this.gm.AdvancedMarkerElement({ map: this.map, position: p.at, content: el, title: `${p.name}, ${kind.toLowerCase()} project`, gmpClickable: true, zIndex: 2 });
+      marker.addListener('gmp-click', () => el.classList.toggle('is-open'));
+      this.past.push({ marker, dot: el, label: el.querySelector('.gc-past__label') });
+    }
+  }
+  /** each name shows only where it is clear of the cards, every dot, the controls and the names already placed */
+  _layoutPast(scope) {
+    const rect = (e) => e.getBoundingClientRect();
+    const taken = [
+      ...this.neighbours.filter((n) => n.badge && n.badge.el.style.display !== 'none').flatMap((n) => [rect(n.badge.body), rect(n.badge.el.querySelector('.gc-badge__dot'))]),
+      ...[...(scope?.querySelectorAll('[data-map-ui]') ?? [])].map(rect),
+      ...this.past.map(({ dot }) => rect(dot)),
+    ].filter((r) => r.width && r.height);
+    const hit = (a, b) => a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom;
+    const box = rect(this.container);
+    const inside = (r) => r.left >= box.left && r.right <= box.right && r.top >= box.top && r.bottom <= box.bottom;
+    for (const { label } of this.past) {
+      let fits = false;
+      // right of the dot, else left of it (near the screen's right edge)
+      for (const left of [false, true]) {
+        label.classList.toggle('is-left', left);
+        const r = rect(label);
+        if (r.width && inside(r) && !taken.some((t) => hit(r, t))) {
+          fits = true;
+          taken.push(r);
+          break;
+        }
+      }
+      label.classList.toggle('is-hidden', !fits);
+    }
   }
 
   get data() {
@@ -449,18 +495,22 @@ export class GoogleRenderer {
   /** after the cards are in the page and whenever the map settles: keep them clear of each other and the controls */
   _queueBadgeLayout() {
     cancelAnimationFrame(this._badgeFrame);
-    const far = (this.map.getZoom() ?? 0) < HERE_ZOOM;
+    const zoom = this.map.getZoom() ?? 0;
+    const far = zoom < HERE_ZOOM;
+    this.container.classList.toggle('gc-compact', zoom < COMPACT_ZOOM || window.matchMedia('(max-width: 639px)').matches);
     for (const n of this.neighbours) {
       if (!n.here) continue;
       if (n.badge) n.badge.el.style.display = far ? '' : 'none';
       else n.marker.setVisible?.(far);
     }
     let tries = 0;
+    const scope = this.container.closest('section');
     const run = () => {
       const badges = this.neighbours.map((x) => x.badge).filter(Boolean);
-      if (!badges.length) return;
       // Google attaches marker content a frame or two after it is added
-      if (!layoutBadges(badges, this.container.closest('section')) && tries++ < 20) this._badgeFrame = requestAnimationFrame(run);
+      const pastDots = this.past.map(({ dot }) => dot.getBoundingClientRect()).filter((r) => r.width);
+      if (badges.length && !layoutBadges(badges, scope, pastDots) && tries++ < 20) return (this._badgeFrame = requestAnimationFrame(run));
+      this._layoutPast(scope); // after the cards, which take the room first
     };
     this._badgeFrame = requestAnimationFrame(run);
   }
@@ -592,6 +642,7 @@ export class GoogleRenderer {
     this.anim = null;
     this.clearPlace();
     this._clearNeighbours();
+    this.past?.forEach(({ marker }) => (marker.map = null));
     this.listeners.forEach((l) => l.remove());
     this.overlays?.forEach((o) => o.setMap(null));
     this.overlay?.setMap(null);

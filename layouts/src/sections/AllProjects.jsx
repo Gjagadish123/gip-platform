@@ -19,7 +19,7 @@ export default function AllProjects({ items, onExplore }) {
         <p className="mt-4 max-w-[60ch] text-lg text-ink-soft">
           Every approved layout on the real map, with each plot&apos;s status as it changes. Open one to walk its plots in 2D or 3D.
         </p>
-        <ul className="mt-10 grid gap-4 sm:grid-cols-2">
+        <ul className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
           {items.map((it) => (
             <li key={it.id} className="flex flex-col rounded-2xl border border-line p-5 sm:p-6">
               <div className="flex items-center gap-3.5">

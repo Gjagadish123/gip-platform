@@ -127,15 +127,13 @@
   align-items: center;
   cursor: pointer;
 }
-.gc-badge__body {
-  transition: transform 0.45s cubic-bezier(0.2, 0.9, 0.25, 1);
-}
+/* the cards stay put: they fade in once and jump (never slide) to a clear spot when the map settles */
 .gc-badge__rise {
   transform-origin: 50% 100%;
   filter: drop-shadow(0 12px 20px rgba(1, 15, 32, 0.55)) drop-shadow(0 2px 4px rgba(1, 15, 32, 0.35));
   transition: transform 0.25s ease, filter 0.25s ease;
-  animation: gc-badge-rise 0.7s cubic-bezier(0.2, 0.9, 0.25, 1.15) backwards;
-  animation-delay: calc(var(--i) * 110ms);
+  animation: gc-badge-rise 0.4s ease-out backwards;
+  animation-delay: calc(var(--i) * 80ms);
 }
 .gc-badge:hover .gc-badge__rise,
 .gc-badge:focus-within .gc-badge__rise {
@@ -233,14 +231,6 @@
   background: #fff;
   box-shadow: 0 0 0 3px #02192e;
 }
-.gc-badge__dot::after {
-  content: '';
-  position: absolute;
-  inset: -4px;
-  border-radius: 50%;
-  border: 2px solid #fff;
-  animation: gc-badge-ping 2.4s ease-out infinite;
-}
 .gc-badge__leader {
   position: absolute;
   left: 50%;
@@ -259,69 +249,105 @@
 @keyframes gc-badge-rise {
   from {
     opacity: 0;
-    transform: translateY(14px) scale(0.7);
-  }
-  60% {
-    opacity: 1;
   }
 }
-@keyframes gc-badge-ping {
-  from {
-    transform: scale(0.6);
-    opacity: 0.9;
-  }
-  to {
-    transform: scale(2.2);
-    opacity: 0;
-  }
+
+/* The client's other projects (PAST_PROJECTS in GoogleRenderer): a small dot, and the name where there is room */
+.gc-past {
+  position: relative;
+  width: 12px;
+  height: 12px;
+  transform: translateY(50%); /* the marker stands on its bottom edge: centre the dot on the site instead */
+  cursor: pointer;
 }
-/* phones: a smaller card, the name alone in its foot (availability is in the card at the bottom and the project cards) */
-@media (max-width: 639px) {
-  .gc-badge__card {
-    border-radius: 10px;
-  }
-  .gc-badge__card::after {
-    bottom: -4px;
-    width: 10px;
-    height: 10px;
-  }
-  .gc-badge__mark {
-    padding: 6px 9px 4px;
-  }
-  .gc-badge__mark img {
-    height: 40px;
-    max-width: 84px;
-  }
-  .gc-badge__mark.is-text {
-    max-width: 96px;
-    font-size: 11px;
-  }
-  .gc-badge__meta {
-    padding: 3px 8px 4px;
-    border-radius: 0 0 10px 10px;
-  }
-  .gc-badge__name {
-    font-size: 11px;
-  }
-  .gc-badge__sub {
-    display: none;
-  }
-  .gc-badge.is-here .gc-badge__card::before {
-    top: -8px;
-    padding: 3px 6px;
-    font-size: 8.5px;
-  }
-  .gc-badge__stem {
-    height: 12px;
-  }
+.gc-past__dot {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: #02192e;
+  box-shadow: 0 0 0 2px #fff, 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+.gc-past__label {
+  position: absolute;
+  top: 50%;
+  left: 17px;
+  display: grid;
+  padding: 3px 7px 4px;
+  border-radius: 6px;
+  background: rgba(2, 25, 46, 0.86);
+  color: #fff;
+  font: 700 11.5px/1.2 'Archivo', sans-serif;
+  white-space: nowrap;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.gc-past__label span {
+  color: #c9d4e3;
+  font-size: 10px;
+  font-weight: 600;
+}
+.gc-past__label.is-left {
+  left: auto;
+  right: 17px;
+}
+.gc-past__label.is-hidden {
+  visibility: hidden;
+}
+.gc-past:hover .gc-past__label,
+.gc-past.is-open .gc-past__label {
+  visibility: visible;
+}
+/* phones, and any screen zoomed far out (GoogleRenderer sets .gc-compact on the map): a smaller card with the name
+   alone in its foot (availability is in the card at the bottom and the project cards) */
+.gc-compact .gc-badge__card {
+  border-radius: 10px;
+}
+.gc-compact .gc-badge__card::after {
+  bottom: -4px;
+  width: 10px;
+  height: 10px;
+}
+.gc-compact .gc-badge__mark {
+  padding: 6px 9px 4px;
+}
+.gc-compact .gc-badge__mark img {
+  height: 40px;
+  max-width: 84px;
+}
+.gc-compact .gc-badge__mark.is-text {
+  max-width: 96px;
+  font-size: 11px;
+}
+.gc-compact .gc-badge__meta {
+  padding: 3px 8px 4px;
+  border-radius: 0 0 10px 10px;
+}
+.gc-compact .gc-badge__name {
+  font-size: 11px;
+}
+.gc-compact .gc-badge__sub {
+  display: none;
+}
+.gc-compact .gc-badge.is-here .gc-badge__card::before {
+  top: -8px;
+  padding: 3px 6px;
+  font-size: 8.5px;
+}
+.gc-compact .gc-badge__stem {
+  height: 12px;
+}
+.gc-compact .gc-past__label {
+  left: 15px;
+  padding: 2px 6px 3px;
+  font-size: 10.5px;
+}
+.gc-compact .gc-past__label.is-left {
+  left: auto;
+  right: 15px;
 }
 @media (prefers-reduced-motion: reduce) {
-  .gc-badge__rise,
-  .gc-badge__dot::after {
-    animation: none;
-  }
-  .gc-badge__body,
   .gc-badge__rise {
+    animation: none;
     transition: none;
   }
 }

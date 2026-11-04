@@ -1,15 +1,31 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Icon from '../components/Icon.jsx';
 import { COMPANY, OFFICES } from '../data/project.js';
 import { directionsUrl } from '../lib/projects.js';
 import { saveEnquiry, toE164 } from '../lib/live.js';
+import { mapBus } from '../lib/mapBus.js';
 
 /** choices: in All projects, the layouts to pick from (the visit is to one of them); otherwise null. */
 export default function Contact({ project, model, pin, choices }) {
-  const [form, setForm] = useState({ name: '', phone: '', plot: '', when: 'This weekend', to: choices?.[0]?.id ?? '' });
+  // like: the plot came from a map card for a plot that isn't available, so the visitor wants plots like it
+  const [form, setForm] = useState({ name: '', phone: '', plot: '', like: false, when: 'This weekend', to: choices?.[0]?.id ?? '' });
   const visit = choices ? (choices.find((p) => p.id === form.to) ?? choices[0]) : project; // {id, name}
   const [error, setError] = useState('');
   const c = project.content || {};
+  const section = useRef(null);
+  const nameField = useRef(null);
+
+  // a plot card's Know more: this form, with that plot filled in
+  useEffect(() => {
+    const onEnquire = (e) => {
+      setForm((f) => ({ ...f, plot: e.detail.plot, like: e.detail.similar }));
+      setError('');
+      nameField.current?.focus({ preventScroll: true });
+      section.current?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+    };
+    mapBus.addEventListener('enquire', onEnquire);
+    return () => mapBus.removeEventListener('enquire', onEnquire);
+  }, []);
 
   const submit = (e) => {
     e.preventDefault();
@@ -24,14 +40,14 @@ export default function Contact({ project, model, pin, choices }) {
       `Hi, I would like to book a site visit to ${visit?.name ?? 'one of your projects'}.`,
       `Name: ${name}`,
       `Mobile: ${phone}`,
-      plot ? `Interested in plot: ${plot}` : null,
+      plot ? (form.like ? `Looking for plots like plot ${plot}` : `Interested in plot: ${plot}`) : null,
       `Preferred time: ${form.when}`,
     ]
       .filter(Boolean)
       .join('\n');
     window.open(`https://wa.me/${COMPANY.whatsapp}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener');
     // the admin's Common sheet gets it too; WhatsApp already has it if this fails
-    saveEnquiry({ form: 'site_visit', project_id: visit?.id, plot_number: plot || null, name, phone, visit_when: form.when }).catch((err) =>
+    saveEnquiry({ form: 'site_visit', project_id: visit?.id, plot_number: plot || null, similar: Boolean(plot && form.like), name, phone, visit_when: form.when }).catch((err) =>
       console.warn('Enquiry not saved to the sheet', err)
     );
   };
@@ -39,7 +55,7 @@ export default function Contact({ project, model, pin, choices }) {
   const field = 'h-12 w-full rounded-xl border border-line bg-white px-4 text-[16px] text-ink placeholder:text-ink-muted focus:border-navy-500 focus:outline-none';
 
   return (
-    <section id="contact" className="scroll-mt-16 bg-white">
+    <section ref={section} id="contact" className="scroll-mt-16 bg-white">
       <div className="mx-auto max-w-page px-5 py-16 sm:px-8 sm:py-24">
         <div className="grid gap-14 lg:grid-cols-[1fr_1fr] lg:gap-20">
           <div>
@@ -66,7 +82,7 @@ export default function Contact({ project, model, pin, choices }) {
                 <label htmlFor="c-name" className="mb-1.5 block text-sm font-medium text-ink-soft">
                   Your name
                 </label>
-                <input id="c-name" autoComplete="name" className={field} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+                <input ref={nameField} id="c-name" autoComplete="name" className={field} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
               </div>
               <div>
                 <label htmlFor="c-phone" className="mb-1.5 block text-sm font-medium text-ink-soft">
@@ -84,8 +100,9 @@ export default function Contact({ project, model, pin, choices }) {
                   placeholder={model ? `${model.firstPlot} to ${model.lastPlot}` : 'Plot no.'}
                   className={`${field} num`}
                   value={form.plot}
-                  onChange={(e) => setForm({ ...form, plot: e.target.value.replace(/\D/g, '').slice(0, 4) })}
+                  onChange={(e) => setForm({ ...form, plot: e.target.value.replace(/\D/g, '').slice(0, 4), like: false })}
                 />
+                {form.like && form.plot && <p className="mt-1.5 text-sm text-ink-muted">Plot {form.plot} isn&apos;t available, so sales will suggest plots like it.</p>}
               </div>
               <div className="sm:col-span-2">
                 <label htmlFor="c-when" className="mb-1.5 block text-sm font-medium text-ink-soft">
