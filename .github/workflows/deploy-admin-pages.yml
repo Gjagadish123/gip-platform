@@ -13,7 +13,7 @@ name: Deploy previews to GitHub Pages
 on:
   push:
     branches: [main]
-    paths: ["admin/**", "website/**", "layouts/**", ".github/workflows/deploy-admin-pages.yml"]
+    paths: ["admin/**", "website/**", "layouts/**", ".github/workflows/deploy-admin-pages.yml", ".github/scripts/**"]
   workflow_dispatch:
 
 permissions:
@@ -91,6 +91,10 @@ jobs:
           <script>location.replace('${NEXT_PUBLIC_LAYOUTS_URL}' + location.search + location.hash)</script>
           </head><body><a href="${NEXT_PUBLIC_LAYOUTS_URL}">Live layouts have moved: open them here.</a></body></html>
           EOF
+
+      # Pages sends HSTS and Cache-Control itself but no custom headers, so the CSP goes into every page.
+      - name: Content-Security-Policy
+        run: node .github/scripts/pages-csp.mjs admin/out
 
       - uses: actions/upload-pages-artifact@v3
         with:

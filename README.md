@@ -128,8 +128,7 @@ a plot card on click, 2D/3D and a guided tour, then the project's sections below
 
 ## Website (public site)
 
-The site hardcodes ONE project (Global City VI) through `website/src/lib/projects.ts`;
-swap those function bodies for Supabase queries when the backend lands and nothing in the pages changes.
+Projects come from Supabase through `website/src/lib/projects.ts`; Global City VI also has its own brochure page.
 
 - Imagery: re-encode source renders and photos with `website/scripts/optimize-images.py` →
   `src/assets/images/*.webp`.

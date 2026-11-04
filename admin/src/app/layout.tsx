@@ -24,6 +24,15 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en-IN" className={`${archivo.variable} h-full antialiased`} suppressHydrationWarning>
+      <head>
+        {/* Clickjacking guard: GitHub Pages cannot send X-Frame-Options, so inside a frame the admin hides itself and
+            takes over the whole window. It touches nothing React renders, so hydration is unaffected. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: "if (self !== top) { document.documentElement.style.display = 'none'; top.location = self.location; }",
+          }}
+        />
+      </head>
       <body className="min-h-full">
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
           {/* Store at the root so /login can call setSession on the same instance the app reads. */}
