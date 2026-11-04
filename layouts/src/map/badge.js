@@ -64,6 +64,16 @@ export function layoutBadges(badges, scope, avoid = []) {
     ...shown.map((a) => ({ a, left: a.x - 14, right: a.x + 14, top: a.y - 14, bottom: a.y + 14 })),
     ...avoid.map((r) => ({ left: r.left - 8, right: r.right + 8, top: r.top - 8, bottom: r.bottom + 8 })),
   ];
+  // a leader line drawn across another card reads as clutter: count it like a small overlap (sampled along the line)
+  const leaders = [];
+  const crosses = (s, r) => {
+    for (let t = 0.05; t < 1; t += 0.05) {
+      const x = s.x1 + (s.x2 - s.x1) * t;
+      const y = s.y1 + (s.y2 - s.y1) * t;
+      if (x > r.left && x < r.right && y > r.top && y < r.bottom) return true;
+    }
+    return false;
+  };
   for (const a of shown) {
     const dxs = [0, -a.w * 0.55, a.w * 0.55, -(a.w + 12), a.w + 12, -(a.w * 1.6 + 12), a.w * 1.6 + 12];
     const lifts = [0, a.h * 0.5, a.h * 1.05, a.h * 1.6, -(a.h + 2 * a.stem)]; // the last hangs the card below its site
@@ -71,17 +81,20 @@ export function layoutBadges(badges, scope, avoid = []) {
     for (const lift of lifts) {
       for (const dx of dxs) {
         const r = { left: a.x + dx - a.w / 2, right: a.x + dx + a.w / 2, top: a.y - a.stem - lift - a.h, bottom: a.y - a.stem - lift };
+        const line = { x1: a.x, y1: a.y, x2: a.x + dx, y2: lift >= 0 ? r.bottom : r.top };
         const off = (Math.max(0, -r.left) + Math.max(0, r.right - vw)) * a.h + (Math.max(0, -r.top) + Math.max(0, r.bottom - vh)) * a.w;
         const clash =
           placed.reduce((t, p) => t + area(r, p), 0) * 4 +
           dots.reduce((t, d) => t + (d.a === a ? 0 : area(r, d)), 0) * 4 +
           ui.reduce((t, u) => t + area(r, u), 0) * 2 +
-          off * 3;
+          off * 3 +
+          (placed.filter((p) => crosses(line, p)).length + leaders.filter((l) => crosses(l, r)).length) * 6000;
         const cost = clash + (Math.abs(dx) + Math.abs(lift)) * 0.5; // clear first, then the least moved
-        if (!best || cost < best.cost) best = { dx, lift, r, cost };
+        if (!best || cost < best.cost) best = { dx, lift, r, line, cost };
       }
     }
     placed.push(best.r);
+    leaders.push(best.line);
     a.g.body.style.transform = `translate(${Math.round(best.dx)}px, ${Math.round(-best.lift)}px)`;
     a.g.line.setAttribute('x1', String(Math.round(best.dx)));
     // the leader meets the body's bottom, or its top when the card hangs below the site
