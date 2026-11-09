@@ -1,13 +1,12 @@
 "use client";
 
-import { CalendarDays, Download } from "lucide-react";
+import { CalendarDays, Download, Mail, MessageSquareText } from "lucide-react";
 import { useSyncExternalStore } from "react";
 
-import { WHATSAPP_TEXT, whatsappUrl } from "@/lib/enquiry";
+import { COMPANY } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 import { useEnquiry } from "./enquiry-provider";
-import { WhatsAppIcon } from "./icons";
 
 const subscribeScroll = (cb: () => void) => {
   window.addEventListener("scroll", cb, { passive: true });
@@ -25,15 +24,14 @@ const cell = "flex h-15 flex-col items-center justify-center gap-1 text-label fo
 const dock = "inline-flex h-10 items-center gap-2 rounded-md px-3.5 text-small font-medium text-navy transition-colors duration-300 hover:bg-mist";
 
 /**
- * One tap to a person, everywhere. Phones: a navy bar fixed to the foot with WhatsApp and Site visit. Desktop: a
- * small white dock in the bottom-right corner (the brochure on project pages, then WhatsApp) that appears
+ * One tap to a person, everywhere. Phones: a navy bar fixed to the foot with Email and Site visit. Desktop: a
+ * small white dock in the bottom-right corner (the brochure on project pages, then Enquire) that appears
  * once the first screen has scrolled away; the minimal header carries Book a site visit and the menu. Both hide while
  * the enquiry drawer is open.
  */
 export function ActionBar() {
   const { open, openEnquiry, page } = useEnquiry();
   const past = useSyncExternalStore(subscribeScroll, readPast, () => false);
-  const text = page.projectName ? WHATSAPP_TEXT.project(page.projectName, page.projectLocation ?? "Hyderabad") : WHATSAPP_TEXT.home;
   const brochure = page.nav?.brochure;
 
   return (
@@ -46,9 +44,9 @@ export function ActionBar() {
         style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       >
         <div className="grid grid-cols-2 divide-x divide-white/12">
-          <a href={whatsappUrl(text)} target="_blank" rel="noreferrer" className={cell}>
-            <WhatsAppIcon className="size-[18px]" />
-            WhatsApp
+          <a href={`mailto:${COMPANY.email}`} className={cell}>
+            <Mail aria-hidden className="size-[18px]" />
+            Email
           </a>
           <button type="button" onClick={() => openEnquiry({ interest: page.interest })} className={cell}>
             <CalendarDays aria-hidden className="size-[18px]" />
@@ -71,10 +69,10 @@ export function ActionBar() {
               Brochure
             </a>
           ) : null}
-          <a href={whatsappUrl(text)} target="_blank" rel="noreferrer" className={cn(dock, "bg-brand text-white hover:bg-navy-deep")}>
-            <WhatsAppIcon className="size-4" />
-            WhatsApp
-          </a>
+          <button type="button" onClick={() => openEnquiry({ interest: page.interest })} className={cn(dock, "bg-brand text-white hover:bg-navy-deep")}>
+            <MessageSquareText aria-hidden className="size-4" />
+            Enquire
+          </button>
         </div>
       </div>
     </>

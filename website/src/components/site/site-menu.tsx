@@ -8,13 +8,12 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import { Arrow, Button } from "@/components/ui/button";
 import { COMPANY, LAYOUTS_URL } from "@/lib/constants";
-import { WHATSAPP_TEXT, whatsappUrl } from "@/lib/enquiry";
 import { COPYRIGHT_YEAR, OFFICE } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 import { Container } from "./container";
 import { useEnquiry } from "./enquiry-provider";
-import { FacebookIcon, InstagramIcon, WhatsAppIcon } from "./icons";
+import { FacebookIcon, InstagramIcon } from "./icons";
 import { Logo } from "./logo";
 import { StatusChip } from "./typography";
 
@@ -221,11 +220,6 @@ function MenuPanel({ onClosed }: { onClosed: () => void }) {
                 <li>
                   <a href={COMPANY.social.instagram} target="_blank" rel="noreferrer" aria-label="Instagram" className={social}>
                     <InstagramIcon />
-                  </a>
-                </li>
-                <li>
-                  <a href={whatsappUrl(WHATSAPP_TEXT.home)} target="_blank" rel="noreferrer" aria-label="WhatsApp" className={social}>
-                    <WhatsAppIcon className="size-4" />
                   </a>
                 </li>
               </ul>

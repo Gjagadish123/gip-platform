@@ -12,7 +12,6 @@ export const COMPANY = {
   name: 'Greater Infra Projects',
   shortName: 'GIP',
   legalName: 'Greater Infra Projects',
-  whatsappE164: '919000770022', // the official WhatsApp Business number; no phone number is shown on the site
   email: 'Gip@greaterinfraprojects.in',
   office: 'Ameerpet, Hyderabad, Telangana',
   city: 'Hyderabad',

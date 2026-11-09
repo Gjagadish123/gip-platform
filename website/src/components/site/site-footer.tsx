@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { Backdrop } from "./backdrop";
 import { Container } from "./container";
 import { DisclaimerDialog } from "./disclaimer-dialog";
-import { FacebookIcon, InstagramIcon, WhatsAppIcon } from "./icons";
+import { FacebookIcon, InstagramIcon } from "./icons";
 import { Logo } from "./logo";
 import { TextLink } from "./text-link";
 
@@ -49,11 +49,6 @@ export function SiteFooter() {
             <li>
               <a href={COMPANY.social.instagram} target="_blank" rel="noreferrer" aria-label="Instagram" className={social}>
                 <InstagramIcon className="size-4" />
-              </a>
-            </li>
-            <li>
-              <a href={`https://wa.me/${COMPANY.whatsappE164}`} target="_blank" rel="noreferrer" aria-label="WhatsApp" className={social}>
-                <WhatsAppIcon className="size-4" />
               </a>
             </li>
           </ul>

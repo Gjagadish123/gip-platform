@@ -1,15 +1,15 @@
 "use client";
 
-import { ArrowUpRight, ChevronDown, Mail } from "lucide-react";
+import { ArrowUpRight, Check, ChevronDown, Mail, Send } from "lucide-react";
 import { useId, useState, useSyncExternalStore, type FormEvent, type ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
 import { COMPANY } from "@/lib/constants";
 import {
   buildMailto,
-  buildWhatsAppUrl,
   cleanPhone,
   DIAL_CODES,
+  fullPhone,
   INTERESTS,
   phoneError,
   saveEnquiry,
@@ -19,9 +19,8 @@ import {
   type InterestId,
 } from "@/lib/enquiry";
 import { formatArea } from "@/lib/format";
+import { OFFICE } from "@/lib/site";
 import { cn } from "@/lib/utils";
-
-import { WhatsAppIcon } from "./icons";
 
 // Boxed controls: 48 px, 10 px radius, a hairline that turns navy with a soft navy halo on focus.
 const control =
@@ -67,9 +66,9 @@ function Field({
 
 /**
  * The one enquiry form (Contact page, the enquiry drawer, the project page): two columns (one in the drawer), labels
- * over boxed controls, the country code joined to the phone field, a navy submit. A valid submit opens WhatsApp with
- * the message prefilled, then offers call and a mailto with the same body.
- * Add the Supabase insert here when the backend ships.
+ * over boxed controls, the country code joined to the phone field, a navy submit. A valid submit puts the enquiry in
+ * the admin's Common sheet, where sales picks it up, and says so; if it can't be sent, the visitor is told and offered
+ * the same message as an email. Editing a field after sending allows another send.
  */
 export function EnquiryForm({
   interest: initialInterest = "general",
@@ -92,7 +91,7 @@ export function EnquiryForm({
   const [interest, setInterest] = useState<InterestId>(initialInterest);
   const [message, setMessage] = useState("");
   const [errors, setErrors] = useState<Errors>({});
-  const [state, setState] = useState<"idle" | "opening" | "done">("idle");
+  const [state, setState] = useState<"idle" | "sending" | "done" | "error">("idle");
   const [last, setLast] = useState<Enquiry | null>(null);
   // False in the server HTML until React owns the form: a native submit before then would send the visitor's name
   // and phone to the server. A disabled default button also stops Enter from submitting. The form's
@@ -111,8 +110,14 @@ export function EnquiryForm({
     return e;
   }
 
-  function onSubmit(ev: FormEvent) {
+  // A changed field after a send (or a failed one) makes the form sendable again.
+  const edited = () => {
+    if (state === "done" || state === "error") setState("idle");
+  };
+
+  async function onSubmit(ev: FormEvent) {
     ev.preventDefault();
+    if (state === "sending" || state === "done") return;
     const e = validate();
     setErrors(e);
     const first = Object.keys(e)[0];
@@ -122,14 +127,16 @@ export function EnquiryForm({
     }
     const enquiry: Enquiry = { name, dial, phone, email, interest, plot, message };
     setLast(enquiry);
-    setState("opening");
-    window.open(buildWhatsAppUrl(enquiry), "_blank", "noopener"); // first, inside the click, or it's blocked
-    // the message is on its way via WhatsApp regardless; a failed save is reported, not hidden
-    saveEnquiry(enquiry, window.location.pathname).catch((err) => console.warn("Enquiry not saved to the sheet", err));
-    window.setTimeout(() => {
-      setState("done");
-      onDone?.();
-    }, 800);
+    setState("sending");
+    try {
+      // null: a build without the backend, which cannot send anything
+      const saved = await saveEnquiry(enquiry, window.location.pathname);
+      setState(saved == null ? "error" : "done");
+      if (saved != null) onDone?.();
+    } catch (err) {
+      console.warn("Enquiry not sent", err);
+      setState("error");
+    }
   }
 
   return (
@@ -165,7 +172,10 @@ export function EnquiryForm({
             autoComplete="name"
             required
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => {
+              setName(e.target.value);
+              edited();
+            }}
             aria-invalid={!!errors.name}
             aria-describedby={errors.name ? `${id}-name-err` : undefined}
             className={control}
@@ -189,6 +199,7 @@ export function EnquiryForm({
                   const next = e.target.value as DialCode;
                   setDial(next);
                   setPhone((p) => cleanPhone(next, p));
+                  edited();
                 }}
                 className="absolute inset-0 cursor-pointer appearance-none opacity-0"
               >
@@ -207,7 +218,10 @@ export function EnquiryForm({
               autoComplete={dial === "other" ? "tel" : "tel-national"}
               required
               value={phone}
-              onChange={(e) => setPhone(cleanPhone(dial, e.target.value))}
+              onChange={(e) => {
+                setPhone(cleanPhone(dial, e.target.value));
+                edited();
+              }}
               aria-invalid={!!errors.phone}
               aria-describedby={errors.phone ? `${id}-phone-err` : undefined}
               className={cn(control, "rounded-l-none tabular-nums")}
@@ -223,7 +237,10 @@ export function EnquiryForm({
             type="email"
             autoComplete="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              edited();
+            }}
             aria-invalid={!!errors.email}
             aria-describedby={errors.email ? `${id}-email-err` : undefined}
             className={control}
@@ -237,7 +254,10 @@ export function EnquiryForm({
               id={`${id}-interest`}
               name="interest"
               value={interest}
-              onChange={(e) => setInterest(e.target.value as InterestId)}
+              onChange={(e) => {
+                setInterest(e.target.value as InterestId);
+                edited();
+              }}
               className={cn(control, "cursor-pointer appearance-none pr-10")}
             >
               {INTERESTS.map((i) => (
@@ -257,7 +277,10 @@ export function EnquiryForm({
             rows={compact ? 3 : 4}
             maxLength={500}
             value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            onChange={(e) => {
+              setMessage(e.target.value);
+              edited();
+            }}
             className={cn(control, "h-auto resize-y py-3")}
             placeholder="Plot size, budget, or when you'd like to visit"
           />
@@ -265,25 +288,29 @@ export function EnquiryForm({
       </div>
 
       <div className={cn("mt-8 flex flex-col gap-4", !compact && "sm:flex-row sm:items-center sm:gap-6 lg:mt-10")}>
-        <Button type="submit" size="lg" className="w-full sm:w-auto" disabled={!ready || state === "opening"}>
-          <WhatsAppIcon className="size-4" />
-          {state === "opening" ? "Opening WhatsApp…" : state === "done" ? "Send again on WhatsApp" : "Send on WhatsApp"}
+        <Button type="submit" size="lg" className="w-full sm:w-auto" disabled={!ready || state === "sending" || state === "done"}>
+          {state === "done" ? <Check className="size-4" /> : <Send className="size-4" />}
+          {state === "sending" ? "Sending…" : state === "done" ? "Sent" : "Send enquiry"}
         </Button>
         <p className="max-w-[46ch] text-small text-muted">
-          Opens WhatsApp with your message to us. By sending, you agree that {COMPANY.name} may contact you
-          about this enquiry.
+          Goes straight to our sales team. By sending, you agree that {COMPANY.name} may contact you about this enquiry.
         </p>
       </div>
-      {/* Always mounted so the confirmation is announced when it fills. */}
+      {/* Always mounted so the outcome is announced when it fills. */}
       <p role="status" className="mt-4 max-w-[62ch] text-small text-text empty:mt-0">
         {state === "done" && last ? (
           <>
-            If WhatsApp didn&rsquo;t open,{" "}
+            Thank you, {last.name.trim().split(/\s+/)[0]}. Our sales team has your enquiry and will call you on{" "}
+            <span className="whitespace-nowrap">{fullPhone(last.dial, last.phone)}</span> ({OFFICE.hours}).
+          </>
+        ) : state === "error" && last ? (
+          <span className="text-destructive">
+            We couldn&rsquo;t send it just now. Please try again, or{" "}
             <a href={buildMailto(last)} className={link}>
-              <Mail className="size-3.5" aria-hidden /> email us <ArrowUpRight className="size-3.5" aria-hidden />
+              <Mail className="size-3.5" aria-hidden /> email it to us <ArrowUpRight className="size-3.5" aria-hidden />
             </a>
             .
-          </>
+          </span>
         ) : null}
       </p>
     </form>

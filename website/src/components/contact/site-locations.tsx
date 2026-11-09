@@ -5,7 +5,6 @@ import { Container } from "@/components/site/container";
 import { Plate } from "@/components/site/plate";
 import { Section } from "@/components/site/section";
 import { TextLink } from "@/components/site/text-link";
-import { WHATSAPP_TEXT, whatsappUrl } from "@/lib/enquiry";
 import { OFFICE } from "@/lib/site";
 import type { Project } from "@/lib/types";
 
@@ -49,7 +48,6 @@ export function SiteLocations({ project }: { project: Project | null }) {
                 <TextLink href={OFFICE.directionsUrl} external>
                   Directions
                 </TextLink>
-                <TextLink href={whatsappUrl(WHATSAPP_TEXT.home)} external>Message us on WhatsApp</TextLink>
               </>
             }
           >

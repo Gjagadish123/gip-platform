@@ -3,7 +3,6 @@
 
 export const COMPANY = {
   name: 'Greater Infra Projects',
-  whatsapp: '919000770022', // the official WhatsApp Business number; no phone number is shown
   email: 'Gip@greaterinfraprojects.in',
   website: import.meta.env.VITE_WEBSITE_URL || 'https://gjagadish123.github.io/gip-platform/site/',
 };

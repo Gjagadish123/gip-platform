@@ -40,8 +40,8 @@ export function toE164(raw) {
 }
 
 /**
- * Puts a lead in the admin's Common sheet (public.submit_enquiry: validated, deduplicated, rate limited). The caller
- * opens WhatsApp first, so the visitor reaches sales even when this fails. fields: {form, project_id, plot_number,
+ * Puts a lead in the admin's Common sheet (public.submit_enquiry: validated, deduplicated, rate limited), where sales
+ * picks it up; the caller tells the visitor whether it got there. fields: {form, project_id, plot_number,
  * similar, name, phone, message, visit_when}.
  */
 export async function saveEnquiry(fields) {

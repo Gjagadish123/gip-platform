@@ -5,11 +5,9 @@ import type { ComponentType } from "react";
 import { SiteLocations } from "@/components/contact/site-locations";
 import { Container } from "@/components/site/container";
 import { EnquiryForm } from "@/components/site/enquiry-form";
-import { WhatsAppIcon } from "@/components/site/icons";
 import { Lede } from "@/components/site/typography";
 import { Arrow } from "@/components/ui/button";
 import { COMPANY } from "@/lib/constants";
-import { WHATSAPP_TEXT, whatsappUrl } from "@/lib/enquiry";
 import { getProject } from "@/lib/projects";
 import { JsonLd, ORGANIZATION_ID, pageMeta, SITE_URL } from "@/lib/seo";
 import { CLOSING_CTA, OFFICE } from "@/lib/site";
@@ -17,7 +15,7 @@ import { cn } from "@/lib/utils";
 
 const TITLE = "Contact — Ameerpet, Hyderabad";
 const DESCRIPTION =
-  "Message us on WhatsApp, email us, or visit Vasavi MPM Grand, Metro Junction, Ameerpet. Wed–Mon 10:00–18:00 IST.";
+  "Send an enquiry, email us, or visit Vasavi MPM Grand, Metro Junction, Ameerpet. Wed–Mon 10:00–18:00 IST.";
 const PATH = "/contact";
 
 export const metadata: Metadata = pageMeta({ title: TITLE, description: DESCRIPTION, path: PATH });
@@ -35,13 +33,6 @@ const jsonLd = {
 type Method = { icon: ComponentType<{ className?: string }>; title: string; detail: string; href?: string; external?: boolean };
 
 const METHODS: Method[] = [
-  {
-    icon: WhatsAppIcon,
-    title: "Message us on WhatsApp",
-    detail: "Send a plot size, a facing or a question",
-    href: whatsappUrl(WHATSAPP_TEXT.home),
-    external: true,
-  },
   { icon: Mail, title: "Email", detail: COMPANY.email, href: `mailto:${COMPANY.email}` },
   { icon: Clock, title: "Office hours", detail: OFFICE.hours },
 ];
@@ -107,7 +98,7 @@ export default async function ContactPage() {
           </div>
           <div className="rounded-lg border border-line bg-white p-6 shadow-raise lg:col-span-6 lg:col-start-7 lg:self-start lg:p-10">
             <h2 className="text-h3">Send an enquiry</h2>
-            <p className="mt-2 text-small text-muted">Opens WhatsApp with your message ready to send.</p>
+            <p className="mt-2 text-small text-muted">It goes straight to our sales team, who call you back.</p>
             <EnquiryForm interest="general" className="mt-8" />
           </div>
         </Container>

@@ -33,8 +33,8 @@ export function Enquire({ name, interest }: { name: string; interest: InterestId
             Enquire about {name}
           </h2>
           <p className="mt-5 max-w-[44ch] text-body text-text">
-            Tell us what you are looking for at {name}: a plot size, a facing, a site visit. We reply on WhatsApp or by
-            phone, and there is no obligation to book.
+            Tell us what you are looking for at {name}: a plot size, a facing, a site visit. Our sales team calls you
+            back, and there is no obligation to book.
           </p>
           <ul className="mt-10 space-y-5">
             <Row icon={Mail} label="Email">

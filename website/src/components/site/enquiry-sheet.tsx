@@ -33,7 +33,7 @@ export function EnquirySheet() {
         <SheetHeader className="gap-3 border-b border-line px-6 pt-16 pb-7 sm:px-10 sm:pt-20">
           <SheetTitle className="text-h2 text-navy">{page.projectName ? `Enquire about ${page.projectName}` : "Book a site visit"}</SheetTitle>
           <SheetDescription className="max-w-[42ch] text-body text-text">
-            Tell us what you are looking for. We reply on WhatsApp or by phone and arrange a visit at a time that suits you.
+            Tell us what you are looking for. Our sales team calls you back and arranges a visit at a time that suits you.
           </SheetDescription>
         </SheetHeader>
         <div className="px-6 pt-8 pb-10 sm:px-10">

@@ -166,7 +166,7 @@ export function faqItems({ hmda, rera, plots, min, max, hours }: {
     },
     {
       q: "How do I visit the site?",
-      a: `Use Schedule site visit at the bottom of the page or message us on WhatsApp (${hours}). We arrange the visit at a time that suits you.`,
+      a: `Use Schedule site visit at the bottom of the page and our sales team calls you back (office hours ${hours}). We arrange the visit at a time that suits you.`,
     },
     {
       q: "Do you build villas on the plots?",
@@ -174,7 +174,7 @@ export function faqItems({ hmda, rera, plots, min, max, hours }: {
     },
     {
       q: "Can NRIs buy a plot here?",
-      a: "Yes. Indian rules allow NRIs and OCI cardholders to buy residential plots. We share the documents, site photos and plot details on WhatsApp, and can show the site to family members in Hyderabad.",
+      a: "Yes. Indian rules allow NRIs and OCI cardholders to buy residential plots. We share the documents, site photos and plot details by email, and can show the site to family members in Hyderabad.",
     },
   ];
 }

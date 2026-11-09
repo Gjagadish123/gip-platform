@@ -1,6 +1,5 @@
-// The enquiry hand-off: a valid form opens WhatsApp with the message prefilled (the channel plot buyers in Telangana
-// already use) and offers the same body as a mailto link. The lead also goes to the admin's Common sheet
-// (saveEnquiry), so WhatsApp stays the visible confirmation and nothing is lost if the save fails.
+// The enquiry hand-off: a valid form puts the lead in the admin's Common sheet (saveEnquiry), where sales picks it up;
+// the form says whether it got there and, if not, offers the same body as a mailto link.
 import { COMPANY } from "./constants";
 import { formatArea } from "./format";
 import type { Unit } from "./types";
@@ -133,10 +132,6 @@ export async function saveEnquiry(e: Enquiry, page: string): Promise<number | nu
   return data as number;
 }
 
-export const whatsappUrl = (text: string) => `https://wa.me/${COMPANY.whatsappE164}?text=${encodeURIComponent(text)}`;
-
-export const buildWhatsAppUrl = (e: Enquiry) => whatsappUrl(enquiryBody(e));
-
 export function buildMailto(e: Enquiry): string {
   const about = e.plot?.project ?? interestLabel(e.interest);
   const subject = e.plot
@@ -144,16 +139,3 @@ export function buildMailto(e: Enquiry): string {
     : `Enquiry — ${about}`;
   return `mailto:${COMPANY.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(enquiryBody(e))}`;
 }
-
-/** Quick WhatsApp messages for the tray and buttons (page-aware). */
-export const WHATSAPP_TEXT = {
-  home: "Hi GIP, I'd like to know about your current plots.",
-  contact: "Hi GIP, I'd like to talk about a plot.",
-  project: (name: string, location: string) =>
-    `Hi GIP, I'm interested in ${name} at ${location}. Please share availability and price.`,
-  plot: (name: string, p: EnquiryPlot) =>
-    p.similar
-      ? `Hi GIP, I'm looking for plots similar to ${describePlot(p)} at ${name}. What do you have available?`
-      : `Hi GIP, I'm interested in ${describePlot(p)} at ${name}. Is it available?`,
-} as const;
-

@@ -29,7 +29,7 @@ import { PlotSizes } from "@/components/project/plot-sizes";
 import { VillaDesigns } from "@/components/project/villas";
 import { PageEnquiryContext } from "@/components/site/enquiry-provider";
 import { LIFECYCLE_LABEL, LIVE_LAYOUT_IDS, liveLayoutUrl } from "@/lib/constants";
-import { INTERESTS, WHATSAPP_TEXT, type InterestId } from "@/lib/enquiry";
+import { INTERESTS, type InterestId } from "@/lib/enquiry";
 import { formatDate, formatLandArea, formatNumber } from "@/lib/format";
 import { getPlan, getProject, getProjects, getUnits, hasDetailPage, hasFullPage, summarize } from "@/lib/projects";
 import { breadcrumbJsonLd, JsonLd, ORGANIZATION_ID, pageMeta, SITE_URL } from "@/lib/seo";
@@ -267,7 +267,6 @@ async function ProjectContent({ params }: Params) {
       <Approvals hmda={hmda} rera={rera} documents={project.legal.documents} brochure={brochure} layout={layoutPdf} />
       <Faq
         items={faqItems({ hmda, rera, plots: units.length, min, max, hours: OFFICE.hours })}
-        whatsapp={WHATSAPP_TEXT.project(project.name, project.location.short)}
       />
       <Enquire name={project.name} interest={interest} />
     </>
