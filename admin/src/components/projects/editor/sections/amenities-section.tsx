@@ -49,7 +49,7 @@ export function AmenitiesSection({ draft, issues, update }: SectionProps) {
       title="Amenities"
       description={
         <>
-          Facilities in the project. Featured ones show as cards with an icon and a line of text.{" "}
+          Facilities in the project. On the project page each amenity is a tab, with its description lines listed under it.{" "}
           <MediaLink projectId={draft.id} />
         </>
       }
@@ -62,7 +62,7 @@ export function AmenitiesSection({ draft, issues, update }: SectionProps) {
             Show amenities section on website
           </Label>
           <p id={`${base}-visible-description`} className="text-xs text-muted-foreground">
-            The section exists but is hidden on the live site today.
+            When off, the project page leaves the amenities out.
           </p>
         </div>
         <Switch
@@ -170,11 +170,11 @@ export function AmenitiesSection({ draft, issues, update }: SectionProps) {
                       />
                     </SubField>
                     <SubField label="Description" htmlFor={`${id}-description`}>
-                      <Input
+                      <Textarea
                         id={`${id}-description`}
-                        className="h-9"
+                        rows={2}
                         value={item.description ?? ""}
-                        placeholder="One short line"
+                        placeholder="One item per line, e.g. Swimming pool"
                         onChange={(e) => patch({ description: e.target.value })}
                       />
                     </SubField>

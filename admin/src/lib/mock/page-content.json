@@ -1,0 +1,137 @@
+{
+  "global-city-vi": {
+    "typeLabel": "Villa & open plots",
+    "tagline": "Villa and open plots at Rudraram, on the Mumbai Highway (NH-65)",
+    "heroIntro": [
+      "HMDA-approved villa and open plots on 21 acres 10 guntas at Rudraram, on the Mumbai Highway (NH-65) near GITAM University.",
+      "Global City VI is a gated layout of 288 plots from 147 to 731 sq yd, with 40 ft and 30 ft CC roads, a clubhouse with a swimming pool, and a 100 ft road on its frontage."
+    ],
+    "masterPlan": {
+      "title": "A layout planned plot by plot.",
+      "description": "The approved layout copy shows all 288 plots with their numbers and sizes, the 40 ft and 30 ft CC roads inside, the 100 ft road on the frontage, the parks, the clubhouse block, the utility area and the land kept for social infrastructure.",
+      "stats": [
+        { "id": "global-city-vi-st-1", "icon": "totalArea", "value": "21 Acres 10 Guntas", "label": "Total layout area" },
+        { "id": "global-city-vi-st-2", "icon": "plots", "value": "288 Plots", "label": "Total plots on the layout" },
+        { "id": "global-city-vi-st-3", "icon": "size", "value": "146.66–730.66 sq yd", "label": "Plot sizes" },
+        { "id": "global-city-vi-st-4", "icon": "hmda", "value": "HMDA approved layout", "label": "LP 007133/LO/HMDA/1700/SKP/2024, 28 Nov 2024" },
+        { "id": "global-city-vi-st-5", "icon": "rera", "value": "TG RERA registered", "label": "P01100009270" },
+        { "id": "global-city-vi-st-6", "icon": "mainRoad", "value": "100 ft road", "label": "Master-plan road on the frontage" },
+        { "id": "global-city-vi-st-7", "icon": "roads", "value": "40′ & 30′ CC roads", "label": "All internal roads" },
+        { "id": "global-city-vi-st-8", "icon": "landUse", "value": "62,107.89 sq yd plotted", "label": "Of a 99,764.89 sq yd net layout area" },
+        { "id": "global-city-vi-st-9", "icon": "greenSpaces", "value": "6,949.88 sq yd of parks", "label": "Roads 27,113.32 · social infrastructure 2,553.96 · utility 1,039.84 sq yd" },
+        { "id": "global-city-vi-st-10", "icon": "pool", "value": "Clubhouse & pool", "label": "With a community hall" },
+        { "id": "global-city-vi-st-11", "icon": "drainage", "value": "Underground services", "label": "Drainage, electricity, LED street lights" },
+        { "id": "global-city-vi-st-12", "icon": "education", "value": "Near GITAM University", "label": "On the Mumbai Highway, NH-65" }
+      ]
+    },
+    "sections": [
+      {
+        "id": "global-city-vi-sec-arch",
+        "title": "",
+        "text": "",
+        "images": [
+          {
+            "id": "global-city-vi-sec-arch-1",
+            "caption": "Entrance arch",
+            "image": { "id": "gc6-arch", "url": "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/project-media/gc6-arch.webp", "kind": "image", "name": "gc6-arch.webp", "alt": "Artist's impression of the Global City VI entrance arch, from the project brochure", "width": 2000, "height": 593, "source": "upload", "impression": true }
+          }
+        ],
+        "points": []
+      },
+      {
+        "id": "global-city-vi-sec-clubhouse",
+        "title": "The clubhouse",
+        "text": "A clubhouse with a swimming pool and a community hall sits inside the layout, beside its parks, the children’s play area and the cycle track.",
+        "images": [
+          {
+            "id": "global-city-vi-sec-clubhouse-1",
+            "caption": "Clubhouse",
+            "image": { "id": "gc6-clubhouse-pool", "url": "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/project-media/gc6-clubhouse-pool.webp", "kind": "image", "name": "gc6-clubhouse-pool.webp", "alt": "Artist's impression of a clubhouse with a swimming pool and lawns", "width": 1600, "height": 1195, "source": "upload", "impression": true }
+          }
+        ],
+        "points": [
+          { "id": "global-city-vi-sec-clubhouse-p1", "title": "Swimming pool", "text": "Part of the clubhouse block in the approved master plan." },
+          { "id": "global-city-vi-sec-clubhouse-p2", "title": "Community hall", "text": "Room for family functions and residents' gatherings." },
+          { "id": "global-city-vi-sec-clubhouse-p3", "title": "Children's park & cycle track", "text": "Play space and a cycle track within the layout's green areas." },
+          { "id": "global-city-vi-sec-clubhouse-p4", "title": "Landscaped parks", "text": "6,949.88 sq yd of park area in the approved land use, with avenue plantation on the roads." }
+        ]
+      },
+      {
+        "id": "global-city-vi-sec-villas",
+        "title": "Villa designs",
+        "text": "We undertake villa construction on request. The brochure carries two elevations drawn for this layout, one for east-facing plots and one for west-facing plots.",
+        "images": [
+          {
+            "id": "global-city-vi-sec-villas-1",
+            "caption": "East-facing",
+            "image": { "id": "gc6-villa-east", "url": "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/project-media/gc6-villa-east.webp", "kind": "image", "name": "gc6-villa-east.webp", "alt": "Artist's impression of the east-facing villa design from the Global City VI brochure", "width": 1000, "height": 1111, "source": "upload", "impression": true }
+          },
+          {
+            "id": "global-city-vi-sec-villas-2",
+            "caption": "West-facing",
+            "image": { "id": "gc6-villa-west", "url": "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/project-media/gc6-villa-west.webp", "kind": "image", "name": "gc6-villa-west.webp", "alt": "Artist's impression of the west-facing villa design from the Global City VI brochure", "width": 1000, "height": 1096, "source": "upload", "impression": true }
+          }
+        ],
+        "points": [
+          { "id": "global-city-vi-sec-villas-p1", "title": "Construction on request", "text": "Choose your plot, and we can build the villa on it for you." },
+          { "id": "global-city-vi-sec-villas-p2", "title": "East-facing elevation", "text": "A villa design drawn for the layout's east-facing plots." },
+          { "id": "global-city-vi-sec-villas-p3", "title": "West-facing elevation", "text": "A matching design for the west-facing plots, from the same brochure." },
+          { "id": "global-city-vi-sec-villas-p4", "title": "Vaastu compliant", "text": "The layout is planned to Vaastu, as the brochure states." }
+        ],
+        "enquireLabel": "Ask about villa construction"
+      }
+    ],
+    "amenities": {
+      "title": "What the layout includes",
+      "description": "As set out in the project brochure.",
+      "visible": true,
+      "items": [
+        { "id": "global-city-vi-am-g1", "icon": "clubhouse", "name": "Clubhouse", "featured": true, "description": "Clubhouse\nSwimming pool\nCommunity hall" },
+        { "id": "global-city-vi-am-g2", "icon": "roads", "name": "Roads and lighting", "featured": true, "description": "Grand entrance arch\n40′ & 30′ CC roads\nUnderground electricity\nLED street lights" },
+        { "id": "global-city-vi-am-g3", "icon": "water", "name": "Water and drainage", "featured": true, "description": "Overhead water tank\nWater connection to each plot\nUnderground drainage\nRainwater harvesting pits" },
+        { "id": "global-city-vi-am-g4", "icon": "greenSpaces", "name": "Green and leisure", "featured": true, "description": "Avenue plantation with tree guards\nChildren's park\nCycle track\nLandscaped parks" },
+        { "id": "global-city-vi-am-g5", "icon": "security", "name": "Security and legal", "featured": true, "description": "All-round compound wall\n24/7 security\nClear title\nBank loan available\nVaastu compliant" }
+      ]
+    },
+    "cta": {
+      "subheading": "",
+      "title": "A rare plot for an unhurried life.",
+      "description": "22 acres off the Mumbai Highway, close to GITAM University and the Outer Ring Road. Build a weekend home now, or keep the plot until the family is ready: the layout is approved, and the work on site is there to see."
+    },
+    "location": {
+      "full": "Near GITAM University, Rudraram to Indrakaran Road, on the Mumbai Highway (NH-65)"
+    },
+    "media": {
+      "hero": { "id": "gc6-film-poster", "url": "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/project-media/gc6-film-poster.webp", "kind": "image", "name": "gc6-film-poster.webp", "alt": "Aerial view of a gated plotted layout, an artist's impression of Global City VI", "width": 1920, "height": 1080, "source": "upload", "impression": true },
+      "heroVideo": { "id": "gc6-film", "url": "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/project-media/gc6-film.mp4", "kind": "video", "name": "gc6-film.mp4", "alt": "Aerial film of a gated plotted layout, an artist's impression of Global City VI", "source": "upload", "impression": true },
+      "locationImage": { "id": "gc6-route-map", "url": "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/project-media/gc6-route-map.webp", "kind": "image", "name": "gc6-route-map.webp", "alt": "Route map from the project brochure showing the Outer Ring Road, Gachibowli, Kokapet, Kollur Exit 2 and Muttangi Junction (not to scale)", "width": 1336, "height": 1470, "source": "upload" },
+      "masterPlan": { "id": "gc6-layout-copy", "url": "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/project-media/gc6-layout-copy.webp", "kind": "image", "name": "gc6-layout-copy.webp", "alt": "Global City VI layout copy: 288 numbered plots with sizes, 40 ft and 30 ft roads, parks and the land-use table", "width": 2200, "height": 3300, "source": "upload" }
+    },
+    "legal": {
+      "title": "Approvals you can check yourself.",
+      "description": "Every number here is on the layout copy or on the authority’s record. Check the RERA registration on the Telangana RERA portal before you book.",
+      "approvals": [
+        { "id": "global-city-vi-ap-1", "date": "2026-04-23", "title": "HMDA final layout permit", "status": "approved", "authority": "HMDA", "reference": "2046/HMDA/SWFL/2026", "description": "Survey nos 426/P, 427/P, 428, 432, 433/P and 434/P" },
+        { "id": "global-city-vi-ap-3", "date": "2024-11-28", "title": "HMDA layout approval", "status": "approved", "authority": "HMDA", "reference": "LP 007133/LO/HMDA/1700/SKP/2024", "description": "As printed on the brochure layout copy" },
+        { "id": "global-city-vi-ap-2", "title": "TS RERA registration", "status": "registered", "authority": "RERA", "reference": "P01100009270", "description": "Registered with the Telangana State Real Estate Regulatory Authority" }
+      ],
+      "documents": [
+        { "id": "global-city-vi-doc-1", "name": "HMDA Layout Approval", "available": true },
+        { "id": "global-city-vi-doc-2", "name": "RERA Registration Certificate", "available": true },
+        { "id": "global-city-vi-doc-3", "name": "Layout Copy", "available": true, "file": { "id": "global-city-vi-plan", "url": "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20VI/pdf/Global%20City%20-%20VI%20@%20Rudraram%20_%20Greater%20Infra%20Projects%20_%20Brochure%20cum%20Layout.pdf", "kind": "pdf", "name": "Global City - VI @ Rudraram _ Greater Infra Projects _ Brochure cum Layout.pdf", "source": "external" } },
+        { "id": "global-city-vi-doc-4", "name": "Link Documents", "available": true }
+      ]
+    },
+    "faq": [
+      { "id": "global-city-vi-faq-1", "q": "Is the layout approved?", "a": "Yes. HMDA issued the final layout permit 2046/HMDA/SWFL/2026 on 23 Apr 2026. The brochure's layout copy carries HMDA LP 007133/LO/HMDA/1700/SKP/2024 dated 28 Nov 2024. The project is registered with TS RERA under P01100009270, which you can check on rera.telangana.gov.in." },
+      { "id": "global-city-vi-faq-2", "q": "What plot sizes are there?", "a": "The layout has 288 plots from 147 to 731 sq yd, most of them under 300 sq yd, almost all facing east or west, on 40 ft and 30 ft CC roads. Ask us which sizes and facings are open today." },
+      { "id": "global-city-vi-faq-3", "q": "Can I get a bank loan for a plot?", "a": "Bank loans are available, as the project brochure states, and the titles are clear. We can share the documents your bank will ask for." },
+      { "id": "global-city-vi-faq-4", "q": "How do I visit the site?", "a": "Use Schedule site visit at the bottom of the page and our sales team calls you back (office hours Wed – Mon, 10:00 – 18:00 IST). We arrange the visit at a time that suits you." },
+      { "id": "global-city-vi-faq-5", "q": "Do you build villas on the plots?", "a": "Yes, on request. The brochure shows an east-facing and a west-facing villa design for this layout; once you have chosen a plot we can take you through construction." },
+      { "id": "global-city-vi-faq-6", "q": "Can NRIs buy a plot here?", "a": "Yes. Indian rules allow NRIs and OCI cardholders to buy residential plots. We share the documents, site photos and plot details by email, and can show the site to family members in Hyderabad." }
+    ]
+  },
+  "global-city-v": { "location": { "pin": { "lat": 17.5280933, "lng": 78.136843 } } },
+  "global-city-rrr": { "location": { "pin": { "lat": 17.5889915, "lng": 78.0067475 } } },
+  "western-county": { "location": { "pin": { "lat": 17.4742058, "lng": 78.1389772 } } }
+}

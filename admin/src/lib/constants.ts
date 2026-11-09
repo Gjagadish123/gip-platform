@@ -1,6 +1,6 @@
 import {
   BadgeCheck, Blocks, BrickWall, Building, Building2, Cctv, CloudRain, DoorOpen, Droplets, FileCheck2,
-  GraduationCap, Hospital, Landmark, LayoutGrid, Leaf, Lightbulb, MapPin, Maximize2, Milestone, Route,
+  GraduationCap, Hospital, LandPlot, Landmark, LayoutGrid, Leaf, Lightbulb, MapPin, Maximize2, Milestone, Route, Ruler,
   ScrollText, ShieldCheck, Sprout, Target, TreePalm, Trees, TrendingUp, Waves, WavesLadder,
   type LucideIcon,
 } from 'lucide-react';
@@ -126,7 +126,7 @@ export const MAX_NAME = 80;
 export const ICONS: Record<IconKey, LucideIcon> = {
   target: Target, trending: TrendingUp, shield: ShieldCheck, leaf: Leaf,
   connectivity: Route, education: GraduationCap, employment: Building2, healthcare: Hospital, growth: TrendingUp, leisure: TreePalm,
-  plots: LayoutGrid, roads: Route, mainRoad: Milestone, greenSpaces: Trees, totalArea: Maximize2, drainage: Waves, location: MapPin,
+  plots: LayoutGrid, roads: Route, mainRoad: Milestone, greenSpaces: Trees, totalArea: Maximize2, drainage: Waves, location: MapPin, size: Ruler, landUse: LandPlot,
   clubhouse: Building, pool: WavesLadder, play: Blocks, lighting: Lightbulb, water: Droplets, harvesting: CloudRain, plantation: Sprout,
   gate: DoorOpen, wall: BrickWall, openSpaces: Trees, security: Cctv, infrastructure: Building2, highway: Milestone,
   hmda: FileCheck2, dtcp: FileCheck2, rera: BadgeCheck, clearTitle: ScrollText, bank: Landmark,
@@ -135,7 +135,7 @@ export const ICONS: Record<IconKey, LucideIcon> = {
 export const ICON_LABELS: Record<IconKey, string> = {
   target: 'Target', trending: 'Growth trend', shield: 'Shield', leaf: 'Leaf',
   connectivity: 'Connectivity', education: 'Education', employment: 'Employment', healthcare: 'Healthcare', growth: 'Growth', leisure: 'Leisure',
-  plots: 'Plots', roads: 'Roads', mainRoad: 'Main road', greenSpaces: 'Green spaces', totalArea: 'Total area', drainage: 'Drainage', location: 'Location',
+  plots: 'Plots', roads: 'Roads', mainRoad: 'Main road', greenSpaces: 'Green spaces', totalArea: 'Total area', drainage: 'Drainage', location: 'Location', size: 'Plot sizes', landUse: 'Land use',
   clubhouse: 'Clubhouse', pool: 'Pool', play: 'Play area', lighting: 'Lighting', water: 'Water', harvesting: 'Rainwater harvesting', plantation: 'Plantation',
   gate: 'Gate', wall: 'Compound wall', openSpaces: 'Open spaces', security: 'Security', infrastructure: 'Infrastructure', highway: 'Highway',
   hmda: 'HMDA', dtcp: 'DTCP', rera: 'RERA', clearTitle: 'Clear title', bank: 'Bank',
@@ -145,7 +145,7 @@ export const ICON_LABELS: Record<IconKey, string> = {
 export const ICON_GROUPS: { label: string; keys: IconKey[] }[] = [
   { label: 'Vision', keys: ['target', 'trending', 'shield', 'leaf'] },
   { label: 'Location', keys: ['connectivity', 'education', 'employment', 'healthcare', 'growth', 'leisure'] },
-  { label: 'Layout', keys: ['plots', 'roads', 'mainRoad', 'greenSpaces', 'totalArea', 'drainage', 'location'] },
+  { label: 'Layout', keys: ['plots', 'roads', 'mainRoad', 'greenSpaces', 'totalArea', 'drainage', 'location', 'size', 'landUse'] },
   { label: 'Amenities', keys: ['clubhouse', 'pool', 'play', 'lighting', 'water', 'harvesting', 'plantation', 'gate', 'wall', 'openSpaces', 'security', 'infrastructure', 'highway'] },
   { label: 'Approvals', keys: ['hmda', 'dtcp', 'rera', 'clearTitle', 'bank'] },
 ];
@@ -171,7 +171,7 @@ export const HOMEPAGE_CAPACITY = { large: 2, small: 3 } as const;
 
 /* ---------- editor sections ---------- */
 
-export const SECTION_IDS = ['overview', 'pricing', 'location', 'media', 'vision', 'masterplan', 'amenities', 'legal', 'cta', 'publishing'] as const;
+export const SECTION_IDS = ['overview', 'pricing', 'location', 'media', 'vision', 'masterplan', 'pagesections', 'amenities', 'legal', 'faq', 'cta', 'publishing'] as const;
 export type SectionId = (typeof SECTION_IDS)[number];
 export type SectionGroup = 'Essentials' | 'Media' | 'Page content' | 'Publishing';
 
@@ -182,14 +182,16 @@ export const SECTION_META: Record<SectionId, { label: string; group: SectionGrou
   media: { label: 'Media', group: 'Media' },
   vision: { label: 'Vision', group: 'Page content' },
   masterplan: { label: 'Master plan', group: 'Page content' },
+  pagesections: { label: 'Page sections', group: 'Page content' },
   amenities: { label: 'Amenities', group: 'Page content' },
   legal: { label: 'Legal', group: 'Page content' },
+  faq: { label: 'FAQ', group: 'Page content' },
   cta: { label: 'Call to action', group: 'Page content' },
   publishing: { label: 'Publishing', group: 'Publishing' },
 };
 
 /** Sections that collapse to "Not shown: no detail page" when hasDetailPage(p) is false. */
-export const PAGE_CONTENT_SECTIONS: SectionId[] = ['vision', 'masterplan', 'amenities', 'legal', 'cta'];
+export const PAGE_CONTENT_SECTIONS: SectionId[] = ['vision', 'masterplan', 'pagesections', 'amenities', 'legal', 'faq', 'cta'];
 
 /** Ids for projects created in the demo. The static GitHub Pages preview pre-builds a page per id, so new projects get
  *  one of these instead of a random id. 40 per browser, then random ids (fine on any server deploy). */

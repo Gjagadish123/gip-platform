@@ -49,7 +49,7 @@ export function Enquire({ name, interest }: { name: string; interest: InterestId
         </div>
         <Reveal className="lg:col-span-7">
           <div className="rounded-lg border border-line bg-white p-6 shadow-raise lg:p-10">
-            <EnquiryForm interest={interest} />
+            <EnquiryForm interest={interest} projectName={name} />
           </div>
         </Reveal>
       </Container>

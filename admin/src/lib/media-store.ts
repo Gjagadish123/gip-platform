@@ -64,7 +64,7 @@ export class UploadError extends Error {
  */
 export async function saveUpload(file: File): Promise<Asset> {
   const id = `up-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 7)}`;
-  const kind: Asset['kind'] = file.type === 'application/pdf' ? 'pdf' : 'image';
+  const kind: Asset['kind'] = file.type.startsWith('video/') ? 'video' : file.type === 'application/pdf' ? 'pdf' : 'image';
   const size = kind === 'image' ? await imageSize(file) : {};
   if (BACKEND) {
     try {

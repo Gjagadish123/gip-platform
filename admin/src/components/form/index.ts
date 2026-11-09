@@ -1,6 +1,6 @@
 export { AreaInput, LandAreaInput } from "./area-inputs"
 export { AssetImage } from "./asset-image"
-export { Dropzone, IMAGE_ACCEPT, LOCAL_UPLOAD_HINT, uploadErrorMessage } from "./dropzone"
+export { Dropzone, IMAGE_ACCEPT, LOCAL_UPLOAD_HINT, VIDEO_ACCEPT, uploadErrorMessage } from "./dropzone"
 export {
   FieldGrid,
   FieldMessage,

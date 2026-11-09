@@ -31,7 +31,7 @@ export interface Asset {
   id: ID;
   /** 'https://…' (remote), '/brand/…' or '/sample/…' (public), or 'idb:<assetId>' (upload kept in IndexedDB). */
   url: string;
-  kind: 'image' | 'pdf';
+  kind: 'image' | 'pdf' | 'video';
   name?: string;               // original filename
   alt?: string;
   width?: number;
@@ -44,7 +44,7 @@ export interface Asset {
 export type IconKey =
   | 'target' | 'trending' | 'shield' | 'leaf'                                            // vision
   | 'connectivity' | 'education' | 'employment' | 'healthcare' | 'growth' | 'leisure'    // location
-  | 'plots' | 'roads' | 'mainRoad' | 'greenSpaces' | 'totalArea' | 'drainage' | 'location' // layout stats
+  | 'plots' | 'roads' | 'mainRoad' | 'greenSpaces' | 'totalArea' | 'drainage' | 'location' | 'size' | 'landUse' // layout stats
   | 'clubhouse' | 'pool' | 'play' | 'lighting' | 'water' | 'harvesting' | 'plantation'
   | 'gate' | 'wall' | 'openSpaces' | 'security' | 'infrastructure' | 'highway'          // amenities
   | 'hmda' | 'dtcp' | 'rera' | 'clearTitle' | 'bank';                                    // approvals
@@ -175,6 +175,7 @@ export interface ProjectMedia {
   masterPlan: Asset | null;         // image or PDF
   masterPlanPage: number;           // PDF page to render, default 1
   brochure: Asset | null;           // PDF; used by Master Plan + CTA buttons
+  heroVideo?: Asset | null;         // mp4/webm film for the page top and the film band; the hero image is its poster
 }
 
 export interface Vision { title: string; description: string; features: IconCard[] }
@@ -210,6 +211,19 @@ export interface Approval {
 export interface LegalDocument { id: ID; name: string; available: boolean; file?: Asset }
 export interface Legal { title: string; description: string; approvals: Approval[]; documents: LegalDocument[] }
 
+/** A free block on the project page (clubhouse, villa designs, entrance arch…). No picture: text and points; one
+ * picture: shown wide with the points beside it; two or more: labelled tabs over the pictures. */
+export interface PageSection {
+  id: ID;
+  title: string;
+  text: string;
+  images: { id: ID; image: Asset; caption: string }[];  // the caption names the tab
+  points: { id: ID; title: string; text: string }[];
+  enquireLabel?: string;            // a button that opens the enquiry, e.g. 'Ask about villa construction'
+}
+
+export interface FaqItem { id: ID; q: string; a: string }
+
 export interface Cta {
   subheading: string;
   title: string;
@@ -242,6 +256,8 @@ export interface Project {
   lifecycle: Lifecycle;
   description: string;
   highlights: string[];
+  tagline?: string;                 // the line under the name at the top of the project page
+  heroIntro?: string[];             // the opening paragraphs under the top of the project page
   launchYear?: number;
   completionYear?: number;
   progressNote?: string;            // old developmentStatus
@@ -264,6 +280,8 @@ export interface Project {
   amenities: Amenities;
   legal: Legal;
   cta: Cta;
+  sections?: PageSection[];         // free blocks, in order (optional: rows saved before them don't carry them)
+  faq?: FaqItem[];
   // Publishing
   publishing: Publishing;
   // Inventory meta

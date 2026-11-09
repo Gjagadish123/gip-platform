@@ -37,7 +37,7 @@ export function EnquirySheet() {
           </SheetDescription>
         </SheetHeader>
         <div className="px-6 pt-8 pb-10 sm:px-10">
-          <EnquiryForm key={`${interest}-${options.plot?.number ?? ""}`} interest={interest} plot={options.plot} compact />
+          <EnquiryForm key={`${interest}-${options.plot?.number ?? ""}`} interest={interest} projectName={page.projectName} plot={options.plot} compact />
         </div>
         <p className="mt-auto flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-t border-line bg-mist px-6 py-5 text-small text-muted sm:px-10">
           <a href={`mailto:${COMPANY.email}`} className="inline-flex items-center gap-2 text-ui font-medium break-all text-navy">

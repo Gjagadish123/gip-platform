@@ -40,6 +40,7 @@ import { LocationSection } from "./sections/location-section"
 import { MasterPlanSection } from "./sections/masterplan-section"
 import { MediaSection } from "./sections/media-section"
 import { OverviewSection } from "./sections/overview-section"
+import { FaqSection, PageSectionsSection } from "./sections/page-sections-section"
 import { PricingSection } from "./sections/pricing-section"
 import { PublishingSection } from "./sections/publishing-section"
 import { VisionSection } from "./sections/vision-section"
@@ -353,8 +354,10 @@ const SECTION_COMPONENTS: Record<SectionId, (p: SectionProps) => React.ReactNode
   media: MediaSection,
   vision: VisionSection,
   masterplan: MasterPlanSection,
+  pagesections: PageSectionsSection,
   amenities: AmenitiesSection,
   legal: LegalSection,
+  faq: FaqSection,
   cta: CtaSection,
   publishing: PublishingSection,
 }
@@ -484,7 +487,7 @@ export function Editor() {
                       Not shown: this project has no detail page on the website. {why}
                     </p>
                     <p className="mt-1 max-w-[70ch] text-sm text-muted-foreground">
-                      Vision, master plan, amenities and call to action keep their content until then.
+                      Vision, master plan, page sections, amenities, FAQ and call to action keep their content until then.
                     </p>
                     <Button
                       type="button"
@@ -507,7 +510,7 @@ export function Editor() {
                   {folds && s === FOLDED_SECTIONS[0] && (
                     <div className="flex flex-wrap items-center justify-between gap-3">
                       <p className="text-sm text-muted-foreground">
-                        Vision, master plan, amenities and call to action are not shown on the website: this project
+                        Vision, master plan, page sections, amenities, FAQ and call to action are not shown on the website: this project
                         has no detail page.
                       </p>
                       <Button

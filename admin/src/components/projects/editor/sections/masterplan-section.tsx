@@ -14,7 +14,7 @@ import { FieldGrid, FieldRow, IconPicker, ListEditor, TEXTAREA_3_ROWS } from "@/
 import { fieldIssues, newId, type SectionProps } from "../section-types"
 import { ContentSection, FieldGroup, FixedRow, MediaLink, SubField, ariaFor } from "./media-section"
 
-const MAX_STATS = 4
+const MAX_STATS = 12
 const STAT_ICONS: IconKey[] = ["plots", "totalArea", "roads", "greenSpaces"]
 type ProposedStat = Omit<LayoutStat, "id">
 
@@ -137,7 +137,7 @@ export function MasterPlanSection({ draft, type, units, issues, update }: Sectio
         label="Layout stats"
         level="W"
         count={`${n} of ${MAX_STATS}`}
-        description="3–4 tiles. The value is the large text, the label the caption under it."
+        description="The layout specification on the project page: plot sizes, area, roads, open space and the like. The value is the large text, the label the caption under it."
         {...stats}
       >
         {!proposing && (

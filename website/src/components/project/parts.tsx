@@ -113,10 +113,10 @@ export function CopyButton({ value, label }: { value: string; label: string }) {
 export function FeatureRows({ items, className }: { items: { title: string; text: string }[]; className?: string }) {
   return (
     <ul className={cn("divide-y divide-line", className)}>
-      {items.map(({ title, text }) => (
-        <li key={title} className="py-4 first:pt-0 last:pb-0">
-          <p className="text-ui font-semibold text-navy">{title}</p>
-          <p className="mt-1 text-small text-muted">{text}</p>
+      {items.map(({ title, text }, i) => (
+        <li key={`${i}-${title}`} className="py-4 first:pt-0 last:pb-0">
+          {title ? <p className="text-ui font-semibold text-navy">{title}</p> : null}
+          {text ? <p className={cn("text-small text-muted", title && "mt-1")}>{text}</p> : null}
         </li>
       ))}
     </ul>

@@ -149,7 +149,7 @@ export function FixedRow({ label, children }: { label: string; children: React.R
 }
 
 /** Wraps a kit control that renders its own label (ImageField, PdfField): its messages, and a blur reveals them. */
-function Labeled({ id, issue, children }: { id: string; issue: FieldIssueProps; children: React.ReactNode }) {
+export function Labeled({ id, issue, children }: { id: string; issue: FieldIssueProps; children: React.ReactNode }) {
   const onBlur = useTouchOnBlur(issue.issueField)
   return (
     <div onBlur={onBlur} className="flex min-w-0 flex-col gap-1.5">
@@ -215,6 +215,7 @@ export function ContentSection({
 const MEDIA_FIELDS = [
   "media.cover",
   "media.hero",
+  "media.heroVideo",
   "media.gallery",
   "media.amenityGallery",
   "media.locationImage",
@@ -292,6 +293,17 @@ export function MediaSection({ draft, issues, update }: SectionProps) {
           description="Top of the project page. Uses the cover when empty."
         />
       </Labeled>
+
+      <ImageField
+        id={`${base}-hero-video`}
+        video
+        label="Hero video"
+        mark={LEVEL_LABEL.O}
+        aspect="16 / 9"
+        value={m.heroVideo ?? null}
+        onChange={set("heroVideo")}
+        description="MP4 or WebM, up to 50 MB. Plays silently at the top of the project page and behind the closing line; the hero image shows until it loads."
+      />
 
       <FieldGroup
         id={`${base}-gallery`}
@@ -421,7 +433,7 @@ export function MediaSection({ draft, issues, update }: SectionProps) {
 type AmenityPhoto = ProjectMedia["amenityGallery"][number]
 
 /** Rows of photo + caption (sortable). Photos come in through the dropzone, so a row never lacks an image. */
-function AmenityGallery({
+export function AmenityGallery({
   baseId,
   value,
   onChange,

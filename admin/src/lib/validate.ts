@@ -142,7 +142,7 @@ export function validateProject(p: Project, type: ProjectType, units: Unit[], ot
     checkRefs('vision', 'vision.features', v.description, ...v.features.flatMap((f) => [f.title, f.description]));
 
     const mp = p.masterPlan;
-    if (mp.stats.length < 3 || mp.stats.length > 4) rec('masterplan', 'masterPlan.stats', `Use 3–4 layout stats (${mp.stats.length} now).`);
+    if (mp.stats.length < 3) rec('masterplan', 'masterPlan.stats', `Use at least 3 layout stats (${mp.stats.length} now).`);
     checkAcres('masterplan', 'masterPlan.description', mp.description, ...mp.stats.map((s) => s.value));
     checkRefs('masterplan', 'masterPlan.description', mp.description);
 

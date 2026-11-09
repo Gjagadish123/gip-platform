@@ -1,28 +1,5 @@
-// Project-page content: what the data model holds today plus the client's brochure claims,
-// and the small derivations the sections share.
-// The brochure constants describe the one hardcoded project (Global City VI); move them into Project when
-// the admin can edit highlights, amenities and nearby places.
-import {
-  BadgeCheck,
-  Building,
-  Droplets,
-  FileCheck2,
-  GraduationCap,
-  LandPlot,
-  LayoutGrid,
-  Maximize2,
-  Milestone,
-  Route,
-  Ruler,
-  ShieldCheck,
-  Trees,
-  Waves,
-  WavesLadder,
-  type LucideIcon,
-} from "lucide-react";
-
-import { formatDate, formatNumber } from "@/lib/format";
-import type { Approval, Asset, Distance, Project, Unit } from "@/lib/types";
+// The small derivations the project page's sections share. Every word and picture comes from the admin.
+import type { Approval, Asset, Distance, Project } from "@/lib/types";
 
 /** "Rudraram" from "Rudraram / Shankarapally, Sangareddy District, Hyderabad". */
 export const firstPlace = (short: string) => short.split(",")[0].split("/")[0].trim();
@@ -35,9 +12,6 @@ export function approvalFacts(project: Project) {
   return { hmda, rera, parts };
 }
 
-/** The earlier layout approval printed on the brochure's layout copy (the final permit is in project.legal). */
-export const BROCHURE_LP = { reference: "007133/LO/HMDA/1700/SKP/2024", date: "28 Nov 2024" } as const;
-
 /** The gallery's real photographs: images that are not renders (flagged in the admin, or generated). */
 export const sitePhotos = (project: Project): Asset[] =>
   project.media.gallery.filter((a) => a.kind === "image" && !a.impression && a.source !== "generated");
@@ -45,63 +19,12 @@ export const sitePhotos = (project: Project): Asset[] =>
 /** "2026-03-06" from "WhatsApp Image 2026-03-06 at 4.13.29 PM.jpeg": the only date the site photos carry. */
 export const photoDate = (a: Asset) => /\d{4}-\d{2}-\d{2}/.exec(a.name ?? "")?.[0];
 
-/** The address as the brochure gives it, ahead of the village / mandal / district line from the data. */
-export const BROCHURE_ADDRESS = ["Near GITAM University, Rudraram to Indrakaran Road", "On the Mumbai Highway (NH-65)"];
-
 export const mapsEmbed = (pin: { lat: number; lng: number }) =>
   `https://maps.google.com/maps?q=${pin.lat},${pin.lng}&z=14&output=embed`;
 export const mapsDirections = (pin: { lat: number; lng: number }) =>
   `https://www.google.com/maps/dir/?api=1&destination=${pin.lat},${pin.lng}`;
 
-/* ---------- key highlights (icon, value, label: the ledger beside the sticky heading) ---------- */
-
-type LandUse = { plotted: number; roads: number; park: number; social: number; utility: number; net: number };
-
-/** The project specification as printed on the approved layout (the client asked for it "as per layout"): its
- * total area, plot count, plot-size range, LP number and date, TG RERA number, roads and land-use table. The final
- * layout permit is listed under Approvals. */
-export function highlights(project: Project, units: Unit[], hmda?: Approval, rera?: Approval, landUse?: LandUse) {
-  const area = project.landArea;
-  const areas = units.map((u) => u.area);
-  const sqyd = (n: number) => `${formatNumber(n)} sq yd`;
-  const items: { icon: LucideIcon; value: string; label: string }[] = [
-    area ? { icon: Maximize2, value: `${area.acres} Acres ${area.guntas ?? 0} Guntas`, label: "Total layout area" } : null,
-    { icon: LayoutGrid, value: `${units.length} Plots`, label: "Total plots on the layout" },
-    areas.length ? { icon: Ruler, value: `${formatNumber(Math.min(...areas))}–${sqyd(Math.max(...areas))}`, label: "Plot sizes" } : null,
-    hmda ? { icon: FileCheck2, value: "HMDA approved layout", label: `LP ${BROCHURE_LP.reference}, ${BROCHURE_LP.date}` } : null,
-    rera ? { icon: BadgeCheck, value: "TG RERA registered", label: rera.reference ?? "" } : null,
-    { icon: Milestone, value: "100 ft road", label: "Master-plan road on the frontage" },
-    { icon: Route, value: "40′ & 30′ CC roads", label: "All internal roads" },
-    landUse ? { icon: LandPlot, value: `${sqyd(landUse.plotted)} plotted`, label: `Of a ${sqyd(landUse.net)} net layout area` } : null,
-    landUse
-      ? { icon: Trees, value: `${sqyd(landUse.park)} of parks`, label: `Roads ${formatNumber(landUse.roads)} · social infrastructure ${formatNumber(landUse.social)} · utility ${sqyd(landUse.utility)}` }
-      : null,
-    { icon: WavesLadder, value: "Clubhouse & pool", label: "With a community hall" },
-    { icon: Waves, value: "Underground services", label: "Drainage, electricity, LED street lights" },
-    { icon: GraduationCap, value: "Near GITAM University", label: "On the Mumbai Highway, NH-65" },
-  ].filter((i) => i !== null);
-  return items;
-}
-
-/* ---------- amenities, grouped from the brochure's project highlights ---------- */
-
-export const AMENITY_GROUPS: { icon: LucideIcon; title: string; items: string[] }[] = [
-  { icon: Building, title: "Clubhouse", items: ["Clubhouse", "Swimming pool", "Community hall"] },
-  { icon: Route, title: "Roads and lighting", items: ["Grand entrance arch", "40′ & 30′ CC roads", "Underground electricity", "LED street lights"] },
-  {
-    icon: Droplets,
-    title: "Water and drainage",
-    items: ["Overhead water tank", "Water connection to each plot", "Underground drainage", "Rainwater harvesting pits"],
-  },
-  { icon: Trees, title: "Green and leisure", items: ["Avenue plantation with tree guards", "Children's park", "Cycle track", "Landscaped parks"] },
-  {
-    icon: ShieldCheck,
-    title: "Security and legal",
-    items: ["All-round compound wall", "24/7 security", "Clear title", "Bank loan available", "Vaastu compliant"],
-  },
-];
-
-/* ---------- nearby, as the brochure states it (no measured distances exist) ---------- */
+/* ---------- nearby, from the admin's location advantages ---------- */
 
 export interface NearbyGroup {
   id: string;
@@ -117,43 +40,3 @@ export const nearbyGroups = (project: Project): NearbyGroup[] =>
   (project.locationAdvantages?.categories ?? [])
     .filter((c) => c.places.length > 0)
     .map((c) => ({ id: c.id, label: c.title, places: c.places.map((p) => ({ name: p.name, time: distanceLabel(p.distance) })) }));
-
-/* ---------- FAQ: answers only from the approvals, the inventory and the brochure ---------- */
-
-export function faqItems({ hmda, rera, plots, min, max, hours }: {
-  hmda?: Approval;
-  rera?: Approval;
-  plots: number;
-  min: number;
-  max: number;
-  hours: string;
-}) {
-  const approvals = [
-    hmda ? `HMDA issued the final layout permit ${hmda.reference}${hmda.date ? ` on ${formatDate(hmda.date)}` : ""}.` : null,
-    `The brochure's layout copy carries HMDA LP ${BROCHURE_LP.reference} dated ${BROCHURE_LP.date}.`,
-    rera ? `The project is registered with TS RERA under ${rera.reference}, which you can check on rera.telangana.gov.in.` : null,
-  ].filter(Boolean);
-  return [
-    { q: "Is the layout approved?", a: `Yes. ${approvals.join(" ")}` },
-    {
-      q: "What plot sizes are there?",
-      a: `The layout has ${plots} plots from ${min} to ${max} sq yd, most of them under 300 sq yd, almost all facing east or west, on 40 ft and 30 ft CC roads. Ask us which sizes and facings are open today.`,
-    },
-    {
-      q: "Can I get a bank loan for a plot?",
-      a: "Bank loans are available, as the project brochure states, and the titles are clear. We can share the documents your bank will ask for.",
-    },
-    {
-      q: "How do I visit the site?",
-      a: `Use Schedule site visit at the bottom of the page and our sales team calls you back (office hours ${hours}). We arrange the visit at a time that suits you.`,
-    },
-    {
-      q: "Do you build villas on the plots?",
-      a: "Yes, on request. The brochure shows an east-facing and a west-facing villa design for this layout; once you have chosen a plot we can take you through construction.",
-    },
-    {
-      q: "Can NRIs buy a plot here?",
-      a: "Yes. Indian rules allow NRIs and OCI cardholders to buy residential plots. We share the documents, site photos and plot details by email, and can show the site to family members in Hyderabad.",
-    },
-  ];
-}

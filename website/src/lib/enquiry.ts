@@ -13,7 +13,8 @@ export const INTERESTS = [
   { id: "other", label: "Another GIP layout" },
   { id: "general", label: "General enquiry" },
 ] as const;
-export type InterestId = (typeof INTERESTS)[number]["id"];
+/** One of INTERESTS, or the id of the project whose page the visitor is on (the form adds that project). */
+export type InterestId = (typeof INTERESTS)[number]["id"] | (string & {});
 
 export interface EnquiryPlot {
   /** The layout the plot is on: plot numbers repeat across projects, so a plot picked on a map names it. */
@@ -69,6 +70,8 @@ export interface Enquiry {
   phone: string; // national number, or the full international number when dial is "other"
   email?: string;
   interest: InterestId;
+  /** The interest's name when it is the page's own project (not in INTERESTS). */
+  interestName?: string;
   plot?: EnquiryPlot;
   message?: string;
 }
@@ -88,7 +91,7 @@ export const describePlot = (p: EnquiryPlot) =>
 export const interestLabel = (id: InterestId) => INTERESTS.find((i) => i.id === id)?.label ?? "General enquiry";
 
 export function enquiryBody(e: Enquiry): string {
-  const about = e.plot?.project ?? interestLabel(e.interest);
+  const about = e.plot?.project ?? e.interestName ?? interestLabel(e.interest);
   const interest = e.plot ? `${about}, ${e.plot.similar ? "plots similar to " : ""}${describePlot(e.plot)}` : about;
   return [
     "Hi Greater Infra Projects,",
@@ -118,8 +121,8 @@ export async function saveEnquiry(e: Enquiry, page: string): Promise<number | nu
       source: "website",
       form: e.plot ? "plot" : "enquiry",
       page: page.slice(0, 200),
-      project_id: e.interest, // the live layouts' project ids; anything else is kept as the interest
-      interest: interestLabel(e.interest),
+      project_id: e.interest, // a project id links the project; anything else is kept as the interest
+      interest: e.interestName ?? interestLabel(e.interest),
       plot_number: e.plot?.number ?? null,
       similar: e.plot?.similar ?? false,
       name: e.name.trim(),
@@ -133,7 +136,7 @@ export async function saveEnquiry(e: Enquiry, page: string): Promise<number | nu
 }
 
 export function buildMailto(e: Enquiry): string {
-  const about = e.plot?.project ?? interestLabel(e.interest);
+  const about = e.plot?.project ?? e.interestName ?? interestLabel(e.interest);
   const subject = e.plot
     ? `Enquiry — ${about}, ${e.plot.similar ? "plots similar to " : ""}Plot ${e.plot.number}`
     : `Enquiry — ${about}`;

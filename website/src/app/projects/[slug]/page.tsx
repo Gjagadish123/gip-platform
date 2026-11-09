@@ -2,39 +2,29 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
-import { ArchBand } from "@/components/project/about";
-import { BasicProjectPage } from "@/components/project/basic-page";
 import { Amenities } from "@/components/project/amenities";
 import { Approvals } from "@/components/project/approvals";
-import { Clubhouse } from "@/components/project/clubhouse";
-import {
-  approvalFacts,
-  BROCHURE_ADDRESS,
-  faqItems,
-  firstPlace,
-  highlights,
-  nearbyGroups,
-  photoDate,
-  sitePhotos,
-} from "@/components/project/content";
+import { approvalFacts, firstPlace, nearbyGroups, photoDate, sitePhotos } from "@/components/project/content";
 import { Enquire } from "@/components/project/enquire";
 import { Faq } from "@/components/project/faq";
 import { Gallery, type Slide } from "@/components/project/gallery";
 import { Hero } from "@/components/project/hero";
 import { Highlights } from "@/components/project/highlights";
 import { FilmBand } from "@/components/project/interlude";
+import { LiveLayoutBand } from "@/components/project/live-layout";
 import { Location } from "@/components/project/location";
 import { MasterPlan } from "@/components/project/master-plan";
-import { VillaDesigns } from "@/components/project/villas";
+import { PageSectionBlock } from "@/components/project/page-section";
+import { realHero } from "@/components/projects/cards";
 import { PageEnquiryContext } from "@/components/site/enquiry-provider";
-import { LIFECYCLE_LABEL, LIVE_LAYOUT_IDS, liveLayoutUrl } from "@/lib/constants";
-import { INTERESTS, type InterestId } from "@/lib/enquiry";
+import { AREA_UNIT_LABEL, getProjectType, LIFECYCLE_LABEL, LIVE_LAYOUT_IDS, liveLayoutUrl } from "@/lib/constants";
 import { formatDate, formatLandArea, formatNumber } from "@/lib/format";
-import { getPlan, getProject, getProjects, getUnits, hasDetailPage, hasFullPage, summarize } from "@/lib/projects";
+import { getPlan, getProject, getProjects, getUnits, hasDetailPage, summarize } from "@/lib/projects";
 import { breadcrumbJsonLd, JsonLd, ORGANIZATION_ID, pageMeta, SITE_URL } from "@/lib/seo";
-import { OFFICE } from "@/lib/site";
 
 type Params = { params: Promise<{ slug: string }> };
+
+const PERMITS = new Set(["HMDA", "DTCP", "RERA"]); // the bodies that approve or register a layout (not title or bank)
 
 // `dynamicParams = false` is rejected under cacheComponents; unknown slugs fall through to notFound() instead.
 export async function generateStaticParams() {
@@ -48,15 +38,20 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   if (!project || !hasDetailPage(project)) return {};
   const units = await getUnits(project.id);
   const { hmda, parts } = approvalFacts(project);
+  const place = firstPlace(project.location.short);
   const seo = project.publishing.seo;
   return pageMeta({
-    title: seo?.title ?? `${project.name} — ${hmda?.authority ?? "HMDA"} approved plots at ${firstPlace(project.location.short)}, ${project.location.district}`,
+    title:
+      seo?.title ??
+      `${project.name} — ${hmda ? `${hmda.authority} approved plots` : "plots"} at ${place}${project.location.district ? `, ${project.location.district}` : ""}`,
     description:
       seo?.description ??
       [
-        `${formatNumber(units.length)} ${hasFullPage(project) ? "open and villa plots" : "plots"}${project.landArea ? ` on ${formatLandArea(project.landArea)}` : ""} at ${project.location.short.split(",")[0].trim()}.`,
+        units.length
+          ? `${formatNumber(units.length)} plots${project.landArea ? ` on ${formatLandArea(project.landArea)}` : ""} at ${place}.`
+          : project.description || null,
         parts.length ? `${parts.join(", ")}.` : null,
-        hasFullPage(project) ? "Layout copy, site photos and approvals." : "The live layout with every plot's status, site photos and approvals.",
+        "Site photos, approvals and the layout.",
       ]
         .filter(Boolean)
         .join(" "),
@@ -65,7 +60,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 }
 
 // `params` is awaited inside a Suspense boundary so the route keeps an instant-navigation shell (Next 16.4 logs an
-// error otherwise); the one known slug is still fully prerendered.
+// error otherwise); the known slugs are still fully prerendered.
 export default function ProjectPage({ params }: Params) {
   return (
     <Suspense fallback={null}>
@@ -74,6 +69,11 @@ export default function ProjectPage({ params }: Params) {
   );
 }
 
+/**
+ * One page for every ongoing project, every word and picture from the admin. A section shows only when the admin has
+ * content for it: hero, live layout (the mapped projects), highlights, page sections, amenities, master plan, the film
+ * band, location, gallery, approvals, FAQ, enquiry.
+ */
 async function ProjectContent({ params }: Params) {
   const { slug } = await params;
   const project = await getProject(slug);
@@ -81,20 +81,54 @@ async function ProjectContent({ params }: Params) {
 
   const units = await getUnits(project.id);
   const summary = summarize(units);
-  const plan = getPlan(project.id);
+  const landUse = getPlan(project.id)?.landUse;
+  const type = getProjectType(project.typeId);
   const { hmda, rera } = approvalFacts(project);
   const photos = sitePhotos(project);
-  const interest = (INTERESTS.some((i) => i.id === project.id) ? project.id : "other") as InterestId;
+  const interest = project.id;
   const path = `/projects/${slug}`;
   const url = `${SITE_URL}${path}`;
-  const pin = project.location.pin;
-  const place = firstPlace(project.location.short);
-  const min = Math.round(summary.minArea);
-  const max = Math.round(summary.maxArea);
-  const brochure = project.media.brochure?.url;
-  const layoutPdf = project.media.masterPlan?.kind === "pdf" ? project.media.masterPlan.url : undefined;
+  const { location: loc, media: m, legal } = project;
+  const pin = loc.pin;
+  const place = firstPlace(loc.short);
   const area = project.landArea ? formatLandArea(project.landArea) : undefined;
-  const landUse = plan?.landUse;
+  const brochure = m.brochure?.url;
+  const planImage = m.masterPlan?.kind === "image" ? m.masterPlan : undefined;
+  const layoutPdf = m.masterPlan?.kind === "pdf" ? m.masterPlan.url : undefined;
+  const liveLayout = LIVE_LAYOUT_IDS.includes(project.id) ? liveLayoutUrl(project.id) : undefined;
+
+  // The film when there is one (its poster: the hero image, else a real photo); otherwise a real photograph.
+  const photo = realHero(project);
+  const video = m.heroVideo?.kind === "video" ? m.heroVideo : undefined;
+  const media = video
+    ? { label: video.alt || `Film of ${project.name}`, video: video.url, poster: m.hero?.url ?? photo?.src, impression: !!video.impression }
+    : { label: photo?.alt ?? project.name, poster: photo?.src };
+
+  const [min, max] = [Math.round(summary.minArea), Math.round(summary.maxArea)];
+  const permits = [...new Set(legal.approvals.filter((a) => PERMITS.has(a.authority)).map((a) => a.authority))];
+  const facts = [
+    ["Type", project.typeLabel || type.name],
+    units.length
+      ? [type.unitNounPlural, `${formatNumber(units.length)} · ${min === max ? min : `${min}–${max}`} ${AREA_UNIT_LABEL[type.areaUnit]}`]
+      : area
+        ? ["Land", area]
+        : null,
+    ["Status", [LIFECYCLE_LABEL[project.lifecycle], permits.length ? `${permits.join(" & ")} approved` : null].filter(Boolean).join(" · ")],
+    place ? ["Location", place] : null,
+  ].filter((f): f is [string, string] => !!f);
+  const intro = (project.heroIntro ?? []).map((p) => p.trim()).filter(Boolean);
+  const sections = (project.sections ?? []).filter((s) => s.title || s.text || s.images.length || s.points.length);
+  const amenities = project.amenities.visible ? project.amenities.items.filter((a) => a.name.trim()) : [];
+  const showPlan = !!(planImage || layoutPdf || landUse);
+  const faq = (project.faq ?? []).filter((f) => f.q.trim() && f.a.trim());
+  const approvals = legal.approvals.filter((a) => PERMITS.has(a.authority));
+  const documents = legal.documents;
+  const villageLine = loc.village || loc.mandal
+    ? [loc.village && `${loc.village} village`, loc.mandal && `${loc.mandal} mandal`, loc.district && `${loc.district} District`, loc.state]
+        .filter(Boolean)
+        .join(", ")
+    : "";
+  const address = [loc.full || loc.short, villageLine].filter(Boolean);
 
   // Real site photographs only: the client keeps artist's impressions out of the gallery (2026-10-26).
   const slides: Slide[] = photos.map((p, i) => {
@@ -124,58 +158,28 @@ async function ProjectContent({ params }: Params) {
     "@context": "https://schema.org",
     "@type": "Place",
     "@id": `${url}#place`,
-    name: `${project.name}, ${project.location.short}`,
+    name: `${project.name}, ${loc.short}`,
     geo: pin ? { "@type": "GeoCoordinates", latitude: pin.lat, longitude: pin.lng } : undefined,
     address: {
       "@type": "PostalAddress",
-      addressLocality: project.location.village ?? place,
-      addressRegion: project.location.state,
+      addressLocality: loc.village ?? place,
+      addressRegion: loc.state,
       addressCountry: "IN",
     },
     additionalProperty: [
       area ? { "@type": "PropertyValue", name: "Extent", value: area } : null,
       units.length ? { "@type": "PropertyValue", name: "Plots", value: units.length } : null,
-      hmda?.reference ? { "@type": "PropertyValue", name: "Approval", value: `${hmda.authority} final layout permit ${hmda.reference}` } : null,
+      hmda?.reference ? { "@type": "PropertyValue", name: "Approval", value: `${hmda.authority} ${hmda.title} ${hmda.reference}` } : null,
       rera?.reference ? { "@type": "PropertyValue", name: "RERA", value: rera.reference } : null,
     ].filter(Boolean),
   };
-
   const crumbs = breadcrumbJsonLd([
     { name: "Home", path: "/" },
     { name: "Projects", path: "/projects" },
     { name: project.name, path },
   ]);
   const reg = [rera?.reference ? `TS RERA No: ${rera.reference}` : null, hmda?.reference ? `${hmda.authority} ${hmda.reference}` : null].filter(Boolean).join(" · ");
-  const liveLayout = LIVE_LAYOUT_IDS.includes(project.id) ? liveLayoutUrl(project.id) : undefined;
-
-  // A live layout without Global City VI's brochure content: the basic page, with the way into its live layout.
-  if (!hasFullPage(project)) {
-    return (
-      <>
-        <JsonLd data={crumbs} />
-        <JsonLd data={listing} />
-        <PageEnquiryContext
-          projectName={project.name}
-          projectLocation={project.location.short}
-          interest={interest}
-          nav={{
-            name: project.name,
-            reg,
-            links: [
-              { href: "#top", label: "Overview" },
-              { href: "#live-layout", label: "Live layout" },
-              ...(project.highlights.length ? [{ href: "#highlights", label: "Highlights" }] : []),
-              ...(slides.length ? [{ href: "#gallery", label: "Gallery" }] : []),
-              { href: "#approvals", label: "Approvals" },
-              { href: "#location", label: "Location" },
-            ],
-            brochure,
-          }}
-        />
-        <BasicProjectPage project={project} summary={summary} interest={interest} />
-      </>
-    );
-  }
+  const stats = project.masterPlan.stats.filter((s) => s.value.trim());
 
   return (
     <>
@@ -184,72 +188,66 @@ async function ProjectContent({ params }: Params) {
       <JsonLd data={placeLd} />
       <PageEnquiryContext
         projectName={project.name}
-        projectLocation={project.location.short}
+        projectLocation={loc.short}
         interest={interest}
         nav={{
           name: project.name,
           reg,
           links: [
             { href: "#top", label: "Overview" },
-            { href: "#highlights", label: "Highlights" },
-            { href: "#amenities", label: "Amenities" },
-            { href: "#villas", label: "Villas" },
-            { href: "#plan", label: "Plan" },
+            ...(liveLayout ? [{ href: "#live-layout", label: "Live layout" }] : []),
+            ...(stats.length || project.highlights.length ? [{ href: "#highlights", label: "Highlights" }] : []),
+            ...(amenities.length ? [{ href: "#amenities", label: "Amenities" }] : []),
+            ...(showPlan ? [{ href: "#plan", label: "Plan" }] : []),
             { href: "#location", label: "Location" },
             ...(slides.length ? [{ href: "#gallery", label: "Gallery" }] : []),
-            { href: "#approvals", label: "Approvals" },
-            { href: "#faq", label: "FAQ" },
+            ...(approvals.length || documents.length ? [{ href: "#approvals", label: "Approvals" }] : []),
+            ...(faq.length ? [{ href: "#faq", label: "FAQ" }] : []),
           ],
           brochure,
         }}
       />
 
       <Hero
-        name={project.name}
+        name={project.displayName || project.name}
         rera={rera?.reference}
-        tagline={`Villa and open plots at ${place}, on the Mumbai Highway (NH-65)`}
+        tagline={project.tagline || loc.short}
         brochure={brochure}
         interest={interest}
         liveLayout={liveLayout}
-        paragraphs={[
-          `${hmda ? "HMDA-approved villa" : "Villa"} and open plots${area ? ` on ${area}` : ""} at ${place}, on the Mumbai Highway (NH-65) near GITAM University.`,
-          `${project.name} is a gated layout of ${units.length} plots from ${min} to ${max} sq yd, with 40 ft and 30 ft CC roads, a clubhouse with a swimming pool, and a 100 ft road on its frontage.`,
-        ]}
-        info={{
-          type: "Villa & open plots",
-          plots: `${units.length} · ${min}–${max} sq yd`,
-          status: [LIFECYCLE_LABEL[project.lifecycle], hmda && rera ? "HMDA & RERA approved" : null].filter(Boolean).join(" · "),
-          location: `${place}, NH-65`,
-        }}
+        paragraphs={intro.length ? intro : [project.description].filter(Boolean)}
+        facts={facts}
+        media={media}
       />
-      <Highlights items={highlights(project, units, hmda, rera, landUse)} />
-      <ArchBand />
-      <Amenities />
-      <Clubhouse parkArea={landUse ? `${formatNumber(landUse.park)} sq yd` : undefined} />
-      <VillaDesigns interest={interest} />
-      <MasterPlan landUse={landUse} plots={units.length} pdf={layoutPdf} />
-      {/* The client's round figure, as in the description: 21 acres 10 guntas (21.25 acres) is said as 22 acres. */}
-      <FilmBand
-        name={project.name}
-        interest={interest}
-        acres={project.landArea ? Math.ceil(project.landArea.acres + (project.landArea.guntas ?? 0) / 40) : undefined}
-      />
-      <Location
-        name={project.name}
-        pin={pin}
-        address={[
-          ...BROCHURE_ADDRESS,
-          [project.location.village && `${project.location.village} village`, project.location.mandal && `${project.location.mandal} mandal`, `${project.location.district} District`, project.location.state]
-            .filter(Boolean)
-            .join(", "),
-        ]}
-        nearby={nearbyGroups(project)}
-      />
+      {liveLayout ? <LiveLayoutBand name={project.name} href={liveLayout} summary={summary} /> : null}
+      <Highlights stats={stats} points={project.highlights} />
+      {sections.map((s) => (
+        <PageSectionBlock key={s.id} section={s} interest={interest} />
+      ))}
+      {amenities.length ? <Amenities title={project.amenities.title} description={project.amenities.description} items={amenities} /> : null}
+      {showPlan ? (
+        <MasterPlan
+          title={project.masterPlan.title}
+          description={project.masterPlan.description}
+          image={planImage}
+          landUse={landUse}
+          pdf={layoutPdf}
+        />
+      ) : null}
+      {project.cta.title.trim() ? (
+        <FilmBand title={project.cta.title} description={project.cta.description} interest={interest} media={media} />
+      ) : null}
+      <Location name={project.name} pin={pin} address={address} nearby={nearbyGroups(project)} image={m.locationImage} />
       {slides.length ? <Gallery slides={slides} /> : null}
-      <Approvals hmda={hmda} rera={rera} documents={project.legal.documents} brochure={brochure} layout={layoutPdf} />
-      <Faq
-        items={faqItems({ hmda, rera, plots: units.length, min, max, hours: OFFICE.hours })}
+      <Approvals
+        title={legal.title}
+        description={legal.description}
+        approvals={approvals}
+        documents={documents}
+        brochure={brochure}
+        layout={layoutPdf}
       />
+      {faq.length ? <Faq items={faq} /> : null}
       <Enquire name={project.name} interest={interest} />
     </>
   );

@@ -8,7 +8,9 @@ import { UploadError } from "@/lib/media-store"
 import { BACKEND } from "@/lib/supabase/client"
 import { cn } from "@/lib/utils"
 
-const MAX_BYTES = 20 * 1024 * 1024
+const MB = 1024 * 1024
+/** The project-media bucket's limits: 50 MB for a film, 20 MB for anything else. */
+const maxMb = (file: File) => (file.type.startsWith("video/") ? 50 : 20)
 
 function accepts(file: File, accept: string) {
   return accept.split(",").some((token) => {
@@ -25,7 +27,7 @@ export function screenFiles(list: FileList | File[], accept: string) {
   const rejected: string[] = []
   for (const file of Array.from(list)) {
     if (!accepts(file, accept)) rejected.push(`${file.name}: file type not supported`)
-    else if (file.size > MAX_BYTES) rejected.push(`${file.name}: larger than 20 MB`)
+    else if (file.size > maxMb(file) * MB) rejected.push(`${file.name}: larger than ${maxMb(file)} MB`)
     else ok.push(file)
   }
   return { ok, rejected }
@@ -35,6 +37,9 @@ export const LOCAL_UPLOAD_HINT = BACKEND ? "" : "Uploads stay in this browser un
 
 /** Image types to offer. Supabase mode: exactly what the project-media bucket accepts (no SVG, HEIC, BMP). */
 export const IMAGE_ACCEPT = BACKEND ? "image/jpeg,image/png,image/webp,image/avif,image/gif" : "image/*"
+
+/** Films the website can play everywhere. */
+export const VIDEO_ACCEPT = "video/mp4,video/webm"
 
 /**
  * Why saveUpload failed. Supabase mode: the upload's own message. Demo: a full disk quota is about size; anything

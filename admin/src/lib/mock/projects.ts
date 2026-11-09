@@ -14,7 +14,7 @@
 import type { Project } from '../types';
 
 /** Seed data version; bump in gen-projects.mjs. Re-exported by ./index. */
-export const SEED_VERSION = 5;
+export const SEED_VERSION = 6;
 
 export const PROJECTS: Project[] = [
   // old id 2 · live /property/GLOBAL CITY VI

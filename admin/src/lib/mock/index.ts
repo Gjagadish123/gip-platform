@@ -1,9 +1,10 @@
-// SEED = the demo's starting state (also the server snapshot of the store): the four projects in the live
-// layouts app, this phase's working set. CATALOGUE = every project on file; scripts/gen-seed.ts writes the others to
+// SEED = the demo's starting state (also the server snapshot of the store): every ongoing project (the admin manages
+// all of them; plots only for the four in the live layouts app). CATALOGUE = every project on file; scripts/gen-seed.ts writes the others to
 // supabase/seed.catalogue.sql, loaded on request. Deterministic: no clock, no Math.random.
 import { isLiveLayout } from '../layouts';
 import type { ActivityEvent, ID, Project, Unit } from '../types';
 import { deriveActivity } from './activity';
+import PAGE_CONTENT from './page-content.json';
 import { PROJECTS } from './projects';
 import { SEED_UNITS } from './units';
 
@@ -16,7 +17,20 @@ function withInventoryMeta(p: Project, units: Unit[] | undefined): Project {
   return { ...p, inventoryUpdatedAt: latest || undefined, statusSample: units.some((u) => u.sample) };
 }
 
-const projects = PROJECTS.map((p) => withInventoryMeta(p, SEED_UNITS[p.id]));
+/** Project-page content written after the generated seed (Global City VI's page, listing pins): each top-level key
+ *  replaces the project's, and an object merges one level deep (the same merge as the live update). */
+function withPageContent(p: Project): Project {
+  const patch = (PAGE_CONTENT as Record<string, Record<string, unknown>>)[p.id];
+  if (!patch) return p;
+  const out: Record<string, unknown> = { ...p };
+  for (const [k, v] of Object.entries(patch)) {
+    const cur = out[k];
+    out[k] = v && cur && typeof v === 'object' && typeof cur === 'object' && !Array.isArray(v) ? { ...cur, ...v } : v;
+  }
+  return out as unknown as Project;
+}
+
+const projects = PROJECTS.map((p) => withInventoryMeta(withPageContent(p), SEED_UNITS[p.id]));
 
 export const CATALOGUE: SeedData = {
   projects,
@@ -25,7 +39,7 @@ export const CATALOGUE: SeedData = {
 };
 
 export const SEED: SeedData = {
-  projects: projects.filter((p) => isLiveLayout(p.id)),
+  projects: projects.filter((p) => p.lifecycle !== 'completed' && !p.sample),
   units: Object.fromEntries(Object.entries(SEED_UNITS).filter(([id]) => isLiveLayout(id))),
   activity: CATALOGUE.activity.filter((a) => isLiveLayout(a.projectId)),
 };

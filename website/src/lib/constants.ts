@@ -1,6 +1,6 @@
 import {
   BadgeCheck, Blocks, BrickWall, Building, Building2, Cctv, CloudRain, DoorOpen, Droplets, FileCheck2,
-  GraduationCap, Hospital, Landmark, LayoutGrid, Leaf, Lightbulb, MapPin, Maximize2, Milestone, Route,
+  GraduationCap, Hospital, LandPlot, Landmark, LayoutGrid, Leaf, Lightbulb, MapPin, Maximize2, Milestone, Route, Ruler,
   ScrollText, ShieldCheck, Sprout, Target, TreePalm, Trees, TrendingUp, Waves, WavesLadder,
   type LucideIcon,
 } from 'lucide-react';
@@ -98,7 +98,7 @@ export const LIFECYCLE_LABEL: Record<Lifecycle, string> = { upcoming: 'Upcoming'
 export const ICONS: Record<IconKey, LucideIcon> = {
   target: Target, trending: TrendingUp, shield: ShieldCheck, leaf: Leaf,
   connectivity: Route, education: GraduationCap, employment: Building2, healthcare: Hospital, growth: TrendingUp, leisure: TreePalm,
-  plots: LayoutGrid, roads: Route, mainRoad: Milestone, greenSpaces: Trees, totalArea: Maximize2, drainage: Waves, location: MapPin,
+  plots: LayoutGrid, roads: Route, mainRoad: Milestone, greenSpaces: Trees, totalArea: Maximize2, drainage: Waves, location: MapPin, size: Ruler, landUse: LandPlot,
   clubhouse: Building, pool: WavesLadder, play: Blocks, lighting: Lightbulb, water: Droplets, harvesting: CloudRain, plantation: Sprout,
   gate: DoorOpen, wall: BrickWall, openSpaces: Trees, security: Cctv, infrastructure: Building2, highway: Milestone,
   hmda: FileCheck2, dtcp: FileCheck2, rera: BadgeCheck, clearTitle: ScrollText, bank: Landmark,

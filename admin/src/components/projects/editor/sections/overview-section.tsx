@@ -15,6 +15,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { AREA_UNIT_LABEL, DEFAULT_PROJECT_TYPES, LIFECYCLES, LIFECYCLE_META, MAX_NAME } from "@/lib/constants"
@@ -142,6 +143,27 @@ export function OverviewSection({ draft, type, units, issues, update }: SectionP
         </FieldRow>
 
         <FieldRow
+          className="sm:col-span-6"
+          label="Tagline"
+          optional
+          htmlFor={fid("tagline")}
+          description="The line under the name at the top of the project page."
+        >
+          <Input
+            id={fid("tagline")}
+            className="h-9"
+            value={draft.tagline ?? ""}
+            aria-describedby={`${fid("tagline")}-description`}
+            onChange={(e) => {
+              const v = e.target.value
+              update((d) => {
+                d.tagline = v || undefined
+              })
+            }}
+          />
+        </FieldRow>
+
+        <FieldRow
           className="sm:col-span-3"
           label="Project type"
           required
@@ -231,6 +253,28 @@ export function OverviewSection({ draft, type, units, issues, update }: SectionP
             onChange={(v) => update((d) => {
               d.description = v
             })}
+          />
+        </FieldRow>
+
+        <FieldRow
+          className="sm:col-span-6"
+          label="Opening paragraphs"
+          optional
+          htmlFor={fid("heroIntro")}
+          description="Under the top of the project page. Leave a blank line between paragraphs. Uses the description when empty."
+        >
+          <Textarea
+            id={fid("heroIntro")}
+            rows={5}
+            // Split on blank lines without trimming, so typing a new paragraph round-trips; the website drops empties.
+            value={(draft.heroIntro ?? []).join("\n\n")}
+            aria-describedby={`${fid("heroIntro")}-description`}
+            onChange={(e) => {
+              const v = e.target.value
+              update((d) => {
+                d.heroIntro = v.trim() ? v.split("\n\n") : undefined
+              })
+            }}
           />
         </FieldRow>
 

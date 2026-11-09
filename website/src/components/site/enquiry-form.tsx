@@ -72,12 +72,15 @@ function Field({
  */
 export function EnquiryForm({
   interest: initialInterest = "general",
+  projectName,
   plot,
   compact,
   onDone,
   className,
 }: {
   interest?: InterestId;
+  /** The page's project, offered first when it isn't one of INTERESTS. */
+  projectName?: string;
   plot?: EnquiryPlot;
   compact?: boolean;
   onDone?: () => void;
@@ -89,6 +92,8 @@ export function EnquiryForm({
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [interest, setInterest] = useState<InterestId>(initialInterest);
+  const options: readonly { id: InterestId; label: string }[] =
+    projectName && !INTERESTS.some((i) => i.id === initialInterest) ? [{ id: initialInterest, label: projectName }, ...INTERESTS] : INTERESTS;
   const [message, setMessage] = useState("");
   const [errors, setErrors] = useState<Errors>({});
   const [state, setState] = useState<"idle" | "sending" | "done" | "error">("idle");
@@ -125,7 +130,7 @@ export function EnquiryForm({
       document.getElementById(`${id}-${first}`)?.focus();
       return;
     }
-    const enquiry: Enquiry = { name, dial, phone, email, interest, plot, message };
+    const enquiry: Enquiry = { name, dial, phone, email, interest, interestName: options.find((o) => o.id === interest && !INTERESTS.some((i) => i.id === o.id))?.label, plot, message };
     setLast(enquiry);
     setState("sending");
     try {
@@ -260,7 +265,7 @@ export function EnquiryForm({
               }}
               className={cn(control, "cursor-pointer appearance-none pr-10")}
             >
-              {INTERESTS.map((i) => (
+              {options.map((i) => (
                 <option key={i.id} value={i.id}>
                   {i.label}
                 </option>

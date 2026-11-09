@@ -5,16 +5,14 @@ import * as React from "react"
 import { Loader2, RefreshCw, Trash2 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import { saveUpload } from "@/lib/media-store"
+import { saveUpload, useAssetUrl } from "@/lib/media-store"
 import type { Asset } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { AssetImage } from "./asset-image"
-import { Dropzone, IMAGE_ACCEPT, LOCAL_UPLOAD_HINT, screenFiles, uploadErrorMessage } from "./dropzone"
+import { Dropzone, IMAGE_ACCEPT, LOCAL_UPLOAD_HINT, VIDEO_ACCEPT, screenFiles, uploadErrorMessage } from "./dropzone"
 import { FieldMessage, FieldRow, LabelMark } from "./field-row"
 import { SampleBadge } from "./hints"
-
-const ACCEPT = IMAGE_ACCEPT
 
 /** Focus stays with the field when the control that had it is swapped out (no fall to <body>). */
 export function focusLater(ref: React.RefObject<HTMLElement | null>) {
@@ -25,7 +23,14 @@ export function focusLater(ref: React.RefObject<HTMLElement | null>) {
 export const focusIsWithin = (root: HTMLElement | null) =>
   document.activeElement === document.body || !!root?.contains(document.activeElement)
 
-/** Single image: drop or browse when empty; preview + Replace / Remove + alt text when set. */
+/** A film preview: muted, with controls (a blank block while an idb: upload resolves). */
+function AssetVideo({ asset, className }: { asset: Asset; className?: string }) {
+  const url = useAssetUrl(asset)
+  if (!url) return <span aria-hidden className={cn("block bg-muted", className)} />
+  return <video src={url} muted controls playsInline preload="metadata" className={cn("bg-black object-cover", className)} />
+}
+
+/** Single image (or film, with `video`): drop or browse when empty; preview + Replace / Remove + alt text when set. */
 export function ImageField({
   value,
   onChange,
@@ -33,6 +38,7 @@ export function ImageField({
   mark,
   description,
   aspect = "4 / 3",
+  video,
   id,
   invalid,
   "aria-describedby": describedBy,
@@ -46,6 +52,8 @@ export function ImageField({
   description?: React.ReactNode
   /** CSS aspect-ratio, e.g. "16 / 9". */
   aspect?: string
+  /** Takes an mp4/webm film instead of an image. */
+  video?: boolean
   id?: string
   /** Forwarded to the drop button (a required image is missing). */
   invalid?: boolean
@@ -53,6 +61,8 @@ export function ImageField({
   className?: string
 }) {
   const autoId = React.useId()
+  const ACCEPT = video ? VIDEO_ACCEPT : IMAGE_ACCEPT
+  const noun = video ? "video" : "image"
   const baseId = id ?? autoId
   const rootRef = React.useRef<HTMLDivElement>(null)
   const pickerRef = React.useRef<HTMLInputElement>(null)
@@ -73,7 +83,7 @@ export function ImageField({
       onChange(asset)
       if (keepFocus) focusLater(replaceRef)
     } catch (e) {
-      setError(uploadErrorMessage(e, "image"))
+      setError(uploadErrorMessage(e, noun))
     } finally {
       setBusy(false)
     }
@@ -95,8 +105,8 @@ export function ImageField({
           accept={ACCEPT}
           busy={busy}
           onFiles={upload}
-          title="Drop an image or browse"
-          ariaLabel={`${label}: drop an image or browse`}
+          title={`Drop ${video ? "a video" : "an image"} or browse`}
+          ariaLabel={`${label}: drop ${video ? "a video" : "an image"} or browse`}
           invalid={invalid}
           aria-describedby={describedBy}
           className="py-10"
@@ -104,7 +114,11 @@ export function ImageField({
       ) : (
         <div className="flex flex-col gap-2">
           <div className="relative w-full max-w-md overflow-hidden rounded-xl border" style={{ aspectRatio: aspect }}>
-            <AssetImage asset={value} alt={value.alt || label} className="size-full" />
+            {video ? (
+              <AssetVideo asset={value} className="size-full" />
+            ) : (
+              <AssetImage asset={value} alt={value.alt || label} className="size-full" />
+            )}
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <input
@@ -148,6 +162,7 @@ export function ImageField({
             </Button>
             {value.source === "upload" && <span className="text-xs text-muted-foreground">{LOCAL_UPLOAD_HINT}</span>}
           </div>
+          {!video && (
           <FieldRow className="max-w-md" label="Alt text" optional htmlFor={`${baseId}-alt`}>
             <Input
               id={`${baseId}-alt`}
@@ -157,6 +172,7 @@ export function ImageField({
               onChange={(e) => onChange({ ...value, alt: e.target.value })}
             />
           </FieldRow>
+          )}
         </div>
       )}
 
