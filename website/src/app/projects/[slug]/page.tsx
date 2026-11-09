@@ -227,7 +227,12 @@ async function ProjectContent({ params }: Params) {
       <Clubhouse parkArea={landUse ? `${formatNumber(landUse.park)} sq yd` : undefined} />
       <VillaDesigns interest={interest} />
       <MasterPlan landUse={landUse} plots={units.length} pdf={layoutPdf} />
-      <FilmBand name={project.name} interest={interest} acres={project.landArea?.acres} />
+      {/* The client's round figure, as in the description: 21 acres 10 guntas (21.25 acres) is said as 22 acres. */}
+      <FilmBand
+        name={project.name}
+        interest={interest}
+        acres={project.landArea ? Math.ceil(project.landArea.acres + (project.landArea.guntas ?? 0) / 40) : undefined}
+      />
       <Location
         name={project.name}
         pin={pin}
