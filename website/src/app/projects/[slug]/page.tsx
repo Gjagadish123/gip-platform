@@ -226,7 +226,7 @@ async function ProjectContent({ params }: Params) {
           location: `${place}, NH-65`,
         }}
       />
-      <Highlights items={highlights(project, units, min, max, hmda, rera)} />
+      <Highlights items={highlights(project, units, hmda, rera, landUse)} />
       <About
         intro={[
           project.description,

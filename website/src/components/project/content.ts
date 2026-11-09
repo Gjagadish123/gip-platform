@@ -8,6 +8,7 @@ import {
   Droplets,
   FileCheck2,
   GraduationCap,
+  LandPlot,
   LayoutGrid,
   Maximize2,
   Milestone,
@@ -20,7 +21,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-import { formatDate } from "@/lib/format";
+import { formatDate, formatNumber } from "@/lib/format";
 import type { Approval, Asset, Project, Unit } from "@/lib/types";
 
 /** "Rudraram" from "Rudraram / Shankarapally, Sangareddy District, Hyderabad". */
@@ -54,16 +55,27 @@ export const mapsDirections = (pin: { lat: number; lng: number }) =>
 
 /* ---------- key highlights (icon, value, label: the ledger beside the sticky heading) ---------- */
 
-export function highlights(project: Project, units: Unit[], min: number, max: number, hmda?: Approval, rera?: Approval) {
+type LandUse = { plotted: number; roads: number; park: number; social: number; utility: number; net: number };
+
+/** The project specification as printed on the approved layout (the client asked for it "as per layout"): its
+ * total area, plot count, plot-size range, LP number and date, TG RERA number, roads and land-use table. The final
+ * layout permit is listed under Approvals. */
+export function highlights(project: Project, units: Unit[], hmda?: Approval, rera?: Approval, landUse?: LandUse) {
   const area = project.landArea;
+  const areas = units.map((u) => u.area);
+  const sqyd = (n: number) => `${formatNumber(n)} sq yd`;
   const items: { icon: LucideIcon; value: string; label: string }[] = [
     area ? { icon: Maximize2, value: `${area.acres} Acres ${area.guntas ?? 0} Guntas`, label: "Total layout area" } : null,
-    { icon: LayoutGrid, value: `${units.length} Plots`, label: "Villa and open plots" },
-    { icon: Ruler, value: `${min}–${max} sq yd`, label: "Plot sizes" },
+    { icon: LayoutGrid, value: `${units.length} Plots`, label: "Total plots on the layout" },
+    areas.length ? { icon: Ruler, value: `${formatNumber(Math.min(...areas))}–${sqyd(Math.max(...areas))}`, label: "Plot sizes" } : null,
+    hmda ? { icon: FileCheck2, value: "HMDA approved layout", label: `LP ${BROCHURE_LP.reference}, ${BROCHURE_LP.date}` } : null,
+    rera ? { icon: BadgeCheck, value: "TG RERA registered", label: rera.reference ?? "" } : null,
     { icon: Milestone, value: "100 ft road", label: "Master-plan road on the frontage" },
     { icon: Route, value: "40′ & 30′ CC roads", label: "All internal roads" },
-    hmda ? { icon: FileCheck2, value: "HMDA approved", label: `Final layout permit ${hmda.reference}` } : null,
-    rera ? { icon: BadgeCheck, value: "TS RERA registered", label: rera.reference ?? "" } : null,
+    landUse ? { icon: LandPlot, value: `${sqyd(landUse.plotted)} plotted`, label: `Of a ${sqyd(landUse.net)} net layout area` } : null,
+    landUse
+      ? { icon: Trees, value: `${sqyd(landUse.park)} of parks`, label: `Roads ${formatNumber(landUse.roads)} · social infrastructure ${formatNumber(landUse.social)} · utility ${sqyd(landUse.utility)}` }
+      : null,
     { icon: WavesLadder, value: "Clubhouse & pool", label: "With a community hall" },
     { icon: Waves, value: "Underground services", label: "Drainage, electricity, LED street lights" },
     { icon: GraduationCap, value: "Near GITAM University", label: "On the Mumbai Highway, NH-65" },
