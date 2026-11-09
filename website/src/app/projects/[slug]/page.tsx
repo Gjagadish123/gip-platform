@@ -14,7 +14,6 @@ import {
   firstPlace,
   highlights,
   photoDate,
-  plotsByFacing,
   sitePhotos,
 } from "@/components/project/content";
 import { Enquire } from "@/components/project/enquire";
@@ -25,7 +24,6 @@ import { Highlights } from "@/components/project/highlights";
 import { FilmBand } from "@/components/project/interlude";
 import { Location } from "@/components/project/location";
 import { MasterPlan } from "@/components/project/master-plan";
-import { PlotSizes } from "@/components/project/plot-sizes";
 import { VillaDesigns } from "@/components/project/villas";
 import { PageEnquiryContext } from "@/components/site/enquiry-provider";
 import { LIFECYCLE_LABEL, LIVE_LAYOUT_IDS, liveLayoutUrl } from "@/lib/constants";
@@ -57,7 +55,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
       [
         `${formatNumber(units.length)} ${hasFullPage(project) ? "open and villa plots" : "plots"}${project.landArea ? ` on ${formatLandArea(project.landArea)}` : ""} at ${project.location.short.split(",")[0].trim()}.`,
         parts.length ? `${parts.join(", ")}.` : null,
-        hasFullPage(project) ? "Plot sizes and facing, layout copy, site photos and approvals." : "The live layout with every plot's status, site photos and approvals.",
+        hasFullPage(project) ? "Layout copy, site photos and approvals." : "The live layout with every plot's status, site photos and approvals.",
       ]
         .filter(Boolean)
         .join(" "),
@@ -96,7 +94,6 @@ async function ProjectContent({ params }: Params) {
   const layoutPdf = project.media.masterPlan?.kind === "pdf" ? project.media.masterPlan.url : undefined;
   const area = project.landArea ? formatLandArea(project.landArea) : undefined;
   const landUse = plan?.landUse;
-  const facingRows = plotsByFacing(units);
 
   // Real site photographs only: the client keeps artist's impressions out of the gallery (2026-10-26).
   const slides: Slide[] = photos.map((p, i) => {
@@ -197,7 +194,6 @@ async function ProjectContent({ params }: Params) {
             { href: "#amenities", label: "Amenities" },
             { href: "#villas", label: "Villas" },
             { href: "#plan", label: "Plan" },
-            ...(facingRows.length ? [{ href: "#plots", label: "Plots" }] : []),
             { href: "#location", label: "Location" },
             ...(slides.length ? [{ href: "#gallery", label: "Gallery" }] : []),
             { href: "#approvals", label: "Approvals" },
@@ -231,14 +227,6 @@ async function ProjectContent({ params }: Params) {
       <Clubhouse parkArea={landUse ? `${formatNumber(landUse.park)} sq yd` : undefined} />
       <VillaDesigns interest={interest} />
       <MasterPlan landUse={landUse} plots={units.length} pdf={layoutPdf} />
-      {facingRows.length ? (
-        <PlotSizes
-          rows={facingRows}
-          asOf={formatDate(project.inventoryUpdatedAt) || undefined}
-          provisional={project.statusSample}
-          interest={interest}
-        />
-      ) : null}
       <FilmBand name={project.name} interest={interest} acres={project.landArea?.acres} />
       <Location
         name={project.name}
