@@ -4,12 +4,11 @@ import { CalendarDays } from "lucide-react";
 import type { ComponentType, ReactNode } from "react";
 
 import { Arrow } from "@/components/ui/button";
-import { WHATSAPP_TEXT, whatsappUrl, type InterestId } from "@/lib/enquiry";
+import type { InterestId } from "@/lib/enquiry";
 import { CLOSING_CTA, OFFICE } from "@/lib/site";
 
 import { Container } from "./container";
 import { useEnquiry } from "./enquiry-provider";
-import { WhatsAppIcon } from "./icons";
 import { Logo } from "./logo";
 
 function Row({ icon: Icon, title, detail }: { icon: ComponentType<{ className?: string }>; title: string; detail: string }) {
@@ -30,19 +29,17 @@ function Row({ icon: Icon, title, detail }: { icon: ComponentType<{ className?: 
 const row = "group/link flex w-full items-center gap-5 py-5 text-left lg:py-6";
 
 /**
- * The close on every page: a navy panel with GIP's own invitation ("Let's start a conversation.") and three ways to
- * reach a person as rows: call, WhatsApp, a site visit. The roof mark sits large and faint in the corner.
+ * The close on the listing and about pages: a navy panel with GIP's own invitation ("Let's start a conversation."),
+ * the office hours, and a site visit as the way to reach a person. The roof mark sits large and faint in the corner.
  */
 export function Closing({
   title = `${CLOSING_CTA.heading} ${CLOSING_CTA.accent}.`,
   text = CLOSING_CTA.lede,
   interest,
-  whatsapp = WHATSAPP_TEXT.home,
 }: {
   title?: ReactNode;
   text?: string;
   interest?: InterestId;
-  whatsapp?: string;
 }) {
   const { openEnquiry } = useEnquiry();
   return (
@@ -60,13 +57,9 @@ export function Closing({
               {title}
             </h2>
             <p className="mt-5 max-w-[42ch] text-lede">{text}</p>
+            <p className="mt-6 text-small text-on-navy-2">Office hours: {OFFICE.hours}</p>
           </div>
           <ul className="mt-10 divide-y divide-white/12 border-y border-white/12 lg:col-span-6 lg:col-start-7 lg:mt-0 lg:self-center">
-            <li>
-              <a href={whatsappUrl(whatsapp)} target="_blank" rel="noreferrer" className={row}>
-                <Row icon={WhatsAppIcon} title="Message us on WhatsApp" detail={`Send a plot size, a facing or a question · ${OFFICE.hours}`} />
-              </a>
-            </li>
             <li>
               <button type="button" onClick={() => openEnquiry({ interest })} className={row}>
                 <Row icon={CalendarDays} title="Book a site visit" detail="We walk the plots with you, at a time that suits you" />
