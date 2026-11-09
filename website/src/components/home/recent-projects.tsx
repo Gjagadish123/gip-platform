@@ -3,7 +3,7 @@
 import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRef, type ReactNode } from "react";
+import { useRef } from "react";
 
 import { Choreo } from "@/components/motion/choreo";
 import { DESKTOP, gsap, MOTION_OK, useGSAP } from "@/components/motion/gsap";
@@ -24,9 +24,15 @@ const TRAVEL = 0.9;
 
 function Card({ item, index }: { item: Item; index: number }) {
   const { openEnquiry } = useEnquiry();
-  const href = "href" in item ? item.href : undefined;
-  const inner: ReactNode = (
-    <>
+  return (
+    // flex: a button would centre a shorter card vertically
+    <button
+      type="button"
+      onClick={() => openEnquiry({ interest: "other" })}
+      data-cursor="Enquire"
+      className="group/card flex w-full flex-col text-left outline-offset-4"
+      aria-label={`Enquire about ${item.name}`}
+    >
       <span
         className={cn(
           "relative block aspect-[4/5] overflow-hidden rounded-2xl bg-mist motion-safe:lg:aspect-[4/3]",
@@ -50,7 +56,7 @@ function Card({ item, index }: { item: Item; index: number }) {
         {"impression" in item ? <ImpressionChip /> : null}
         {/* Keyboard focus, hover without the context cursor and, always, a touch screen name the action. */}
         <span className="absolute right-4 bottom-4 inline-flex h-10 translate-y-2 items-center gap-2 rounded-md bg-white px-3.5 text-small font-medium text-navy opacity-0 shadow-raise transition-[opacity,translate] duration-500 ease-(--ease-out) group-focus-visible/card:translate-y-0 group-focus-visible/card:opacity-100 pointer-coarse:translate-y-0 pointer-coarse:opacity-100 motion-reduce:group-hover/card:translate-y-0 motion-reduce:group-hover/card:opacity-100">
-          {href ? "View project" : "Enquire"} <ArrowUpRight aria-hidden className="size-4" />
+          Enquire <ArrowUpRight aria-hidden className="size-4" />
         </span>
       </span>
       <span className="mt-5 grid grid-cols-[2.5rem_1fr] items-baseline">
@@ -60,34 +66,18 @@ function Card({ item, index }: { item: Item; index: number }) {
         <span className="text-h3 text-navy">{item.name}</span>
         <span className="col-start-2 mt-1 text-small text-muted">{item.location}</span>
       </span>
-    </>
-  );
-  const cls = "group/card flex w-full flex-col text-left outline-offset-4"; // flex: a button would centre a shorter card vertically
-  return href ? (
-    <Link href={href} data-cursor="View" className={cls}>
-      {inner}
-    </Link>
-  ) : (
-    <button
-      type="button"
-      onClick={() => openEnquiry({ interest: "other" })}
-      data-cursor="Enquire"
-      className={cls}
-      aria-label={`Enquire about ${item.name}`}
-    >
-      {inner}
     </button>
   );
 }
 
 /**
- * Our recent projects, as on the live home: the five layouts with their site photographs; Global City VI opens its
- * page, the others open the enquiry drawer. Desktop: a horizontal gallery. A 300vh runway holds a sticky white stage
+ * Our recent projects, as on the live home: the five layouts with their site photographs; every card opens the enquiry
+ * drawer. Desktop: a horizontal gallery. A 300vh runway holds a sticky white stage
  * (kicker, title, Start exploring along the top) and the track of tall cards slides left as the page scrolls, every
  * second card set lower; each photograph lags its frame (it sits centred when its card is mid-screen) and a hairline
  * along the bottom fills teal with the travel. The last card arrives at 90 % of the runway and holds. Tabbing (not
  * clicking) to a card off to the right scrolls the page until it is in view. Phones: a swipe strip of cards that snaps
- * to the gutter. Touch screens always show each card's action label ("View project" / "Enquire"). Reduced motion
+ * to the gutter. Touch screens always show each card's "Enquire" label. Reduced motion
  * (desktop): no runway, two large cards over three, as before.
  */
 export function RecentProjects() {

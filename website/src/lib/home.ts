@@ -98,7 +98,6 @@ export const RECENT_PROJECTS = {
       name: "GLOBAL CITY VI",
       location: "Rudraram / Shankarapally, Sangareddy District, Hyderabad",
       image: `${STORAGE}/GLOBAL%20CITY%20VI/WhatsApp%20Image%202026-03-06%20at%204.13.29%20PM.jpeg`,
-      href: "/projects/global-city-vi",
     },
     {
       name: "Global City RRR",
