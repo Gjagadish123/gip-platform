@@ -4,11 +4,21 @@ import { Plate } from "@/components/site/plate";
 import { Section } from "@/components/site/section";
 import { TextLink } from "@/components/site/text-link";
 
-import { mapsDirections, mapsEmbed, NEARBY } from "./content";
-import { NearbyTabs } from "./nearby-tabs";
+import { mapsDirections, mapsEmbed, type NearbyGroup } from "./content";
+import { Nearby } from "./nearby";
 
 /** The location: address, directions and what's nearby on the left; the map and the brochure route map on the right. */
-export function Location({ name, address, pin }: { name: string; address: string[]; pin?: { lat: number; lng: number } }) {
+export function Location({
+  name,
+  address,
+  pin,
+  nearby,
+}: {
+  name: string;
+  address: string[];
+  pin?: { lat: number; lng: number };
+  nearby: NearbyGroup[];
+}) {
   return (
     <Section id="location" aria-labelledby="location-title">
       <Container className="grid gap-12 lg:grid-cols-12 lg:gap-x-10">
@@ -29,9 +39,7 @@ export function Location({ name, address, pin }: { name: string; address: string
             </TextLink>
           ) : null}
 
-          <h3 className="mt-14 text-h3 lg:mt-16">What&rsquo;s nearby</h3>
-          <p className="mt-2 text-small text-muted">Drive times as the project brochure gives them.</p>
-          <NearbyTabs groups={NEARBY} className="mt-6" />
+          <Nearby groups={nearby} className="mt-14 lg:mt-16" />
         </div>
 
         <div className="space-y-10 lg:col-span-6 lg:col-start-7">

@@ -13,6 +13,7 @@ import {
   faqItems,
   firstPlace,
   highlights,
+  nearbyGroups,
   photoDate,
   sitePhotos,
 } from "@/components/project/content";
@@ -242,6 +243,7 @@ async function ProjectContent({ params }: Params) {
             .filter(Boolean)
             .join(", "),
         ]}
+        nearby={nearbyGroups(project)}
       />
       {slides.length ? <Gallery slides={slides} /> : null}
       <Approvals hmda={hmda} rera={rera} documents={project.legal.documents} brochure={brochure} layout={layoutPdf} />

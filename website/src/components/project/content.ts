@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 
 import { formatDate, formatNumber } from "@/lib/format";
-import type { Approval, Asset, Project, Unit } from "@/lib/types";
+import type { Approval, Asset, Distance, Project, Unit } from "@/lib/types";
 
 /** "Rudraram" from "Rudraram / Shankarapally, Sangareddy District, Hyderabad". */
 export const firstPlace = (short: string) => short.split(",")[0].split("/")[0].trim();
@@ -103,41 +103,20 @@ export const AMENITY_GROUPS: { icon: LucideIcon; title: string; items: string[] 
 
 /* ---------- nearby, as the brochure states it (no measured distances exist) ---------- */
 
-export const NEARBY: { id: string; label: string; places: { name: string; time: string }[] }[] = [
-  {
-    id: "connectivity",
-    label: "Connectivity",
-    places: [
-      { name: "Mumbai Highway (NH-65)", time: "Near" },
-      { name: "Isnapur X Road", time: "Near" },
-      { name: "Muttangi Junction, ORR Exit 3", time: "Near" },
-      { name: "Patancheru junction", time: "10 min drive" },
-      { name: "Kollur, ORR Exit 2", time: "15 min drive" },
-      { name: "Kokapet Neopolis IT SEZ", time: "20 min" },
-      { name: "JNTU & Miyapur", time: "25 min drive" },
-      { name: "HITEC City", time: "30 min drive" },
-    ],
-  },
-  {
-    id: "education",
-    label: "Education",
-    places: [
-      { name: "GITAM University", time: "Near" },
-      { name: "IIT Hyderabad, Kandi", time: "Near" },
-      { name: "ICFAI University", time: "Near" },
-    ],
-  },
-  { id: "healthcare", label: "Healthcare", places: [{ name: "TRR Medical College & General Hospital", time: "Near" }] },
-  {
-    id: "townships",
-    label: "Townships",
-    places: [
-      { name: "BDL township", time: "Near" },
-      { name: "ODF township", time: "Near" },
-      { name: "ODF Shankarpally", time: "Near" },
-    ],
-  },
-];
+export interface NearbyGroup {
+  id: string;
+  label: string;
+  places: { name: string; time: string }[];
+}
+
+/** "10 min", "2 km", "500 m", or the client's own words ("Near") where no figure is given yet. */
+export const distanceLabel = (d: Distance) => ("text" in d ? d.text.trim() : `${d.value} ${d.unit}`);
+
+/** What's nearby, from the project's location advantages in the admin: the groups that have places, in order. */
+export const nearbyGroups = (project: Project): NearbyGroup[] =>
+  (project.locationAdvantages?.categories ?? [])
+    .filter((c) => c.places.length > 0)
+    .map((c) => ({ id: c.id, label: c.title, places: c.places.map((p) => ({ name: p.name, time: distanceLabel(p.distance) })) }));
 
 /* ---------- FAQ: answers only from the approvals, the inventory and the brochure ---------- */
 

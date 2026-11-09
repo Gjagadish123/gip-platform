@@ -15,9 +15,10 @@ import type { InventorySummary } from "@/lib/projects";
 import { RERA_PORTAL } from "@/lib/site";
 import type { Project } from "@/lib/types";
 
-import { firstPlace, mapsDirections, mapsEmbed, photoDate, sitePhotos } from "./content";
+import { firstPlace, mapsDirections, mapsEmbed, nearbyGroups, photoDate, sitePhotos } from "./content";
 import { Enquire } from "./enquire";
 import { Gallery, type Slide } from "./gallery";
+import { Nearby } from "./nearby";
 import { CopyButton } from "./parts";
 
 const PERMITS = new Set(["HMDA", "DTCP", "RERA"]); // the bodies that approve or register a layout
@@ -210,6 +211,7 @@ export function BasicProjectPage({ project, summary, interest }: { project: Proj
             <TextLink href={live} className="mt-3">
               See it on the live layout
             </TextLink>
+            <Nearby groups={nearbyGroups(project)} className="mt-14 lg:mt-16" />
           </div>
           {pin ? (
             <iframe
@@ -217,7 +219,7 @@ export function BasicProjectPage({ project, summary, interest }: { project: Proj
               src={mapsEmbed(pin)}
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              className="block aspect-[4/3] w-full rounded-lg border border-line bg-mist lg:col-span-6 lg:col-start-7"
+              className="block aspect-[4/3] w-full rounded-lg border border-line bg-mist lg:col-span-6 lg:col-start-7 lg:self-start"
             />
           ) : null}
         </Container>

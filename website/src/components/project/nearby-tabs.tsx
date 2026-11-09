@@ -2,11 +2,11 @@
 
 import { useId, useState } from "react";
 
-import type { NEARBY } from "./content";
+import type { NearbyGroup } from "./content";
 import { Segmented } from "./parts";
 
-/** What's nearby: a segmented control over the brochure's groups, places as rows on hairlines with a time chip. */
-export function NearbyTabs({ groups, className }: { groups: typeof NEARBY; className?: string }) {
+/** What's nearby: a segmented control over the project's groups, places as rows on hairlines with a time chip. */
+export function NearbyTabs({ groups, className }: { groups: NearbyGroup[]; className?: string }) {
   const uid = useId();
   const [active, setActive] = useState(groups[0].id);
   const group = groups.find((g) => g.id === active) ?? groups[0];
@@ -22,7 +22,8 @@ export function NearbyTabs({ groups, className }: { groups: typeof NEARBY; class
         onChange={setActive}
         idOf={tabId}
         panelId={panelId}
-        className="grid w-full grid-cols-2 sm:inline-flex sm:w-auto"
+        // Wraps rather than scrolls: a project can have four long group names ("Educational Institutions").
+        className="flex w-full flex-wrap sm:inline-flex sm:w-auto"
       />
       <ul key={group.id} id={panelId} role="tabpanel" aria-labelledby={tabId(group.id)} className="mt-6 animate-in border-t border-line duration-500 ease-(--ease-out) fade-in">
         {group.places.map((p) => (
