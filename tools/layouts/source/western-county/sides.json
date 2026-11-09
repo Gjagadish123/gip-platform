@@ -1,5 +1,5 @@
 {
- "_note": "Phase I plots 1-176: side lengths printed inside each plot cell of the HMDA layout (source.png), verbatim with ASCII quotes (the drawing writes decimal feet: 50'.3\" = 50.3 ft, also 49'.99\", 51'.75\", 61'.75\", 30'.14\"; only that reading reproduces the printed areas, e.g. 36'.4\" x 60' = 242.67 -> 243, and no .10/.11 occurs, unlike the feet-inches of the Phase II cells, e.g. 42'.10\"); T/L/R/B = edge as drawn; a side is listed only where its own label is printed on/inside the plot (shared edges are labelled once, in one plot); read from per-plot 3x crops in two passes (upright + rotated 90 deg), both passes identical, odd values re-zoomed at 4-5x; 154 top is two printed segments (21'.2\"+25'.5\", left to right); the 45' printed just inside 131 above the 131/132 line measures 132's full top edge (131's bottom is ~38 ft) so it is given to 132 T.",
+ "_note": "Phase I plots 1-176: side lengths printed inside each plot cell of the HMDA layout (source.png), verbatim with ASCII quotes (the drawing writes decimal feet: 50'.3\" = 50.3 ft, also 49'.99\", 51'.75\", 61'.75\", 30'.14\"; only that reading reproduces the printed areas, e.g. 36'.4\" x 60' = 242.67 -> 243, and no .10/.11 occurs, unlike the feet-inches of the Phase II cells, e.g. 42'.10\"); T/L/R/B = edge as drawn; a side is listed only where its own label is printed on/inside the plot (shared edges are labelled once, in one plot); read from per-plot 3x crops in two passes (upright + rotated 90 deg), both passes identical, odd values re-zoomed at 4-5x; 154 top is two printed segments (21'.2\"+25'.5\", left to right); the 45' printed just inside 131 above the 131/132 line measures 132's full top edge (131's bottom is ~38 ft) so it is given to 132 T. Phase II plots P2-1..P2-15 (the orange cells numbered 1-15 on the drawing) were read on 9 Nov 2026 from a 1:1 crop; they print FEET AND INCHES (42'.10\" = 42 ft 10 in: 45' x 42'10\" = 214.2 -> 214), transcribed here as 42'-10\" so the build reads them as feet-inches; each column's 45' width is printed once (under 1 and over 3, under 4 and 6, under 9 and 14) and is given to the plots between too (2, 5, 8), whose cells print only their depth; Phase II is drawn about 8% under its printed sizes, so those widths cannot be measured off the drawing instead.",
  "sides": {
   "1": "T50'.3\" L30'.14\" R36'.4\"",
   "2": "L33'",
@@ -176,6 +176,21 @@
   "173": "R33'",
   "174": "R36'",
   "175": "R36'",
-  "176": "T47'.9\" L54'.4\" R38'"
+  "176": "T47'.9\" L54'.4\" R38'",
+  "P2-1": "L42'-10\" R42'-10\" B45'",
+  "P2-2": "L40' R40' B45'",
+  "P2-3": "T45' L40' R40'",
+  "P2-4": "L33' R33' B45'",
+  "P2-5": "L33' R33' B45'",
+  "P2-6": "L53'-10\" R66' B45'",
+  "P2-7": "T47' L26'-8\" R40'-2\"",
+  "P2-8": "R33'-1\" B45'",
+  "P2-9": "R33' B45'",
+  "P2-10": "T34' R41'-8\"",
+  "P2-11": "T50'-2\" L30' R30'",
+  "P2-12": "L38'-2\" R38'-2\" B36'-9\"",
+  "P2-13": "T34' L41'-8\"",
+  "P2-14": "L33' B45'",
+  "P2-15": "T47'-8\" L44' R33'"
  }
 }

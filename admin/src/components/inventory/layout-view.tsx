@@ -28,6 +28,9 @@ const MAX_ZOOM = 8
 const LABEL_ZOOM = 1.5
 
 const pathOf = (xy: number[][]) => `M${xy.map(([x, y]) => `${x},${-y}`).join("L")}Z`
+const ringArea = (xy: number[][]) => Math.abs(xy.reduce((s, [x, y], i) => s + x * xy[(i + 1) % xy.length][1] - xy[(i + 1) % xy.length][0] * y, 0)) / 2
+/** A zone name's box (about 0.55 em a character, one em high, in metres) is no larger than the zone. */
+const nameFits = (name: string, font: number, area: number) => name.length * 0.55 * font * font <= area
 const ringsPath = (rings: PlanRing[]) => rings.map((r) => [r.outer, ...r.holes].map(pathOf).join("")).join("")
 
 function geometryOf(plan: LayoutPlan) {
@@ -41,7 +44,7 @@ function geometryOf(plan: LayoutPlan) {
     boundary: plan.boundary ? pathOf(plan.boundary) : "",
     roads: ringsPath([...plan.roads, ...plan.access.map((a) => ({ outer: a.xy, holes: [] }))]),
     greens: ringsPath(plan.greens),
-    zones: plan.zones.map((z) => ({ key: z.id, name: z.name, d: pathOf(z.xy), label: { x: z.c[0], y: -z.c[1] } })),
+    zones: plan.zones.map((z) => ({ key: z.id, name: z.name, d: pathOf(z.xy), label: { x: z.c[0], y: -z.c[1] }, area: ringArea(z.xy) })),
   }
 }
 type Plot = ReturnType<typeof geometryOf>["plots"][number]
@@ -214,6 +217,7 @@ export function LayoutView({
     [byNumber, PLOTS],
   )
   const zoom = base.w / vb.w
+  const zoneFont = zoom >= LABEL_ZOOM ? 4 : 6
   // Patterns are sized in screen pixels, as on the tiles, so they read at any zoom. px = map units per pixel.
   const px = size ? 1 / Math.min(size.w / vb.w, size.h / vb.h) : 0.6
 
@@ -378,8 +382,9 @@ export function LayoutView({
 
             <g pointerEvents="none" className="fill-muted-foreground font-medium" textAnchor="middle">
               {geo.zones.map((z) =>
-                z.label && z.name && z.key !== "clubhouse" ? (
-                  <text key={z.key} x={z.label.x} y={z.label.y} transform={upright(rot, z.label.x, z.label.y)} fontSize={zoom >= LABEL_ZOOM ? 4 : 6}>
+                // A name shows only on a zone at least as large as the name (Western County's Phase II utility box is not).
+                z.label && z.name && z.key !== "clubhouse" && nameFits(z.name, zoneFont, z.area) ? (
+                  <text key={z.key} x={z.label.x} y={z.label.y} transform={upright(rot, z.label.x, z.label.y)} fontSize={zoneFont}>
                     {z.name}
                   </text>
                 ) : null,

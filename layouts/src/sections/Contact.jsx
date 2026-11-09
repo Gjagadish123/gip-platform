@@ -4,6 +4,7 @@ import { COMPANY, OFFICES } from '../data/project.js';
 import { directionsUrl } from '../lib/projects.js';
 import { saveEnquiry, toE164 } from '../lib/live.js';
 import { mapBus } from '../lib/mapBus.js';
+import { findPlot, plotInput } from '../lib/plots.js';
 
 /** choices: in All projects, the layouts to pick from (the visit is to one of them); otherwise null. */
 export default function Contact({ project, model, pin, choices }) {
@@ -31,10 +32,11 @@ export default function Contact({ project, model, pin, choices }) {
     e.preventDefault();
     const name = form.name.trim().replace(/\s+/g, ' ');
     const phone = toE164(form.phone);
-    const plot = form.plot.replace(/^0+(?=\d)/, '');
+    const typed = form.plot.trim();
+    const plot = typed && model ? findPlot(model, typed) : typed.replace(/^0+(?=\d)/, '');
     if (name.length < 2) return setError('Add your name so the sales team knows who to ask for.');
     if (!phone) return setError('Enter a 10 digit mobile number, or the full number with + and the country code.');
-    if (plot && model && !model.plotByNumber.has(plot)) return setError(`There is no plot ${plot}. Plots run from ${model.firstPlot} to ${model.lastPlot}.`);
+    if (typed && !plot) return setError(`There is no plot ${typed}. Plots run from ${model.plotRange}.`);
     setError('');
     const msg = [
       `Hi, I would like to book a site visit to ${visit?.name ?? 'one of your projects'}.`,
@@ -96,11 +98,12 @@ export default function Contact({ project, model, pin, choices }) {
                 </label>
                 <input
                   id="c-plot"
-                  inputMode="numeric"
-                  placeholder={model ? `${model.firstPlot} to ${model.lastPlot}` : 'Plot no.'}
+                  inputMode={model?.lettered ? 'text' : 'numeric'}
+                  autoCapitalize="characters"
+                  placeholder={model ? model.plotRange : 'Plot no.'}
                   className={`${field} num`}
                   value={form.plot}
-                  onChange={(e) => setForm({ ...form, plot: e.target.value.replace(/\D/g, '').slice(0, 4), like: false })}
+                  onChange={(e) => setForm({ ...form, plot: plotInput(model, e.target.value), like: false })}
                 />
                 {form.like && form.plot && <p className="mt-1.5 text-sm text-ink-muted">Plot {form.plot} isn&apos;t available, so sales will suggest plots like it.</p>}
               </div>

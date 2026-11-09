@@ -86,19 +86,36 @@ export function buildModel(geo, rows, project) {
   const plotByNumber = new Map(plots.map((p) => [p.n, p]));
   const statusByPlot = Object.fromEntries(plots.map((p) => [p.n, p.status]));
   const sorted = [...plotByNumber.keys()].sort(byNumber);
+  // Numbers come in runs: 1..176, then a later phase under its own prefix (Western County's P2-1..P2-15).
+  const runs = new Map();
+  for (const n of sorted) {
+    const k = n.replace(/\d+$/, '');
+    if (!runs.has(k)) runs.set(k, []);
+    runs.get(k).push(n);
+  }
   const uniq = (xs) => [...new Set(xs.filter(Boolean))];
   return {
     plots,
     plotByNumber,
     statusByPlot,
     stats: statsOf(rows, project),
-    firstPlot: sorted[0],
-    lastPlot: sorted[sorted.length - 1],
+    plotRange: [...runs.values()].map((r) => (r.length > 1 ? `${r[0]} to ${r[r.length - 1]}` : r[0])).join(' and '),
+    lettered: sorted.some((n) => /\D/.test(n)),
     facings: uniq(plots.map((p) => p.f)).sort((x, y) => FACING_ORDER.indexOf(x) - FACING_ORDER.indexOf(y)),
     roads: uniq(plots.flatMap((p) => [p.rw, p.rw2])).sort((x, y) => x - y),
     bands: SIZE_BANDS.filter((b) => plots.some((p) => p.band === b.id)),
   };
 }
+/** The plot a visitor typed: as typed, or ignoring a later phase's hyphen and spaces ("p25", "P2 5" = "P2-5"). */
+export function findPlot(model, typed) {
+  const q = typed.trim().toUpperCase().replace(/^0+(?=\d)/, '');
+  if (model.plotByNumber.has(q)) return q;
+  const flat = (s) => s.replace(/[\s-]/g, '');
+  return [...model.plotByNumber.keys()].find((n) => flat(n) === flat(q)) ?? null;
+}
+/** What a plot-number box keeps of a keystroke: digits, and letters and a hyphen where some plots carry a prefix. */
+export const plotInput = (model, raw) => raw.replace(model?.lettered ? /[^\dA-Za-z\s-]/g : /\D/g, '').toUpperCase().slice(0, 6);
+
 const FACING_ORDER = ['East', 'West', 'North', 'South', 'North-East', 'North-West', 'South-East', 'South-West'];
 
 // ---------------------------------------------------------------- filters

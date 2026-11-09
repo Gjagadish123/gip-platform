@@ -6,7 +6,7 @@ import ProjectCard from './ProjectCard.jsx';
 import StatusCard from './StatusCard.jsx';
 import { ProjectMark, changeText, useRecent } from './StatusParts.jsx';
 import { loadGoogleMaps } from '../lib/googleMaps.js';
-import { STATUS_LABEL, emptyFilters, filterCount, matches, sqyd } from '../lib/plots.js';
+import { STATUS_LABEL, emptyFilters, filterCount, findPlot, matches, plotInput, sqyd } from '../lib/plots.js';
 import { ALL, asset, writeUrl } from '../lib/projects.js';
 import { mapBus } from '../lib/mapBus.js';
 
@@ -371,12 +371,12 @@ export default function MasterPlan({ project, items, site, model, stats, plan, o
 
   const submitSearch = (e) => {
     e.preventDefault();
-    const n = query.trim().replace(/^0+(?=\d)/, '');
     if (!model) return;
-    if (model.plotByNumber.has(n)) {
+    const n = findPlot(model, query);
+    if (n) {
       selectPlot(n);
       setNotice(null);
-    } else setNotice(`There is no plot ${n || ''} in this layout. Plots run from ${model.firstPlot} to ${model.lastPlot}.`);
+    } else setNotice(`There is no plot ${query.trim()} in this layout. Plots run from ${model.plotRange}.`);
   };
 
   // notices clear themselves; a fallback explanation stays a little longer than a search miss
@@ -577,10 +577,11 @@ export default function MasterPlan({ project, items, site, model, stats, plan, o
           </label>
           <input
             id="plot-search"
-            inputMode="numeric"
+            inputMode={model?.lettered ? 'text' : 'numeric'}
+            autoCapitalize="characters"
             autoComplete="off"
             value={query}
-            onChange={(e) => setQuery(e.target.value.replace(/\D/g, '').slice(0, 4))}
+            onChange={(e) => setQuery(plotInput(model, e.target.value))}
             placeholder="Plot no."
             className="num w-[74px] bg-transparent text-[17px] font-semibold text-navy-900 placeholder:font-normal placeholder:text-ink-muted focus:outline-none sm:w-24"
           />

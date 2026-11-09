@@ -12,5 +12,6 @@
   ],
   "landTotal": 75151.93,
   "landArea": "16+ acres",
-  "plotCount": 176
+  "plotCount": 176,
+  "phase2": { "prefix": "P2-", "count": 15, "sqyd": 2806, "note": "The orange Phase II villa plots, numbered 1-15 on the drawing and P2-1..P2-15 here (plot numbers are unique per project). They are not among the HMDA permit's 176 plots or in its land-use table, so plotCount and landUse stay the permit's." }
 }

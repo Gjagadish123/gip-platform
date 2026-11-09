@@ -8,7 +8,8 @@
 //   Statuses SAMPLE (generated with a seeded RNG, as before).
 // - Western County: 176 REAL plots from its HMDA layout (LP 000144/LO/PLG/HMDA/2022, src/lib/layouts): numbers,
 //   areas, facing, roads, sizes. Mortgages REAL as printed (10–25 & 36–46 to HMDA, 47–51 & 66–67 to HMDA for the
-//   nala); the others are Available as SAMPLE status.
+//   nala); the others are Available as SAMPLE status. Plus the 15 Phase II villa plots drawn beside them on the flyer
+//   (P2-1..P2-15, REAL numbers, areas and sizes; not in that permit), Available as SAMPLE status.
 // - Urban Eden (24 villas): count REAL, everything else SAMPLE, generated with a seeded RNG so the demo never
 //   changes between reloads.
 // - Skyline Residences (sample): 2 towers × 12 floors × 4 flats, all SAMPLE.
@@ -229,9 +230,12 @@ const wcMortgage = (n: number) =>
 function westernCountyUnits(): Unit[] {
   const added = fixed('2022-07-27', '10:00'); // the layout's approval date
   return (wcLayout.plots as DrawnPlot[]).map((p) => {
-    const m = wcMortgage(Number(p.n));
+    const phase2 = p.n.startsWith('P2-'); // Phase II villa plots: on the flyer, not in the permit
+    const m = phase2 ? null : wcMortgage(Number(p.n));
     const statusNote = m ? `Mortgaged to ${m} as printed on the HMDA layout (LP ${WC_LP})` : undefined;
-    const history: StatusEvent[] = [{ from: null, to: m ? 'mortgaged' : 'available', at: added, by: BY, ...(statusNote && { note: statusNote }) }];
+    const history: StatusEvent[] = phase2
+      ? [{ from: null, to: 'available', at: fixed(DEMO_TODAY, '10:00'), by: BY, note: 'Phase II villa plot, from the project flyer' }]
+      : [{ from: null, to: m ? 'mortgaged' : 'available', at: added, by: BY, ...(statusNote && { note: statusNote }) }];
     return finish({
       id: `${WC_PROJECT_ID}:${p.n}`, projectId: WC_PROJECT_ID, number: p.n, ...fromDrawing(p),
       status: m ? 'mortgaged' : 'available', ...(statusNote && { statusNote }), ...(m && { mortgagedTo: 'HMDA' as const }),

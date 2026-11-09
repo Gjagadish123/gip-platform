@@ -16,10 +16,13 @@ re-read by a separate checker (0 disagreements). Working files, the full report 
   39,159.18, a rounding gap), outlines in source pixels and `mortgage` from the pink fill: "hmda" for 10–25 and 36–46,
   "nala" for 47–51 and 66–67, as the drawing's notes say ("Plots Mortgage to HMDA" and "… for Nala"). Their areas match
   the table's mortgage rows (4,977 vs 4,974.84 sq m; 1,728.3 vs 1,728.00 sq m).
-- `phase2_px.json`: the 15 Phase II plots (orange, their own numbers 1–15, 2,806 sq yd). They are not among the
-  permit's 176 plots and not in its land-use table, so the build draws them as one outlined "Phase II · 15 villa plots"
-  area, not as plots with a status. The four labels on its unbuilt roads carry `"phase": "II"` in `site_px.json`
-  and are left out.
+- `phase2_px.json`: the 15 Phase II plots (orange, their own numbers 1–15, 2,806 sq yd). Since 9 Nov 2026 (client
+  request) they are plots like the others, numbered P2-1..P2-15 (plot numbers are unique per project; `meta.json`
+  `phase2`). They are not among the permit's 176 plots and not in its land-use table, so `plotCount` and `landUse`
+  stay the permit's and `check_layouts.py` sums the two phases separately. Their printed sides (feet and inches,
+  `42'.10"`) are in `sides.json` as `42'-10"`; Phase II is drawn about 8% under its printed sizes. The Phase II social
+  infrastructure (101.83 sq yd) and utilities boxes are zones in `site_px.json` (`"phase": "II"`); an edge backing
+  onto a zone does not front the road beyond it, so P2-12 faces east, not onto the 40' road past its utilities box.
 - `site_px.json`: boundary (inner edge of the drawn site band), internal roads (40', 33', 30' and the existing villa
   cart road), road labels, Parks 1–9 (areas printed in square metres, kept as sq yd), social infrastructure, the STP and
   OHT utility areas, and the roads just outside the site that are on the ground: the 40' approach road, the 30' road west
@@ -30,7 +33,7 @@ re-read by a separate checker (0 disagreements). Working files, the full report 
     instead;
   - an unlabelled grey triangle near plot 58 (probably the 15 sq m of utility the table has but the labels don't) and
     two unlabelled symbols, whose meaning isn't printed;
-  - the Phase II social-infrastructure, utilities and cycle-track parcels (inside the Phase II area).
+  - the Phase II cycle-and-walk-track strip.
 
   One correction to the digitiser's output: the second road polygon had a slit cut down the Phase II road west of
   plots 14–15 where its "30' WIDE ROAD" lettering is (x 1671–1696 px); those 26 vertices are removed.

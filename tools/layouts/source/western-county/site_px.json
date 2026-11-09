@@ -2041,6 +2041,55 @@
    ],
    "phase": "I",
    "note": "Utility (UTILIY-3, OHT)"
+  },
+  {
+   "id": "social-infra-p2",
+   "name": "Social infrastructure",
+   "areaSqYd": 101.83,
+   "poly": [
+    [
+     2053.0,
+     967.0
+    ],
+    [
+     2053.0,
+     1030.0
+    ],
+    [
+     2174.0,
+     1030.0
+    ],
+    [
+     2174.0,
+     967.0
+    ]
+   ],
+   "phase": "II",
+   "note": "Phase II SOCIAL INFRA box between Phase II plots 3 and 4, 101.83 Sq.Yds as printed (flood-filled bounds)"
+  },
+  {
+   "id": "utility-p2",
+   "name": "Utility",
+   "poly": [
+    [
+     1872.0,
+     1338.0
+    ],
+    [
+     1872.0,
+     1370.0
+    ],
+    [
+     1967.0,
+     1370.0
+    ],
+    [
+     1967.0,
+     1338.0
+    ]
+   ],
+   "phase": "II",
+   "note": "Phase II UTILITIES box under Phase II plot 12, between it and the 40' road (area not printed; flood-filled bounds)"
   }
  ],
  "points": [

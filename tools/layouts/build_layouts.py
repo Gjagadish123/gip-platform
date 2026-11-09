@@ -5,7 +5,7 @@ view, from traceable sources in tools/layouts/source/<project-id>/:
   global-city-vi   masterplan.json  the GC VI demo plan (layout_demo, already georeferenced: 1.96 m rms)
   global-city-v    plots_px.json + site_px.json (digitised from the HMDA layout copy) + georef.json (control points)
   global-city-rrr  same, from the DTCP layout in the brochure
-  western-county   same, from the HMDA layout on the client's flyer, plus phase2_px.json (Phase II, drawn as one zone)
+  western-county   same, from the HMDA layout on the client's flyer, plus phase2_px.json (the Phase II plots, P2-1..P2-15)
 
 Everything is emitted in local ENU metres (x east, y north) around `origin`; the apps convert to lat/lng.
 Run:  python -P -E tools/layouts/build_layouts.py [extra output dir ...]
@@ -297,7 +297,7 @@ def digitised(pid, meta):
         p0, p1 = xy(l["at"]), xy([l["at"][0] + 40 * math.cos(a), l["at"][1] + 40 * math.sin(a)])
         u = np.array(p1) - np.array(p0)
         u /= max(np.linalg.norm(u), 1e-9)
-        labels.append(dict(t=l["text"], w=l.get("widthFt"), at=np.array(p0), u=u, phase=l.get("phase")))
+        labels.append(dict(t=l["text"], w=l.get("widthFt"), at=np.array(p0), u=u))
 
     def road_at(probe, edge_dir):
         """Width (ft) of the road a plot edge faces: an access road polygon names its own; otherwise the road label
@@ -332,18 +332,22 @@ def digitised(pid, meta):
         i = i.strip('-."')
         return float(f) + (float("0." + i) if dec else float(i) / 12 if i else 0)
 
-    def printed_dims(n, area_sqyd, r, front_ft):
-        """(front, depth) in ft from the sides printed in the cell, or None.
+    def printed_dims(n, area_sqyd, r, front_ft, cos_x):
+        """(front, depth) in ft from the sides printed in the cell, or None. cos_x: the road edge's outward normal
+        against the drawing's x axis (+1/-1: an L/R edge, 0: a T/B edge).
 
         Both sides printed: they must give the printed area (within 1%). One side printed (interior cells print only
         the frontage; the depth is printed once per column): the other is the printed area over it, accepted only for a
         drawn rectangle whose sides agree with both lengths (within 7%), rounded to the quarter foot it was printed in.
-        The side nearer the measured road frontage is the front."""
+        The front is the printed side along the road edge: T/B run along the drawing's x axis, L/R along its y axis.
+        A diagonal road edge falls back to the side nearer the measured frontage (Western County's Phase II is drawn
+        ~8% under its printed sizes, so lengths alone can pick the wrong side of a near-square plot)."""
         s = dict((t[0], feet(t[1:])) for t in printed.get(n, "").split())
         vert = {s[k] for k in "LR" if k in s}
         horiz = {s[k] for k in "TB" if k in s}
         if len(vert) > 1 or len(horiz) > 1 or not (vert or horiz):
             return None
+        a_vert = bool(vert)
         if vert and horiz:
             a, b = vert.pop(), horiz.pop()
             if abs(a * b / 9 - area_sqyd) / area_sqyd > 0.01:
@@ -364,11 +368,30 @@ def digitised(pid, meta):
             b = round(area_sqyd * 9 / a * 4) / 4
             if abs(pairs[k] - a) / a > 0.07 or abs(b - m) / m > 0.07 or abs(a * b / 9 - area_sqyd) / area_sqyd > 0.006:
                 return None
-        return (a, b) if abs(front_ft - a) <= abs(front_ft - b) else (b, a)
+        if 0.45 <= abs(cos_x) <= 0.9:
+            return (a, b) if abs(front_ft - a) <= abs(front_ft - b) else (b, a)
+        return (a, b) if (abs(cos_x) > 0.9) == a_vert else (b, a)
+
+    def image_x(poly):
+        """The drawing's +x axis at a cell, as a unit vector in ENU."""
+        c = np.mean(np.array(poly, float), axis=0)
+        v = np.subtract(xy([c[0] + 20, c[1]]), xy(c))
+        return v / np.linalg.norm(v)
+
+    # A later phase drawn on the same sheet with its own numbers (Western County's orange Phase II plots, 1-15) joins
+    # the plots under a prefix (P2-1..P2-15): plot numbers are unique per project.
+    cells = dict(plots_px)
+    phase2_path = os.path.join(folder, "phase2_px.json")
+    if os.path.exists(phase2_path):
+        cells.update({f"{meta['phase2']['prefix']}{k}": v for k, v in json.load(open(phase2_path, encoding="utf-8")).items()})
+
+    # Utility and social-infrastructure parcels: an edge backing onto one does not front the road beyond it (Western
+    # County's Phase II plot 12 has a utilities strip between it and the 40 ft road).
+    parcels = [ring(zrec["poly"]) for zrec in site.get("zones", [])]
 
     plots = []
-    for n in sorted(plots_px, key=lambda k: int(k)):
-        p = plots_px[n]
+    for n in sorted(cells, key=lambda k: (not k.isdigit(), int(k.rsplit("-", 1)[-1]))):
+        p = cells[n]
         r = ring(p["poly"])
         c = np.mean(np.array(r), axis=0)
         fronts = []
@@ -384,12 +407,14 @@ def digitised(pid, meta):
                 nrm = -nrm
             for reach in (2.5, 4.5):
                 probe = (mid + nrm * reach).tolist()
+                if any(pip(probe, z) for z in parcels):
+                    break
                 if in_rings(probe, roads) or any(pip(probe, x["xy"]) for x in access):
                     w, ext = road_at(probe, e)
                     if w:
                         fronts.append(dict(i=i, L=L, n=nrm, w=w, ext=ext))
                     break
-        rec = dict(n=str(int(n)), a=p["area"], xy=pts(r), c=[rnd(c[0]), rnd(c[1])], la=label_angle(r))
+        rec = dict(n=str(int(n)) if n.isdigit() else n, a=p["area"], xy=pts(r), c=[rnd(c[0]), rnd(c[1])], la=label_angle(r))
         if fronts:
             # A plot faces its internal road; an outside road is a second frontage. Corner: the shorter road side leads.
             fronts.sort(key=lambda f: (f["ext"], f["L"]))
@@ -425,9 +450,9 @@ def digitised(pid, meta):
         if printed is not None:
             rec.pop("w", None)
             rec.pop("d", None)
-            dims = printed_dims(rec["n"], p["area"], r, fronts[0]["L"] * FT) if fronts else None
-            if dims:
-                rec["w"], rec["d"] = dims
+            dims = printed_dims(rec["n"], p["area"], r, fronts[0]["L"] * FT, float(np.dot(fronts[0]["n"], image_x(p["poly"])))) if fronts else None
+            if dims:  # feet and inches become decimal feet: 42'-10" = 42.83
+                rec["w"], rec["d"] = (round(v, 2) for v in dims)
         plots.append(rec)
 
     boundary = ring(site["boundary"])
@@ -453,28 +478,9 @@ def digitised(pid, meta):
         if g.get("label") and sqyd(g):
             num = re.search(r"PARK\s*-\s*(\d+)", g["label"], re.I)
             zones.append(dict(id=f"park-{len(zones)}", name=f"Park {num.group(1)}" if num else "Park", xy=pts(outer), area=sqyd(g)))
-    # A later phase drawn on the same plan (Western County's 15 Phase II plots) is one outlined zone, not plots:
-    # the approved plots are the inventory.
-    phase2_path = os.path.join(folder, "phase2_px.json")
-    if os.path.exists(phase2_path):
-        import cv2
-        p2 = json.load(open(phase2_path, encoding="utf-8"))
-        allp = np.array([q for v in p2.values() for q in v["poly"]], float)
-        o = allp.min(axis=0) - 60  # margin wider than the closing's reach, or the outline bulges to the canvas edge
-        cells = np.zeros(tuple((allp.max(axis=0) - o + 60).astype(int)[::-1]), np.uint8)
-        for v in p2.values():
-            cv2.fillPoly(cells, [np.round(np.array(v["poly"], float) - o).astype(np.int32)], 1)
-        # Across the cell borders and the 30 ft roads between the blocks (~85 px), so the phase is one outline.
-        m = cv2.morphologyEx(cells, cv2.MORPH_CLOSE, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (101, 101)))
-        for c in cv2.findContours(m, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[0]:
-            if cv2.contourArea(c) >= 2000:
-                zr = ring((cv2.approxPolyDP(c, 3, True)[:, 0] + o).tolist())
-                zones.append(dict(id=f"phase-2-{len(zones)}", name=f"Phase II · {len(p2)} villa plots", xy=pts(zr)))
 
     road_labels = []
     for l in labels:
-        if l["phase"] == "II":  # a later phase is one named area: its unbuilt roads are not labelled
-            continue
         ang = math.degrees(math.atan2(l["u"][1], l["u"][0]))
         ang = ang - 180 if ang > 90 else ang + 180 if ang <= -90 else ang
         road_labels.append(dict(t=f"{l['w']} ft road" if l["w"] else l["t"].capitalize(), at=[rnd(l["at"][0]), rnd(l["at"][1])], r=round(ang, 1)))

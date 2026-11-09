@@ -1,7 +1,8 @@
 """
 Checks the live-layout geometry and the seed against each other. Exits non-zero on any failure.
 
-- every digitised plan: plot numbers 1..plotCount exactly once, valid outlines, plot and zone label points inside, areas summing to
+- every digitised plan: plot numbers 1..plotCount exactly once (plus a later phase's own numbered plots, Western
+  County's P2-1..P2-15, against its meta.json `phase2`), valid outlines, plot and zone label points inside, areas summing to
   the printed plotted area within 0.2 %, a satellite fit within 3 m, plots drawn at one scale (a fit that squeezes or
   stretches a block shows up as plots whose drawn area strays from the printed one);
 - supabase/seed.sql has the same plot numbers and areas as each drawing.
@@ -53,7 +54,15 @@ for name in sorted(os.listdir(ADMIN)):
         print(f"{pid}: no plot outlines (drawing pending), pin {doc['pin']['lat']:.5f}, {doc['pin']['lng']:.5f}")
         continue
     nums = [p["n"] for p in plots]
-    check(sorted(nums, key=int) == [str(i) for i in range(1, doc["plotCount"] + 1)], f"{pid}: plot numbers are not exactly 1..{doc['plotCount']}")
+    later = [n for n in nums if not n.isdigit()]  # a later phase drawn on the same sheet, under its own prefix
+    check(sorted((n for n in nums if n.isdigit()), key=int) == [str(i) for i in range(1, doc["plotCount"] + 1)],
+          f"{pid}: plot numbers are not exactly 1..{doc['plotCount']}")
+    phase2 = json.load(open(os.path.join(HERE, "source", pid, "meta.json"), encoding="utf-8")).get("phase2") if later else None
+    if later:
+        want = [f"{phase2['prefix']}{i}" for i in range(1, phase2["count"] + 1)] if phase2 else []
+        check(sorted(later, key=lambda n: int(n.rsplit("-", 1)[-1])) == want, f"{pid}: later-phase plot numbers {later[:5]} are not {want[:2]}..")
+        p2 = sum(p["a"] for p in plots if not p["n"].isdigit())
+        check(phase2 and p2 == phase2["sqyd"], f"{pid}: later-phase plot areas sum to {p2}, printed {phase2 and phase2['sqyd']}")
     for p in plots:
         check(len(p["xy"]) >= 3 and area(p["xy"]) > 20, f"{pid}: plot {p['n']} outline is degenerate")
         check(pip(p["c"], p["xy"]), f"{pid}: plot {p['n']} label point is outside its outline")
@@ -67,7 +76,7 @@ for name in sorted(os.listdir(ADMIN)):
     off = [r / scale[len(scale) // 2] for r in scale if not 0.85 <= r / scale[len(scale) // 2] <= 1.15]
     check(len(off) <= 0.02 * len(plots) and all(0.7 <= r <= 1.4 for r in off),
           f"{pid}: {len(off)} plots are drawn at a different scale from the rest ({min(off, default=1):.2f}..{max(off, default=1):.2f} of the median)")
-    total = sum(p["a"] for p in plots)
+    total = sum(p["a"] for p in plots if p["n"].isdigit())  # the permit's land-use table covers its own plots only
     printed = doc["landUse"][0]["sqyd"] if doc["landUse"] else total
     check(abs(total - printed) / printed < 0.002, f"{pid}: plot areas sum to {total:.2f}, printed plotted area {printed}")
     check(doc["georef"] and doc["georef"]["rmsMetres"] <= 3, f"{pid}: satellite fit {doc['georef']} is worse than 3 m")

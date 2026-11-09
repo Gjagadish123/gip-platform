@@ -136,11 +136,12 @@ export function patchLiftMaterial(mat, uniforms, flat = 0.04) {
 }
 
 // ---------------------------------------------------------------- labels
-const GLYPHS = '0123456789.';
-function buildGlyphAtlas() {
+const DIGITS = '0123456789.';
+/** glyphs: the digits plus any other character a plot number uses (Western County's Phase II plots are P2-1..P2-15). */
+function buildGlyphAtlas(glyphs) {
   const cell = { w: 72, h: 112 };
   const c = document.createElement('canvas');
-  c.width = 1024;
+  c.width = 2 ** Math.ceil(Math.log2(glyphs.length * cell.w));
   c.height = 128;
   const ctx = c.getContext('2d');
   ctx.clearRect(0, 0, c.width, c.height);
@@ -149,13 +150,13 @@ function buildGlyphAtlas() {
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.lineJoin = 'round';
-  for (let i = 0; i < GLYPHS.length; i++) {
+  for (let i = 0; i < glyphs.length; i++) {
     const x = i * cell.w + cell.w / 2;
     ctx.lineWidth = 14;
     ctx.strokeStyle = 'rgba(1, 20, 42, 0.9)';
-    ctx.strokeText(GLYPHS[i], x, 66);
+    ctx.strokeText(glyphs[i], x, 66);
     ctx.fillStyle = '#ffffff';
-    ctx.fillText(GLYPHS[i], x, 66);
+    ctx.fillText(glyphs[i], x, 66);
   }
   const tex = new THREE.CanvasTexture(c);
   tex.colorSpace = THREE.SRGBColorSpace;
@@ -164,11 +165,12 @@ function buildGlyphAtlas() {
   tex.minFilter = THREE.LinearMipmapLinearFilter;
   // how far one digit really advances, as a fraction of the glyph height, for whichever font actually rendered
   const adv = Math.min(Math.max(ctx.measureText('0').width / 96 + 0.035, 0.36), 0.6);
-  return { tex, cell, size: { w: c.width, h: c.height }, adv };
+  return { tex, cell, size: { w: c.width, h: c.height }, adv, glyphs };
 }
 
 function buildLabels(plots, uniforms, delays) {
-  const atlas = buildGlyphAtlas();
+  const extra = new Set(plots.flatMap((p) => [...String(p.n)].filter((ch) => !DIGITS.includes(ch))));
+  const atlas = buildGlyphAtlas(DIGITS + [...extra].join(''));
   const base = new THREE.PlaneGeometry(1, 1);
   const geo = new THREE.InstancedBufferGeometry();
   geo.index = base.index;
@@ -208,11 +210,11 @@ function buildLabels(plots, uniforms, delays) {
     const numH = Math.min(spanV * 0.46, (spanU * 0.78) / (num.length * ADV), 4.4);
     const areaH = Math.min(numH * 0.55, (spanU * 0.78) / (area.length * ADV));
     const place = (text, h, vOff, kind) => {
-      const adv = (ch) => h * (ch === '.' ? ADV * 0.55 : ADV);
+      const adv = (ch) => h * (ch === '.' ? ADV * 0.55 : ch === '-' ? ADV * 0.7 : ADV);
       const total = [...text].reduce((t, ch) => t + adv(ch), 0);
       let cursor = -total / 2;
       for (let k = 0; k < text.length; k++) {
-        const gi = GLYPHS.indexOf(text[k]);
+        const gi = atlas.glyphs.indexOf(text[k]);
         const a = adv(text[k]);
         const u = cursor + a / 2;
         cursor += a;
