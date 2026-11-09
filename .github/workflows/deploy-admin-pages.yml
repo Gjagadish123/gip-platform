@@ -20,7 +20,8 @@ on:
     paths: ["admin/**", "website/**", "layouts/**", ".github/workflows/deploy-admin-pages.yml", ".github/scripts/**"]
   workflow_dispatch:
   schedule:
-    - cron: "*/10 * * * *"
+    # Off the hour (GitHub delays or drops scheduled runs at busy minutes like :00).
+    - cron: "7-59/10 * * * *"
 
 permissions:
   contents: read
