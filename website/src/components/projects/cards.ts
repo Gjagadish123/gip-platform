@@ -3,7 +3,7 @@ import { firstPlace } from "@/components/project/content";
 import { AREA_UNIT_LABEL, getProjectType } from "@/lib/constants";
 import { formatLandArea, formatNumber } from "@/lib/format";
 import { hasDetailPage, type InventorySummary } from "@/lib/projects";
-import type { Project } from "@/lib/types";
+import type { Asset, Project } from "@/lib/types";
 
 export interface ProjectFact {
   label: string;
@@ -28,12 +28,18 @@ const STOCK_HOSTS = /(^|\.)unsplash\.com$/;
 const APPROVERS = new Set(["HMDA", "DTCP", "RERA"]); // the bodies that approve or register a layout (not title or bank)
 
 /** The project's cover when it is a real photograph (the client's call, 2026-10-26: no renders, no stock). */
-export function realCover(p: Project): ProjectCardData["photo"] {
-  const a = p.media.cover;
+/** A real photograph to show: an https image that isn't a render, generated or a stock photo. */
+function realPhoto(p: Project, a: Asset | null | undefined): ProjectCardData["photo"] {
   if (!a || a.kind !== "image" || a.impression || a.source === "generated") return undefined;
   if (!/^https?:\/\//.test(a.url) || STOCK_HOSTS.test(new URL(a.url).hostname)) return undefined;
   return { src: a.url, alt: a.alt ?? `${p.name}, site photograph` };
 }
+
+/** The listing card's photo: the admin's cover image. */
+export const realCover = (p: Project) => realPhoto(p, p.media.cover);
+
+/** The project page's top photo: the admin's hero image, else the cover. */
+export const realHero = (p: Project) => realPhoto(p, p.media.hero) ?? realCover(p);
 
 export function toCard(p: Project, s: InventorySummary): ProjectCardData {
   const type = getProjectType(p.typeId);

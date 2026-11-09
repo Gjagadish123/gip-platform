@@ -1,7 +1,7 @@
 import { BadgeCheck, Check, Download, FileCheck2, Map as MapIcon } from "lucide-react";
 import Image from "next/image";
 
-import { realCover } from "@/components/projects/cards";
+import { realHero } from "@/components/projects/cards";
 import { Container } from "@/components/site/container";
 import { EnquireButton } from "@/components/site/enquire-button";
 import { Reveal } from "@/components/site/reveal";
@@ -38,7 +38,7 @@ const LISTING_PINS: Record<string, { lat: number; lng: number }> = {
 export function BasicProjectPage({ project, summary, interest }: { project: Project; summary: InventorySummary; interest: InterestId }) {
   const place = firstPlace(project.location.short);
   const live = liveLayoutUrl(project.id);
-  const cover = realCover(project);
+  const cover = realHero(project);
   const brochure = project.media.brochure?.url;
   const approvals = project.legal.approvals.filter((a) => PERMITS.has(a.authority));
   const rera = approvals.find((a) => a.authority === "RERA");
