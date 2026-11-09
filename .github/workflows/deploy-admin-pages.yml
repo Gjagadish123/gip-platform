@@ -8,6 +8,10 @@
 # design (every visitor's browser gets them; RLS decides what they can read). The Google Maps browser key is a
 # repository secret (VITE_GOOGLE_MAPS_API_KEY, or the older NEXT_PUBLIC_GOOGLE_MAPS_API_KEY) and the vector map id a
 # repository variable (VITE_GOOGLE_MAP_ID). Never put the Supabase secret key here.
+#
+# The website is a build-time copy of the live data, so a schedule keeps it current: every 10 minutes the check job
+# fingerprints what the website reads (.github/scripts/site-data-version.mjs) and compares it with the deployed
+# site/data-version.txt; only a difference (an admin edit, a plot status change) builds and deploys.
 name: Deploy previews to GitHub Pages
 
 on:
@@ -15,15 +19,13 @@ on:
     branches: [main]
     paths: ["admin/**", "website/**", "layouts/**", ".github/workflows/deploy-admin-pages.yml", ".github/scripts/**"]
   workflow_dispatch:
+  schedule:
+    - cron: "*/10 * * * *"
 
 permissions:
   contents: read
   pages: write
   id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: true
 
 env:
   NEXT_PUBLIC_SUPABASE_URL: https://jjskgxbshmjsfrowlzsj.supabase.co
@@ -31,7 +33,37 @@ env:
   NEXT_PUBLIC_LAYOUTS_URL: https://gjagadish123.github.io/gip-platform/layouts/
 
 jobs:
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      build: ${{ steps.v.outputs.build }}
+      version: ${{ steps.v.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: .github/scripts
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - id: v
+        name: Has the live data changed?
+        run: |
+          version=$(node .github/scripts/site-data-version.mjs)
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          if [ "${{ github.event_name }}" != "schedule" ]; then
+            echo "build=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          live=$(curl -fsS "https://gjagadish123.github.io/gip-platform/site/data-version.txt?t=$(date +%s)" || true)
+          if [ "$live" = "$version" ]; then echo "build=false" >> "$GITHUB_OUTPUT"; echo "Website is current."; else echo "build=true" >> "$GITHUB_OUTPUT"; echo "Live data changed: rebuilding."; fi
+
   build:
+    needs: check
+    if: needs.check.outputs.build == 'true'
+    # A newer build replaces one in progress; the check above never takes the lock, so it can't cancel a deploy.
+    concurrency:
+      group: pages
+      cancel-in-progress: true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -82,6 +114,8 @@ jobs:
           cp -R website/out/. admin/out/site/
           cp -R layouts/dist/. admin/out/layouts/
           touch admin/out/.nojekyll
+          # The data this build read (the schedule compares it with the live data).
+          echo -n "${{ needs.check.outputs.version }}" > admin/out/site/data-version.txt
           # The website used to host the live layouts at site/layouts/; keep that link (and ?project=&plot=) working.
           mkdir -p admin/out/site/layouts
           cat > admin/out/site/layouts/index.html <<EOF
@@ -102,6 +136,9 @@ jobs:
 
   deploy:
     needs: build
+    concurrency:
+      group: pages
+      cancel-in-progress: true
     runs-on: ubuntu-latest
     environment:
       name: github-pages

@@ -23,10 +23,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { PAGE_CONTENT_SECTIONS, SECTION_IDS, SECTION_META, getProjectType, type SectionId } from "@/lib/constants"
+import { PAGE_CONTENT_SECTIONS, SECTION_IDS, SECTION_META, WEBSITE_UPDATE_NOTE, getProjectType, type SectionId } from "@/lib/constants"
 import { plural } from "@/lib/format"
 import { setLeaveGuard } from "@/lib/leave-guard"
 import { useDemo, useProjects, useUnits } from "@/lib/store"
+import { BACKEND } from "@/lib/supabase/client"
 import type { Project, ProjectType, Unit } from "@/lib/types"
 import { hasDetailPage, sectionCompletion, validateProject, type Issue } from "@/lib/validate"
 
@@ -196,10 +197,10 @@ export function EditorProvider({ project, children }: { project: Project; childr
   const commit = React.useCallback(
     (then?: () => void) => {
       save()
-      toast.success("Changes saved")
+      toast.success("Changes saved", BACKEND && project.publishing.state === "published" ? { description: WEBSITE_UPDATE_NOTE } : undefined)
       then?.()
     },
-    [save],
+    [save, project.publishing.state],
   )
 
   const requestSave = React.useCallback(

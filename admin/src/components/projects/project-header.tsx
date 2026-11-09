@@ -37,9 +37,10 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty"
 import { Input } from "@/components/ui/input"
-import { SECTION_IDS, getProjectType, type SectionId } from "@/lib/constants"
+import { SECTION_IDS, WEBSITE_UPDATE_NOTE, getProjectType, type SectionId } from "@/lib/constants"
 import { plural } from "@/lib/format"
 import { useDemo, useProject } from "@/lib/store"
+import { BACKEND } from "@/lib/supabase/client"
 import type { ID } from "@/lib/types"
 import { cn } from "@/lib/utils"
 import { liveSiteUrl, reraNumber, validateProject, type Issue } from "@/lib/validate"
@@ -164,7 +165,9 @@ export function ProjectHeader() {
     const name = (dirty ? save() : p).name
     actions.setPublishState(p.id, "published")
     setCheck(null)
-    toast.success(`Published ${name}`, { description: dirty ? "Your changes were saved first." : undefined })
+    toast.success(`Published ${name}`, {
+      description: [dirty ? "Your changes were saved first." : null, BACKEND ? WEBSITE_UPDATE_NOTE : null].filter(Boolean).join(" ") || undefined,
+    })
   }
 
   function unpublish() {
