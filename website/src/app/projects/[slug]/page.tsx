@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
-import { About } from "@/components/project/about";
+import { ArchBand } from "@/components/project/about";
 import { BasicProjectPage } from "@/components/project/basic-page";
 import { Amenities } from "@/components/project/amenities";
 import { Approvals } from "@/components/project/approvals";
@@ -194,7 +194,6 @@ async function ProjectContent({ params }: Params) {
           links: [
             { href: "#top", label: "Overview" },
             { href: "#highlights", label: "Highlights" },
-            { href: "#about", label: "About" },
             { href: "#amenities", label: "Amenities" },
             { href: "#villas", label: "Villas" },
             { href: "#plan", label: "Plan" },
@@ -227,19 +226,7 @@ async function ProjectContent({ params }: Params) {
         }}
       />
       <Highlights items={highlights(project, units, hmda, rera, landUse)} />
-      <About
-        intro={[
-          project.description,
-          "It is an HMDA mega gated township in a residential (R1) zone, abutting a 100 ft road on the master plan, with a grand entrance arch, an all-round compound wall and 40 ft and 30 ft CC roads throughout.",
-          project.vision.description,
-        ]}
-        more={[
-          landUse
-            ? `The approved land use keeps ${formatNumber(landUse.park)} sq yd for parks and ${formatNumber(landUse.social)} sq yd for social infrastructure, with a clubhouse, a swimming pool, a community hall, a children's park and a cycle track inside the gates.`
-            : "Parks, a clubhouse with a swimming pool, a community hall, a children's park and a cycle track sit inside the gates.",
-          "Underground electricity with LED street lights, underground drainage, an overhead water tank with a water connection to each plot, avenue plantation with tree guards and rainwater harvesting pits are part of the plan. Titles are clear, bank loans are available, and we undertake villa construction on request.",
-        ]}
-      />
+      <ArchBand />
       <Amenities />
       <Clubhouse parkArea={landUse ? `${formatNumber(landUse.park)} sq yd` : undefined} />
       <VillaDesigns interest={interest} />

@@ -127,6 +127,7 @@ export type Database = {
           client_hash: string | null
           created_at: string
           email: string | null
+          emailed_at: string | null
           form: string
           id: number
           interest: string | null
@@ -145,6 +146,7 @@ export type Database = {
           client_hash?: string | null
           created_at?: string
           email?: string | null
+          emailed_at?: string | null
           form: string
           id?: never
           interest?: string | null
@@ -162,6 +164,7 @@ export type Database = {
           client_hash?: string | null
           created_at?: string
           email?: string | null
+          emailed_at?: string | null
           form?: string
           id?: never
           interest?: string | null

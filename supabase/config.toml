@@ -391,6 +391,10 @@ deno_version = 2
 # [edge_runtime.secrets]
 # secret_key = "env(SECRET_VALUE)"
 
+# Called by the enquiries insert trigger (no user JWT); it checks the enquiry id itself.
+[functions.enquiry-email]
+verify_jwt = false
+
 [analytics]
 # Off locally: logflare + vector cost ~1 GB RAM and nothing here reads the logs.
 enabled = false
