@@ -60,8 +60,8 @@ export const LEGACY = {
   title: "A Legacy Built on Trust and Planning",
   text: "Together, we can conquer challenges, utilize our strengths, and achieve remarkable success in this ambitious home project.",
   slides: [
-    { src: `${STORAGE}/urban-eden-1.jpg`, alt: "Artist's impression of the Urban Eden club house" },
-    { src: `${STORAGE}/urban-eden-2.jpg`, alt: "Artist's impression of the Urban Eden club house, second view" },
+    { src: `${STORAGE}/urban-eden-1.jpg`, w: 7200, h: 1923, alt: "Artist's impression of the Urban Eden club house" },
+    { src: `${STORAGE}/urban-eden-2.jpg`, w: 3049, h: 1395, alt: "Artist's impression of the Urban Eden club house, second view" },
   ],
 } as const;
 
