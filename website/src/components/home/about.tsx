@@ -84,16 +84,16 @@ export function About() {
 
         <div className="mt-20 grid gap-8 lg:mt-32 lg:grid-cols-12 lg:gap-14">
           <div className="lg:sticky lg:top-32 lg:col-span-4 lg:self-start">
-            <h2 data-anim="lines" className="text-title">
+            <h2 data-anim="lines" className="text-h2">
               {ABOUT.story.title}
             </h2>
             <span aria-hidden data-anim="line-x" className="mt-8 block h-0.5 w-16 bg-teal" />
           </div>
           <div className="space-y-8 lg:col-span-7 lg:col-start-6">
-            <p data-anim="lines" className="text-h3 font-medium text-navy">
+            <p data-anim="lines" className="text-lede font-medium text-navy">
               {ABOUT.story.p1}
             </p>
-            <p data-anim="lines" className="text-lede text-text">
+            <p data-anim="lines" className="text-body text-text">
               {ABOUT.story.p2}
             </p>
           </div>
