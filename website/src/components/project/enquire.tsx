@@ -3,11 +3,10 @@ import type { ComponentType, ReactNode } from "react";
 
 import { Container } from "@/components/site/container";
 import { EnquiryForm } from "@/components/site/enquiry-form";
-import { WhatsAppIcon } from "@/components/site/icons";
 import { Reveal } from "@/components/site/reveal";
 import { Section } from "@/components/site/section";
 import { COMPANY } from "@/lib/constants";
-import { WHATSAPP_TEXT, whatsappUrl, type InterestId } from "@/lib/enquiry";
+import type { InterestId } from "@/lib/enquiry";
 import { OFFICE } from "@/lib/site";
 
 function Row({ icon: Icon, label, children }: { icon: ComponentType<{ className?: string }>; label: string; children: ReactNode }) {
@@ -24,7 +23,7 @@ function Row({ icon: Icon, label, children }: { icon: ComponentType<{ className?
   );
 }
 
-/** The enquiry close: the invitation and the ways to reach us on the left, the shared form in a raised panel on the right. */
+/** The enquiry close: the invitation, email and office hours on the left, the shared form in a raised panel on the right. */
 export function Enquire({ name, interest }: { name: string; interest: InterestId }) {
   return (
     <Section id="enquire" aria-labelledby="enquire-title" className="border-t border-line">
@@ -38,11 +37,6 @@ export function Enquire({ name, interest }: { name: string; interest: InterestId
             phone, and there is no obligation to book.
           </p>
           <ul className="mt-10 space-y-5">
-            <Row icon={WhatsAppIcon} label="WhatsApp">
-              <a href={whatsappUrl(WHATSAPP_TEXT.project(name, "Hyderabad"))} target="_blank" rel="noreferrer" className="transition-colors hover:text-navy-soft">
-                Message us on WhatsApp
-              </a>
-            </Row>
             <Row icon={Mail} label="Email">
               <a href={`mailto:${COMPANY.email}`} className="break-all transition-colors hover:text-navy-soft">
                 {COMPANY.email}
