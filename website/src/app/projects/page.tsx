@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import { toCard, type ProjectCardData } from "@/components/projects/cards";
 import { ProjectGrid } from "@/components/projects/project-grid";
 import { ProjectsHero } from "@/components/projects/projects-hero";
-import { FAQ, ProjectsFaq } from "@/components/projects/projects-faq";
 import { Closing } from "@/components/site/closing";
 import { formatNumber } from "@/lib/format";
 import { getProjects, getUnits, hasDetailPage, summarize } from "@/lib/projects";
@@ -17,7 +16,7 @@ const PATH = "/projects";
 export const metadata: Metadata = pageMeta({ title: TITLE, description: DESCRIPTION, path: PATH });
 
 // The listing: the full-screen film hero (H1, live counts, the record), the ongoing projects as a card grid, the delivered layouts as a second
-// grid (`#delivered`, linked from the header, footer and home), the FAQ as a sticky split, the navy close.
+// grid (`#delivered`, linked from the header, footer and home), the navy close.
 export default async function ProjectsPage() {
   const projects = await getProjects();
   const cards = await Promise.all(projects.map(async (p) => toCard(p, summarize(await getUnits(p.id)))));
@@ -50,10 +49,6 @@ export default async function ProjectsPage() {
           })),
         },
       },
-      {
-        "@type": "FAQPage",
-        mainEntity: FAQ.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
-      },
     ],
   };
 
@@ -81,7 +76,6 @@ export default async function ProjectsPage() {
         }
         cards={deliveredCards}
       />
-      <ProjectsFaq />
       <Closing />
     </>
   );
