@@ -1805,7 +1805,7 @@ export const PROJECTS: Project[] = [
     name: "Western County – Shankarpalli",
     typeId: "open-plots",
     lifecycle: "ongoing",
-    description: "Western County – Shankarpalli is a premium 16+ acre HMDA & RERA approved gated layout offering 176 vaastu-compliant open plots with excellent connectivity to Mumbai Highway, ORR, and RRR.",
+    description: "Western County – Shankarpalli is a premium 16+ acre HMDA & RERA approved gated layout of 176 vaastu-compliant open plots, plus 15 Phase II villa plots (191 in all), with excellent connectivity to Mumbai Highway, ORR, and RRR.",
     highlights: [
       "HMDA & RERA Approved",
       "Vaastu Compliant Layout",
@@ -1996,9 +1996,9 @@ export const PROJECTS: Project[] = [
     },
     masterPlan: {
       title: "HMDA Approved Layout Plan",
-      description: "Well-planned 16+ acre layout with 176 plots, 40’ & 30’ CC roads, underground utilities, drainage provisions, and green landscaping.",
+      description: "Well-planned 16+ acre layout with 191 plots (176 in Phase I, 15 in Phase II), 40’ & 30’ CC roads, underground utilities, drainage provisions, and green landscaping.",
       stats: [
-        { id: "western-county-st-1", icon: "plots", value: "176", label: "Total Open Plots" },
+        { id: "western-county-st-1", icon: "plots", value: "191", label: "Total Open Plots" },
         { id: "western-county-st-2", icon: "totalArea", value: "16+ Acres", label: "Premium Layout" },
         { id: "western-county-st-3", icon: "roads", value: "40’ & 30’", label: "CC Roads" },
         { id: "western-county-st-4", icon: "greenSpaces", value: "Vaastu", label: "Compliant Layout" },
