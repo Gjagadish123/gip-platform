@@ -222,11 +222,15 @@
   line-height: 1.02;
   letter-spacing: -0.045em;
 }
-/* The record on its stage (11+, 20+, 600+, 6000+): 104 → 280 px. */
+/* The record on its stage (11+, 20+, 600+, 6000+): 104 → 190 px on phones and tablets; on desktop two records share
+   the stage, so 150 → 208 px keeps "6000+" inside half the container. */
 @utility text-mega {
   font-family: var(--font-sans);
   font-weight: 500;
   font-size: clamp(6.5rem, 1rem + 17vw, 17.5rem);
+  @media (width >= 64rem) {
+    font-size: clamp(9rem, 19vw - 2.75rem, 13rem);
+  }
   line-height: 0.8;
   letter-spacing: -0.06em;
   font-variant-numeric: tabular-nums lining-nums;
