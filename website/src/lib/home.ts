@@ -4,6 +4,18 @@
 // two Why drawings are optimised local copies of the live site's own files (2026-10-22).
 // RECENT_PROJECTS and the legacy slides are hardcoded until the admin portal publishes projects.
 import { touchVilla } from "@/assets/images";
+import feedbackHome1 from "@/assets/images/feedback/home-1.webp";
+import feedbackHome2 from "@/assets/images/feedback/home-2.webp";
+import feedbackHome3 from "@/assets/images/feedback/home-3.webp";
+import feedbackHome4 from "@/assets/images/feedback/home-4.webp";
+import feedbackHome5 from "@/assets/images/feedback/home-5.webp";
+import feedbackHome6 from "@/assets/images/feedback/home-6.webp";
+import feedbackHome7 from "@/assets/images/feedback/home-7.webp";
+import feedbackFace1 from "@/assets/images/feedback/face-1.webp";
+import feedbackFace2 from "@/assets/images/feedback/face-2.webp";
+import feedbackFace3 from "@/assets/images/feedback/face-3.webp";
+import feedbackFace4 from "@/assets/images/feedback/face-4.webp";
+import feedbackFace5 from "@/assets/images/feedback/face-5.webp";
 
 import { BRAND_STORY, PRINCIPLES, PROMISES } from "./site";
 
@@ -144,16 +156,18 @@ export const WHY = {
   video: { src: "/media/why-film.mp4", poster: "/media/why-film-poster.webp" },
 } as const;
 
+// The pictures are the live home's own (greaterinfraprojects.in/images/img-rectangle-4*.png and img-ellipse-7*.png,
+// re-encoded), paired with each feedback as the live page pairs them; they are library pictures, not the customers.
 export const TESTIMONIALS = {
   label: "Testimonials",
   title: "Client Feedbacks",
   items: [
-    { quote: "Nice plotting at Rudraram, really liked the spacious roads and good infrastructure. Definitely the best open plots in the Rudraram area for long-term investment.", name: "Rakesh Kota" },
-    { quote: "A very promising group with a dedicated attitude and uncompromising sincerity. They completed Green Hills Farms in Yadadri and LR Medchal County. Their project planning and execution are excellent.", name: "Ravi Kiran" },
-    { quote: "I've invested in multiple projects with GIP Properties and have always been impressed with their transparency and quality of work. The team is knowledgeable and genuinely cares about client success.", name: "Srinivas G" },
-    { quote: "Purchased a plot in Medchal County recently. The development progress is impressive, and the legal documentation was handled very professionally by the GIP team.", name: "Venkata Ramana" },
-    { quote: "Choosing GIP Properties for our investment in Shadnagar was a great decision. The location is strategic and the team provided excellent support throughout the registration process.", name: "Anitha Reddy" },
-    { quote: "Finding a reliable developer in the Hyderabad market can be tough, but GIP stands out for their transparency. Their Yadadri projects are well-planned with great future potential.", name: "Karthik Sharma" },
-    { quote: "Investing in GIP's Srisailam Highway project has given me great peace of mind. The property appreciation in this belt is fantastic and the layout maintenance is top-notch.", name: "Mahesh Rao" },
+    { quote: "Nice plotting at Rudraram, really liked the spacious roads and good infrastructure. Definitely the best open plots in the Rudraram area for long-term investment.", name: "Rakesh Kota", home: feedbackHome1, face: feedbackFace1 },
+    { quote: "A very promising group with a dedicated attitude and uncompromising sincerity. They completed Green Hills Farms in Yadadri and LR Medchal County. Their project planning and execution are excellent.", name: "Ravi Kiran", home: feedbackHome2, face: feedbackFace2 },
+    { quote: "I've invested in multiple projects with GIP Properties and have always been impressed with their transparency and quality of work. The team is knowledgeable and genuinely cares about client success.", name: "Srinivas G", home: feedbackHome3, face: feedbackFace3 },
+    { quote: "Purchased a plot in Medchal County recently. The development progress is impressive, and the legal documentation was handled very professionally by the GIP team.", name: "Venkata Ramana", home: feedbackHome4, face: feedbackFace4 },
+    { quote: "Choosing GIP Properties for our investment in Shadnagar was a great decision. The location is strategic and the team provided excellent support throughout the registration process.", name: "Anitha Reddy", home: feedbackHome5, face: feedbackFace4 },
+    { quote: "Finding a reliable developer in the Hyderabad market can be tough, but GIP stands out for their transparency. Their Yadadri projects are well-planned with great future potential.", name: "Karthik Sharma", home: feedbackHome6, face: feedbackFace4 },
+    { quote: "Investing in GIP's Srisailam Highway project has given me great peace of mind. The property appreciation in this belt is fantastic and the layout maintenance is top-notch.", name: "Mahesh Rao", home: feedbackHome7, face: feedbackFace5 },
   ],
 } as const;
