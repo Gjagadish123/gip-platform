@@ -33,7 +33,7 @@
           {
             "id": "global-city-vi-sec-arch-1",
             "caption": "Entrance arch",
-            "image": { "id": "gc6-arch", "url": "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/project-media/gc6-arch.webp", "kind": "image", "name": "gc6-arch.webp", "alt": "Artist's impression of the Global City VI entrance arch, from the project brochure", "width": 2000, "height": 593, "source": "upload", "impression": true }
+            "image": { "id": "gc6-arch", "url": "https://api.greaterinfraprojects.in/storage/v1/object/public/project-media/gc6-arch.webp", "kind": "image", "name": "gc6-arch.webp", "alt": "Artist's impression of the Global City VI entrance arch, from the project brochure", "width": 2000, "height": 593, "source": "upload", "impression": true }
           }
         ],
         "points": []
@@ -46,7 +46,7 @@
           {
             "id": "global-city-vi-sec-clubhouse-1",
             "caption": "Clubhouse",
-            "image": { "id": "gc6-clubhouse-pool", "url": "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/project-media/gc6-clubhouse-pool.webp", "kind": "image", "name": "gc6-clubhouse-pool.webp", "alt": "Artist's impression of a clubhouse with a swimming pool and lawns", "width": 1600, "height": 1195, "source": "upload", "impression": true }
+            "image": { "id": "gc6-clubhouse-pool", "url": "https://api.greaterinfraprojects.in/storage/v1/object/public/project-media/gc6-clubhouse-pool.webp", "kind": "image", "name": "gc6-clubhouse-pool.webp", "alt": "Artist's impression of a clubhouse with a swimming pool and lawns", "width": 1600, "height": 1195, "source": "upload", "impression": true }
           }
         ],
         "points": [
@@ -64,12 +64,12 @@
           {
             "id": "global-city-vi-sec-villas-1",
             "caption": "East-facing",
-            "image": { "id": "gc6-villa-east", "url": "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/project-media/gc6-villa-east.webp", "kind": "image", "name": "gc6-villa-east.webp", "alt": "Artist's impression of the east-facing villa design from the Global City VI brochure", "width": 1000, "height": 1111, "source": "upload", "impression": true }
+            "image": { "id": "gc6-villa-east", "url": "https://api.greaterinfraprojects.in/storage/v1/object/public/project-media/gc6-villa-east.webp", "kind": "image", "name": "gc6-villa-east.webp", "alt": "Artist's impression of the east-facing villa design from the Global City VI brochure", "width": 1000, "height": 1111, "source": "upload", "impression": true }
           },
           {
             "id": "global-city-vi-sec-villas-2",
             "caption": "West-facing",
-            "image": { "id": "gc6-villa-west", "url": "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/project-media/gc6-villa-west.webp", "kind": "image", "name": "gc6-villa-west.webp", "alt": "Artist's impression of the west-facing villa design from the Global City VI brochure", "width": 1000, "height": 1096, "source": "upload", "impression": true }
+            "image": { "id": "gc6-villa-west", "url": "https://api.greaterinfraprojects.in/storage/v1/object/public/project-media/gc6-villa-west.webp", "kind": "image", "name": "gc6-villa-west.webp", "alt": "Artist's impression of the west-facing villa design from the Global City VI brochure", "width": 1000, "height": 1096, "source": "upload", "impression": true }
           }
         ],
         "points": [
@@ -102,10 +102,10 @@
       "full": "Near GITAM University, Rudraram to Indrakaran Road, on the Mumbai Highway (NH-65)"
     },
     "media": {
-      "hero": { "id": "gc6-film-poster", "url": "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/project-media/gc6-film-poster.webp", "kind": "image", "name": "gc6-film-poster.webp", "alt": "Aerial view of a gated plotted layout, an artist's impression of Global City VI", "width": 1920, "height": 1080, "source": "upload", "impression": true },
-      "heroVideo": { "id": "gc6-film", "url": "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/project-media/gc6-film.mp4", "kind": "video", "name": "gc6-film.mp4", "alt": "Aerial film of a gated plotted layout, an artist's impression of Global City VI", "source": "upload", "impression": true },
-      "locationImage": { "id": "gc6-route-map", "url": "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/project-media/gc6-route-map.webp", "kind": "image", "name": "gc6-route-map.webp", "alt": "Route map from the project brochure showing the Outer Ring Road, Gachibowli, Kokapet, Kollur Exit 2 and Muttangi Junction (not to scale)", "width": 1336, "height": 1470, "source": "upload" },
-      "masterPlan": { "id": "gc6-layout-copy", "url": "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/project-media/gc6-layout-copy.webp", "kind": "image", "name": "gc6-layout-copy.webp", "alt": "Global City VI layout copy: 288 numbered plots with sizes, 40 ft and 30 ft roads, parks and the land-use table", "width": 2200, "height": 3300, "source": "upload" }
+      "hero": { "id": "gc6-film-poster", "url": "https://api.greaterinfraprojects.in/storage/v1/object/public/project-media/gc6-film-poster.webp", "kind": "image", "name": "gc6-film-poster.webp", "alt": "Aerial view of a gated plotted layout, an artist's impression of Global City VI", "width": 1920, "height": 1080, "source": "upload", "impression": true },
+      "heroVideo": { "id": "gc6-film", "url": "https://api.greaterinfraprojects.in/storage/v1/object/public/project-media/gc6-film.mp4", "kind": "video", "name": "gc6-film.mp4", "alt": "Aerial film of a gated plotted layout, an artist's impression of Global City VI", "source": "upload", "impression": true },
+      "locationImage": { "id": "gc6-route-map", "url": "https://api.greaterinfraprojects.in/storage/v1/object/public/project-media/gc6-route-map.webp", "kind": "image", "name": "gc6-route-map.webp", "alt": "Route map from the project brochure showing the Outer Ring Road, Gachibowli, Kokapet, Kollur Exit 2 and Muttangi Junction (not to scale)", "width": 1336, "height": 1470, "source": "upload" },
+      "masterPlan": { "id": "gc6-layout-copy", "url": "https://api.greaterinfraprojects.in/storage/v1/object/public/project-media/gc6-layout-copy.webp", "kind": "image", "name": "gc6-layout-copy.webp", "alt": "Global City VI layout copy: 288 numbered plots with sizes, 40 ft and 30 ft roads, parks and the land-use table", "width": 2200, "height": 3300, "source": "upload" }
     },
     "legal": {
       "title": "Approvals you can check yourself.",
@@ -118,7 +118,7 @@
       "documents": [
         { "id": "global-city-vi-doc-1", "name": "HMDA Layout Approval", "available": true },
         { "id": "global-city-vi-doc-2", "name": "RERA Registration Certificate", "available": true },
-        { "id": "global-city-vi-doc-3", "name": "Layout Copy", "available": true, "file": { "id": "global-city-vi-plan", "url": "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20VI/pdf/Global%20City%20-%20VI%20@%20Rudraram%20_%20Greater%20Infra%20Projects%20_%20Brochure%20cum%20Layout.pdf", "kind": "pdf", "name": "Global City - VI @ Rudraram _ Greater Infra Projects _ Brochure cum Layout.pdf", "source": "external" } },
+        { "id": "global-city-vi-doc-3", "name": "Layout Copy", "available": true, "file": { "id": "global-city-vi-plan", "url": "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20VI/pdf/Global%20City%20-%20VI%20@%20Rudraram%20_%20Greater%20Infra%20Projects%20_%20Brochure%20cum%20Layout.pdf", "kind": "pdf", "name": "Global City - VI @ Rudraram _ Greater Infra Projects _ Brochure cum Layout.pdf", "source": "external" } },
         { "id": "global-city-vi-doc-4", "name": "Link Documents", "available": true }
       ]
     },

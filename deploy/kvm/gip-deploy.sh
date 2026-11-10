@@ -29,7 +29,7 @@ sudo -u gip -H bash -euo pipefail -c "
 "
 
 ln -sfn "$rel" "$BASE/current"
-rm -rf /var/www/gip-layouts.new && cp -r "$rel/layouts/dist" /var/www/gip-layouts.new
+mkdir -p /var/www && rm -rf /var/www/gip-layouts.new && cp -r "$rel/layouts/dist" /var/www/gip-layouts.new
 rm -rf /var/www/gip-layouts.old && { [ ! -d /var/www/gip-layouts ] || mv /var/www/gip-layouts /var/www/gip-layouts.old; }
 mv /var/www/gip-layouts.new /var/www/gip-layouts && rm -rf /var/www/gip-layouts.old
 systemctl restart gip-website gip-admin

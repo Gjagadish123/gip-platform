@@ -19,8 +19,10 @@ const nextConfig: NextConfig = {
     ],
   }),
   images: {
-    // Project photos and PDFs live in the client's Supabase storage; the old site hosts the location graphic.
+    // Project photos and PDFs live in Supabase storage on the GIP server (api.greaterinfraprojects.in); the hosted
+    // project stays listed until it is deleted.
     remotePatterns: [
+      { protocol: "https", hostname: "api.greaterinfraprojects.in" },
       { protocol: "https", hostname: "jjskgxbshmjsfrowlzsj.supabase.co" },
       { protocol: "https", hostname: "www.greaterinfraprojects.in" },
     ],

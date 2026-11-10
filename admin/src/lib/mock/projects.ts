@@ -101,7 +101,7 @@ export const PROJECTS: Project[] = [
     media: {
       cover: {
         id: "global-city-vi-cover",
-        url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20VI/WhatsApp%20Image%202026-03-06%20at%204.13.29%20PM.jpeg",
+        url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20VI/WhatsApp%20Image%202026-03-06%20at%204.13.29%20PM.jpeg",
         kind: "image",
         name: "WhatsApp Image 2026-03-06 at 4.13.29 PM.jpeg",
         source: "external",
@@ -110,98 +110,98 @@ export const PROJECTS: Project[] = [
       gallery: [
         {
           id: "global-city-vi-g1",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20VI/WhatsApp%20Image%202026-03-06%20at%204.13.26%20PM%20(1).jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20VI/WhatsApp%20Image%202026-03-06%20at%204.13.26%20PM%20(1).jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-06 at 4.13.26 PM (1).jpeg",
           source: "external",
         },
         {
           id: "global-city-vi-g2",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20VI/WhatsApp%20Image%202026-03-06%20at%204.13.26%20PM%20(2).jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20VI/WhatsApp%20Image%202026-03-06%20at%204.13.26%20PM%20(2).jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-06 at 4.13.26 PM (2).jpeg",
           source: "external",
         },
         {
           id: "global-city-vi-g3",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20VI/WhatsApp%20Image%202026-03-06%20at%204.13.27%20PM%20(1).jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20VI/WhatsApp%20Image%202026-03-06%20at%204.13.27%20PM%20(1).jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-06 at 4.13.27 PM (1).jpeg",
           source: "external",
         },
         {
           id: "global-city-vi-g4",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20VI/WhatsApp%20Image%202026-03-06%20at%204.13.27%20PM%20(2).jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20VI/WhatsApp%20Image%202026-03-06%20at%204.13.27%20PM%20(2).jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-06 at 4.13.27 PM (2).jpeg",
           source: "external",
         },
         {
           id: "global-city-vi-g5",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20VI/WhatsApp%20Image%202026-03-06%20at%204.13.27%20PM.jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20VI/WhatsApp%20Image%202026-03-06%20at%204.13.27%20PM.jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-06 at 4.13.27 PM.jpeg",
           source: "external",
         },
         {
           id: "global-city-vi-g6",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20VI/WhatsApp%20Image%202026-03-06%20at%204.13.28%20PM%20(1).jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20VI/WhatsApp%20Image%202026-03-06%20at%204.13.28%20PM%20(1).jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-06 at 4.13.28 PM (1).jpeg",
           source: "external",
         },
         {
           id: "global-city-vi-g7",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20VI/WhatsApp%20Image%202026-03-06%20at%204.13.28%20PM%20(2).jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20VI/WhatsApp%20Image%202026-03-06%20at%204.13.28%20PM%20(2).jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-06 at 4.13.28 PM (2).jpeg",
           source: "external",
         },
         {
           id: "global-city-vi-g8",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20VI/WhatsApp%20Image%202026-03-06%20at%204.13.28%20PM%20(3).jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20VI/WhatsApp%20Image%202026-03-06%20at%204.13.28%20PM%20(3).jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-06 at 4.13.28 PM (3).jpeg",
           source: "external",
         },
         {
           id: "global-city-vi-g9",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20VI/WhatsApp%20Image%202026-03-06%20at%204.13.28%20PM.jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20VI/WhatsApp%20Image%202026-03-06%20at%204.13.28%20PM.jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-06 at 4.13.28 PM.jpeg",
           source: "external",
         },
         {
           id: "global-city-vi-g10",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20VI/WhatsApp%20Image%202026-03-06%20at%204.13.29%20PM%20(1).jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20VI/WhatsApp%20Image%202026-03-06%20at%204.13.29%20PM%20(1).jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-06 at 4.13.29 PM (1).jpeg",
           source: "external",
         },
         {
           id: "global-city-vi-g11",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20VI/WhatsApp%20Image%202026-03-06%20at%204.13.29%20PM%20(2).jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20VI/WhatsApp%20Image%202026-03-06%20at%204.13.29%20PM%20(2).jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-06 at 4.13.29 PM (2).jpeg",
           source: "external",
         },
         {
           id: "global-city-vi-g12",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20VI/WhatsApp%20Image%202026-03-06%20at%204.13.29%20PM%20(3).jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20VI/WhatsApp%20Image%202026-03-06%20at%204.13.29%20PM%20(3).jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-06 at 4.13.29 PM (3).jpeg",
           source: "external",
         },
         {
           id: "global-city-vi-g13",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20VI/WhatsApp%20Image%202026-03-06%20at%204.13.29%20PM.jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20VI/WhatsApp%20Image%202026-03-06%20at%204.13.29%20PM.jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-06 at 4.13.29 PM.jpeg",
           source: "external",
         },
         {
           id: "global-city-vi-g14",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20VI/WhatsApp%20Image%202026-03-06%20at%204.13.30%20PM.jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20VI/WhatsApp%20Image%202026-03-06%20at%204.13.30%20PM.jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-06 at 4.13.30 PM.jpeg",
           source: "external",
@@ -217,7 +217,7 @@ export const PROJECTS: Project[] = [
       },
       masterPlan: {
         id: "global-city-vi-plan",
-        url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20VI/pdf/Global%20City%20-%20VI%20@%20Rudraram%20_%20Greater%20Infra%20Projects%20_%20Brochure%20cum%20Layout.pdf",
+        url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20VI/pdf/Global%20City%20-%20VI%20@%20Rudraram%20_%20Greater%20Infra%20Projects%20_%20Brochure%20cum%20Layout.pdf",
         kind: "pdf",
         name: "Global City - VI @ Rudraram _ Greater Infra Projects _ Brochure cum Layout.pdf",
         source: "external",
@@ -225,7 +225,7 @@ export const PROJECTS: Project[] = [
       masterPlanPage: 2,
       brochure: {
         id: "global-city-vi-brochure",
-        url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20VI/pdf/Global%20City%20VI-Greater%20Infra%20Project%20Brochure.pdf",
+        url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20VI/pdf/Global%20City%20VI-Greater%20Infra%20Project%20Brochure.pdf",
         kind: "pdf",
         name: "Global City VI-Greater Infra Project Brochure.pdf",
         source: "external",
@@ -495,7 +495,7 @@ export const PROJECTS: Project[] = [
     media: {
       cover: {
         id: "kompally-county-iii-cover",
-        url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/KOMPALLY%20COUNTY%20III/WhatsApp%20Image%202026-03-07%20at%203.31.42%20PM.jpeg",
+        url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/KOMPALLY%20COUNTY%20III/WhatsApp%20Image%202026-03-07%20at%203.31.42%20PM.jpeg",
         kind: "image",
         name: "WhatsApp Image 2026-03-07 at 3.31.42 PM.jpeg",
         source: "external",
@@ -505,35 +505,35 @@ export const PROJECTS: Project[] = [
       gallery: [
         {
           id: "kompally-county-iii-g1",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/KOMPALLY%20COUNTY%20III/WhatsApp%20Image%202026-03-06%20at%204.13.29%20PM.jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/KOMPALLY%20COUNTY%20III/WhatsApp%20Image%202026-03-06%20at%204.13.29%20PM.jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-06 at 4.13.29 PM.jpeg",
           source: "external",
         },
         {
           id: "kompally-county-iii-g2",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/KOMPALLY%20COUNTY%20III/WhatsApp%20Image%202026-03-06%20at%204.12.25%20PM%20(1).jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/KOMPALLY%20COUNTY%20III/WhatsApp%20Image%202026-03-06%20at%204.12.25%20PM%20(1).jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-06 at 4.12.25 PM (1).jpeg",
           source: "external",
         },
         {
           id: "kompally-county-iii-g3",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/KOMPALLY%20COUNTY%20III/WhatsApp%20Image%202026-03-06%20at%204.12.25%20PM.jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/KOMPALLY%20COUNTY%20III/WhatsApp%20Image%202026-03-06%20at%204.12.25%20PM.jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-06 at 4.12.25 PM.jpeg",
           source: "external",
         },
         {
           id: "kompally-county-iii-g4",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/KOMPALLY%20COUNTY%20III/WhatsApp%20Image%202026-03-06%20at%204.12.26%20PM%20(1).jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/KOMPALLY%20COUNTY%20III/WhatsApp%20Image%202026-03-06%20at%204.12.26%20PM%20(1).jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-06 at 4.12.26 PM (1).jpeg",
           source: "external",
         },
         {
           id: "kompally-county-iii-g5",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/KOMPALLY%20COUNTY%20III/WhatsApp%20Image%202026-03-07%20at%203.31.42%20PM.jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/KOMPALLY%20COUNTY%20III/WhatsApp%20Image%202026-03-07%20at%203.31.42%20PM.jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-07 at 3.31.42 PM.jpeg",
           source: "external",
@@ -550,7 +550,7 @@ export const PROJECTS: Project[] = [
       },
       masterPlan: {
         id: "kompally-county-iii-plan",
-        url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/KOMPALLY%20COUNTY%20III/pdf/Brochure%20Kompally%20County%20-%20III-1.pdf",
+        url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/KOMPALLY%20COUNTY%20III/pdf/Brochure%20Kompally%20County%20-%20III-1.pdf",
         kind: "pdf",
         name: "Brochure Kompally County - III-1.pdf",
         source: "external",
@@ -558,7 +558,7 @@ export const PROJECTS: Project[] = [
       masterPlanPage: 6,
       brochure: {
         id: "kompally-county-iii-brochure",
-        url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/KOMPALLY%20COUNTY%20III/pdf/Brochure%20Kompally%20County%20-%20III-1.pdf",
+        url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/KOMPALLY%20COUNTY%20III/pdf/Brochure%20Kompally%20County%20-%20III-1.pdf",
         kind: "pdf",
         name: "Brochure Kompally County - III-1.pdf",
         source: "external",
@@ -768,7 +768,7 @@ export const PROJECTS: Project[] = [
     media: {
       cover: {
         id: "global-city-rrr-cover",
-        url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20RRR/WhatsApp%20Image%202026-03-06%20at%204.14.59%20PM.jpeg",
+        url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20RRR/WhatsApp%20Image%202026-03-06%20at%204.14.59%20PM.jpeg",
         kind: "image",
         name: "WhatsApp Image 2026-03-06 at 4.14.59 PM.jpeg",
         source: "external",
@@ -777,35 +777,35 @@ export const PROJECTS: Project[] = [
       gallery: [
         {
           id: "global-city-rrr-g1",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20RRR/WhatsApp%20Image%202026-03-06%20at%204.15.00%20PM%20(1).jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20RRR/WhatsApp%20Image%202026-03-06%20at%204.15.00%20PM%20(1).jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-06 at 4.15.00 PM (1).jpeg",
           source: "external",
         },
         {
           id: "global-city-rrr-g2",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20RRR/WhatsApp%20Image%202026-03-06%20at%204.15.00%20PM%20(2).jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20RRR/WhatsApp%20Image%202026-03-06%20at%204.15.00%20PM%20(2).jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-06 at 4.15.00 PM (2).jpeg",
           source: "external",
         },
         {
           id: "global-city-rrr-g3",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20RRR/WhatsApp%20Image%202026-03-06%20at%204.15.00%20PM%20(3).jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20RRR/WhatsApp%20Image%202026-03-06%20at%204.15.00%20PM%20(3).jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-06 at 4.15.00 PM (3).jpeg",
           source: "external",
         },
         {
           id: "global-city-rrr-g4",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20RRR/WhatsApp%20Image%202026-03-06%20at%204.15.00%20PM.jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20RRR/WhatsApp%20Image%202026-03-06%20at%204.15.00%20PM.jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-06 at 4.15.00 PM.jpeg",
           source: "external",
         },
         {
           id: "global-city-rrr-g5",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20RRR/WhatsApp%20Image%202026-03-06%20at%204.15.01%20PM.jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20RRR/WhatsApp%20Image%202026-03-06%20at%204.15.01%20PM.jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-06 at 4.15.01 PM.jpeg",
           source: "external",
@@ -821,7 +821,7 @@ export const PROJECTS: Project[] = [
       },
       masterPlan: {
         id: "global-city-rrr-plan",
-        url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20RRR/pdf/Global%20City%20-%20RRR%20_%20Dtcp%20&%20Rera%20approved%20final%20brochure.pdf",
+        url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20RRR/pdf/Global%20City%20-%20RRR%20_%20Dtcp%20&%20Rera%20approved%20final%20brochure.pdf",
         kind: "pdf",
         name: "Global City - RRR _ Dtcp & Rera approved final brochure.pdf",
         source: "external",
@@ -829,7 +829,7 @@ export const PROJECTS: Project[] = [
       masterPlanPage: 2,
       brochure: {
         id: "global-city-rrr-brochure",
-        url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20RRR/pdf/Global%20City%20-%20RRR%20_%20Dtcp%20&%20Rera%20approved%20final%20brochure.pdf",
+        url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20CITY%20RRR/pdf/Global%20City%20-%20RRR%20_%20Dtcp%20&%20Rera%20approved%20final%20brochure.pdf",
         kind: "pdf",
         name: "Global City - RRR _ Dtcp & Rera approved final brochure.pdf",
         source: "external",
@@ -1123,7 +1123,7 @@ export const PROJECTS: Project[] = [
     media: {
       cover: {
         id: "global-nature-view-city-cover",
-        url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20NATURE%20VIEW%20CITY/WhatsApp%20Image%202026-03-06%20at%204.14.44%20PM%20(1).jpeg",
+        url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20NATURE%20VIEW%20CITY/WhatsApp%20Image%202026-03-06%20at%204.14.44%20PM%20(1).jpeg",
         kind: "image",
         name: "WhatsApp Image 2026-03-06 at 4.14.44 PM (1).jpeg",
         source: "external",
@@ -1132,28 +1132,28 @@ export const PROJECTS: Project[] = [
       gallery: [
         {
           id: "global-nature-view-city-g1",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20NATURE%20VIEW%20CITY/WhatsApp%20Image%202026-03-06%20at%204.14.44%20PM%20(1).jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20NATURE%20VIEW%20CITY/WhatsApp%20Image%202026-03-06%20at%204.14.44%20PM%20(1).jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-06 at 4.14.44 PM (1).jpeg",
           source: "external",
         },
         {
           id: "global-nature-view-city-g2",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20NATURE%20VIEW%20CITY/WhatsApp%20Image%202026-03-06%20at%204.14.43%20PM%20(1).jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20NATURE%20VIEW%20CITY/WhatsApp%20Image%202026-03-06%20at%204.14.43%20PM%20(1).jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-06 at 4.14.43 PM (1).jpeg",
           source: "external",
         },
         {
           id: "global-nature-view-city-g3",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20NATURE%20VIEW%20CITY/WhatsApp%20Image%202026-03-06%20at%204.14.43%20PM.jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20NATURE%20VIEW%20CITY/WhatsApp%20Image%202026-03-06%20at%204.14.43%20PM.jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-06 at 4.14.43 PM.jpeg",
           source: "external",
         },
         {
           id: "global-nature-view-city-g4",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20NATURE%20VIEW%20CITY/WhatsApp%20Image%202026-03-06%20at%204.14.44%20PM.jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20NATURE%20VIEW%20CITY/WhatsApp%20Image%202026-03-06%20at%204.14.44%20PM.jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-06 at 4.14.44 PM.jpeg",
           source: "external",
@@ -1169,7 +1169,7 @@ export const PROJECTS: Project[] = [
       },
       masterPlan: {
         id: "global-nature-view-city-plan",
-        url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20NATURE%20VIEW%20CITY/pdf/Global%20Nature%20New%20City%20Layout%20(5).pdf",
+        url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20NATURE%20VIEW%20CITY/pdf/Global%20Nature%20New%20City%20Layout%20(5).pdf",
         kind: "pdf",
         name: "Global Nature New City Layout (5).pdf",
         source: "external",
@@ -1177,7 +1177,7 @@ export const PROJECTS: Project[] = [
       masterPlanPage: 1,
       brochure: {
         id: "global-nature-view-city-brochure",
-        url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20NATURE%20VIEW%20CITY/pdf/Global%20Nature%20View%20City%20(3)%20(1).pdf",
+        url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/GLOBAL%20NATURE%20VIEW%20CITY/pdf/Global%20Nature%20View%20City%20(3)%20(1).pdf",
         kind: "pdf",
         name: "Global Nature View City (3) (1).pdf",
         source: "external",
@@ -1376,7 +1376,7 @@ export const PROJECTS: Project[] = [
     media: {
       cover: {
         id: "godavari-green-farms-cover",
-        url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GODAVARI%20GREEN%20FARMS/WhatsApp%20Image%202026-03-06%20at%204.13.53%20PM%20(1).jpeg",
+        url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/GODAVARI%20GREEN%20FARMS/WhatsApp%20Image%202026-03-06%20at%204.13.53%20PM%20(1).jpeg",
         kind: "image",
         name: "WhatsApp Image 2026-03-06 at 4.13.53 PM (1).jpeg",
         source: "external",
@@ -1385,42 +1385,42 @@ export const PROJECTS: Project[] = [
       gallery: [
         {
           id: "godavari-green-farms-g1",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GODAVARI%20GREEN%20FARMS/WhatsApp%20Image%202026-03-06%20at%204.13.53%20PM%20(2).jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/GODAVARI%20GREEN%20FARMS/WhatsApp%20Image%202026-03-06%20at%204.13.53%20PM%20(2).jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-06 at 4.13.53 PM (2).jpeg",
           source: "external",
         },
         {
           id: "godavari-green-farms-g2",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GODAVARI%20GREEN%20FARMS/WhatsApp%20Image%202026-03-06%20at%204.13.53%20PM%20(1).jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/GODAVARI%20GREEN%20FARMS/WhatsApp%20Image%202026-03-06%20at%204.13.53%20PM%20(1).jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-06 at 4.13.53 PM (1).jpeg",
           source: "external",
         },
         {
           id: "godavari-green-farms-g3",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GODAVARI%20GREEN%20FARMS/WhatsApp%20Image%202026-03-06%20at%204.13.53%20PM%20(3).jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/GODAVARI%20GREEN%20FARMS/WhatsApp%20Image%202026-03-06%20at%204.13.53%20PM%20(3).jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-06 at 4.13.53 PM (3).jpeg",
           source: "external",
         },
         {
           id: "godavari-green-farms-g4",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GODAVARI%20GREEN%20FARMS/WhatsApp%20Image%202026-03-06%20at%204.13.53%20PM.jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/GODAVARI%20GREEN%20FARMS/WhatsApp%20Image%202026-03-06%20at%204.13.53%20PM.jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-06 at 4.13.53 PM.jpeg",
           source: "external",
         },
         {
           id: "godavari-green-farms-g5",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GODAVARI%20GREEN%20FARMS/WhatsApp%20Image%202026-03-06%20at%204.13.54%20PM%20(1).jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/GODAVARI%20GREEN%20FARMS/WhatsApp%20Image%202026-03-06%20at%204.13.54%20PM%20(1).jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-06 at 4.13.54 PM (1).jpeg",
           source: "external",
         },
         {
           id: "godavari-green-farms-g6",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GODAVARI%20GREEN%20FARMS/WhatsApp%20Image%202026-03-06%20at%204.13.54%20PM%20(3).jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/GODAVARI%20GREEN%20FARMS/WhatsApp%20Image%202026-03-06%20at%204.13.54%20PM%20(3).jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-06 at 4.13.54 PM (3).jpeg",
           source: "external",
@@ -1436,7 +1436,7 @@ export const PROJECTS: Project[] = [
       },
       masterPlan: {
         id: "godavari-green-farms-plan",
-        url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GODAVARI%20GREEN%20FARMS/pdf/Green%20Farms%20EBrochure%20(2).pdf",
+        url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/GODAVARI%20GREEN%20FARMS/pdf/Green%20Farms%20EBrochure%20(2).pdf",
         kind: "pdf",
         name: "Green Farms EBrochure (2).pdf",
         source: "external",
@@ -1444,7 +1444,7 @@ export const PROJECTS: Project[] = [
       masterPlanPage: 2,
       brochure: {
         id: "godavari-green-farms-brochure",
-        url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/GODAVARI%20GREEN%20FARMS/pdf/Green%20Farms%20EBrochure%20(2).pdf",
+        url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/GODAVARI%20GREEN%20FARMS/pdf/Green%20Farms%20EBrochure%20(2).pdf",
         kind: "pdf",
         name: "Green Farms EBrochure (2).pdf",
         source: "external",
@@ -1628,7 +1628,7 @@ export const PROJECTS: Project[] = [
     media: {
       cover: {
         id: "global-city-v-cover",
-        url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/globalcityV/WhatsApp%20Image%202026-03-25%20at%205.04.41%20PM.jpeg",
+        url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/globalcityV/WhatsApp%20Image%202026-03-25%20at%205.04.41%20PM.jpeg",
         kind: "image",
         name: "WhatsApp Image 2026-03-25 at 5.04.41 PM.jpeg",
         source: "external",
@@ -1637,70 +1637,70 @@ export const PROJECTS: Project[] = [
       gallery: [
         {
           id: "global-city-v-g1",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/globalcityV/WhatsApp%20Image%202026-03-25%20at%205.04.42%20PM%20(1).jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/globalcityV/WhatsApp%20Image%202026-03-25%20at%205.04.42%20PM%20(1).jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-25 at 5.04.42 PM (1).jpeg",
           source: "external",
         },
         {
           id: "global-city-v-g2",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/globalcityV/WhatsApp%20Image%202026-03-25%20at%205.04.42%20PM%20(2).jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/globalcityV/WhatsApp%20Image%202026-03-25%20at%205.04.42%20PM%20(2).jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-25 at 5.04.42 PM (2).jpeg",
           source: "external",
         },
         {
           id: "global-city-v-g3",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/globalcityV/WhatsApp%20Image%202026-03-25%20at%205.04.42%20PM.jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/globalcityV/WhatsApp%20Image%202026-03-25%20at%205.04.42%20PM.jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-25 at 5.04.42 PM.jpeg",
           source: "external",
         },
         {
           id: "global-city-v-g4",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/globalcityV/WhatsApp%20Image%202026-03-25%20at%205.04.43%20PM%20(1).jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/globalcityV/WhatsApp%20Image%202026-03-25%20at%205.04.43%20PM%20(1).jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-25 at 5.04.43 PM (1).jpeg",
           source: "external",
         },
         {
           id: "global-city-v-g5",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/globalcityV/WhatsApp%20Image%202026-03-25%20at%205.04.43%20PM%20(2).jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/globalcityV/WhatsApp%20Image%202026-03-25%20at%205.04.43%20PM%20(2).jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-25 at 5.04.43 PM (2).jpeg",
           source: "external",
         },
         {
           id: "global-city-v-g6",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/globalcityV/WhatsApp%20Image%202026-03-25%20at%205.04.43%20PM.jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/globalcityV/WhatsApp%20Image%202026-03-25%20at%205.04.43%20PM.jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-25 at 5.04.43 PM.jpeg",
           source: "external",
         },
         {
           id: "global-city-v-g7",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/globalcityV/WhatsApp%20Image%202026-03-25%20at%205.04.44%20PM%20(1).jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/globalcityV/WhatsApp%20Image%202026-03-25%20at%205.04.44%20PM%20(1).jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-25 at 5.04.44 PM (1).jpeg",
           source: "external",
         },
         {
           id: "global-city-v-g8",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/globalcityV/WhatsApp%20Image%202026-03-25%20at%205.04.44%20PM%20(2).jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/globalcityV/WhatsApp%20Image%202026-03-25%20at%205.04.44%20PM%20(2).jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-25 at 5.04.44 PM (2).jpeg",
           source: "external",
         },
         {
           id: "global-city-v-g9",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/globalcityV/WhatsApp%20Image%202026-03-25%20at%205.04.44%20PM.jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/globalcityV/WhatsApp%20Image%202026-03-25%20at%205.04.44%20PM.jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-25 at 5.04.44 PM.jpeg",
           source: "external",
         },
         {
           id: "global-city-v-g10",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/globalcityV/WhatsApp%20Image%202026-03-25%20at%205.04.45%20PM%20(1).jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/globalcityV/WhatsApp%20Image%202026-03-25%20at%205.04.45%20PM%20(1).jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-25 at 5.04.45 PM (1).jpeg",
           source: "external",
@@ -1716,7 +1716,7 @@ export const PROJECTS: Project[] = [
       },
       masterPlan: {
         id: "global-city-v-plan",
-        url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/globalcityV/PRAVEEN%20ADS_Global%20City-V.pdf",
+        url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/globalcityV/PRAVEEN%20ADS_Global%20City-V.pdf",
         kind: "pdf",
         name: "PRAVEEN ADS_Global City-V.pdf",
         source: "external",
@@ -1724,7 +1724,7 @@ export const PROJECTS: Project[] = [
       masterPlanPage: 1,
       brochure: {
         id: "global-city-v-brochure",
-        url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/globalcityV/PRAVEEN%20ADS_Global%20City-V.pdf",
+        url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/globalcityV/PRAVEEN%20ADS_Global%20City-V.pdf",
         kind: "pdf",
         name: "PRAVEEN ADS_Global City-V.pdf",
         source: "external",
@@ -1925,7 +1925,7 @@ export const PROJECTS: Project[] = [
     media: {
       cover: {
         id: "western-county-cover",
-        url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/Western%20County%20%20Shankarpalli/WhatsApp%20Image%202026-03-06%20at%204.14.19%20PM.jpeg",
+        url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/Western%20County%20%20Shankarpalli/WhatsApp%20Image%202026-03-06%20at%204.14.19%20PM.jpeg",
         kind: "image",
         name: "WhatsApp Image 2026-03-06 at 4.14.19 PM.jpeg",
         source: "external",
@@ -1934,49 +1934,49 @@ export const PROJECTS: Project[] = [
       gallery: [
         {
           id: "western-county-g1",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/Western%20County%20%20Shankarpalli/WhatsApp%20Image%202026-03-06%20at%204.14.19%20PM.jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/Western%20County%20%20Shankarpalli/WhatsApp%20Image%202026-03-06%20at%204.14.19%20PM.jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-06 at 4.14.19 PM.jpeg",
           source: "external",
         },
         {
           id: "western-county-g2",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/Western%20County%20%20Shankarpalli/WhatsApp%20Image%202026-03-06%20at%204.14.17%20PM.jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/Western%20County%20%20Shankarpalli/WhatsApp%20Image%202026-03-06%20at%204.14.17%20PM.jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-06 at 4.14.17 PM.jpeg",
           source: "external",
         },
         {
           id: "western-county-g3",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/Western%20County%20%20Shankarpalli/WhatsApp%20Image%202026-03-06%20at%204.14.18%20PM%20(1).jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/Western%20County%20%20Shankarpalli/WhatsApp%20Image%202026-03-06%20at%204.14.18%20PM%20(1).jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-06 at 4.14.18 PM (1).jpeg",
           source: "external",
         },
         {
           id: "western-county-g4",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/Western%20County%20%20Shankarpalli/WhatsApp%20Image%202026-03-06%20at%204.14.18%20PM%20(2).jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/Western%20County%20%20Shankarpalli/WhatsApp%20Image%202026-03-06%20at%204.14.18%20PM%20(2).jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-06 at 4.14.18 PM (2).jpeg",
           source: "external",
         },
         {
           id: "western-county-g5",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/Western%20County%20%20Shankarpalli/WhatsApp%20Image%202026-03-06%20at%204.14.18%20PM%20(3).jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/Western%20County%20%20Shankarpalli/WhatsApp%20Image%202026-03-06%20at%204.14.18%20PM%20(3).jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-06 at 4.14.18 PM (3).jpeg",
           source: "external",
         },
         {
           id: "western-county-g6",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/Western%20County%20%20Shankarpalli/WhatsApp%20Image%202026-03-06%20at%204.14.18%20PM.jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/Western%20County%20%20Shankarpalli/WhatsApp%20Image%202026-03-06%20at%204.14.18%20PM.jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-06 at 4.14.18 PM.jpeg",
           source: "external",
         },
         {
           id: "western-county-g7",
-          url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/Western%20County%20%20Shankarpalli/WhatsApp%20Image%202026-03-06%20at%204.14.19%20PM%20(1).jpeg",
+          url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/Western%20County%20%20Shankarpalli/WhatsApp%20Image%202026-03-06%20at%204.14.19%20PM%20(1).jpeg",
           kind: "image",
           name: "WhatsApp Image 2026-03-06 at 4.14.19 PM (1).jpeg",
           source: "external",
@@ -2243,7 +2243,7 @@ export const PROJECTS: Project[] = [
       },
       masterPlan: {
         id: "urban-eden-plan",
-        url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/KOMPALLY%20COUNTY%20III/pdf/Brochure%20Kompally%20County%20-%20III-1.pdf",
+        url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/KOMPALLY%20COUNTY%20III/pdf/Brochure%20Kompally%20County%20-%20III-1.pdf",
         kind: "pdf",
         name: "Brochure Kompally County - III-1.pdf",
         source: "external",
@@ -2251,7 +2251,7 @@ export const PROJECTS: Project[] = [
       masterPlanPage: 1,
       brochure: {
         id: "urban-eden-brochure",
-        url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/KOMPALLY%20COUNTY%20III/pdf/Brochure%20Kompally%20County%20-%20III-1.pdf",
+        url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/KOMPALLY%20COUNTY%20III/pdf/Brochure%20Kompally%20County%20-%20III-1.pdf",
         kind: "pdf",
         name: "Brochure Kompally County - III-1.pdf",
         source: "external",
@@ -2469,7 +2469,7 @@ export const PROJECTS: Project[] = [
     media: {
       cover: {
         id: "global-city-rudraram-cover",
-        url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/Global%20city%20I.jpg",
+        url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/Global%20city%20I.jpg",
         kind: "image",
         name: "Global city I.jpg",
         source: "external",
@@ -2526,7 +2526,7 @@ export const PROJECTS: Project[] = [
     media: {
       cover: {
         id: "global-city-ii-nandigama-cover",
-        url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/global%20city%20II.png",
+        url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/global%20city%20II.png",
         kind: "image",
         name: "global city II.png",
         source: "external",
@@ -2583,7 +2583,7 @@ export const PROJECTS: Project[] = [
     media: {
       cover: {
         id: "global-city-iii-isnapur-cover",
-        url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/global%20city%20III.jpeg",
+        url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/global%20city%20III.jpeg",
         kind: "image",
         name: "global city III.jpeg",
         source: "external",
@@ -2640,7 +2640,7 @@ export const PROJECTS: Project[] = [
     media: {
       cover: {
         id: "greater-infra-resorts-cover",
-        url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/greater%20infra%20resorts.jpg",
+        url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/greater%20infra%20resorts.jpg",
         kind: "image",
         name: "greater infra resorts.jpg",
         source: "external",
@@ -2697,7 +2697,7 @@ export const PROJECTS: Project[] = [
     media: {
       cover: {
         id: "lr-palm-meadows-rampally-cover",
-        url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/LR%20Palm%20Meadows.jpg",
+        url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/LR%20Palm%20Meadows.jpg",
         kind: "image",
         name: "LR Palm Meadows.jpg",
         source: "external",
@@ -2754,7 +2754,7 @@ export const PROJECTS: Project[] = [
     media: {
       cover: {
         id: "highway-city-yadadri-cover",
-        url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/highway%20city.jpeg",
+        url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/highway%20city.jpeg",
         kind: "image",
         name: "highway city.jpeg",
         source: "external",
@@ -2873,7 +2873,7 @@ export const PROJECTS: Project[] = [
     media: {
       cover: {
         id: "lr-medchal-county-cover",
-        url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/lr%20medchal%20county.jpg",
+        url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/lr%20medchal%20county.jpg",
         kind: "image",
         name: "lr medchal county.jpg",
         source: "external",
@@ -2930,7 +2930,7 @@ export const PROJECTS: Project[] = [
     media: {
       cover: {
         id: "keesara-county-bogaram-cover",
-        url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/keesara%20county.jpg",
+        url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/keesara%20county.jpg",
         kind: "image",
         name: "keesara county.jpg",
         source: "external",
@@ -3056,7 +3056,7 @@ export const PROJECTS: Project[] = [
     media: {
       cover: {
         id: "sri-yadadri-gardens-cover",
-        url: "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay/sri%20yadadri%20gardens.jpg",
+        url: "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay/sri%20yadadri%20gardens.jpg",
         kind: "image",
         name: "sri yadadri gardens.jpg",
         source: "external",

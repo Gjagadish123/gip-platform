@@ -19,7 +19,7 @@ import feedbackFace5 from "@/assets/images/feedback/face-5.webp";
 
 import { BRAND_STORY, PRINCIPLES, PROMISES } from "./site";
 
-const STORAGE = "https://jjskgxbshmjsfrowlzsj.supabase.co/storage/v1/object/public/gip%20-%20akshay";
+const STORAGE = "https://api.greaterinfraprojects.in/storage/v1/object/public/gip%20-%20akshay";
 
 export const HERO = {
   title: ["Turning Your Property", "Dreams into Trusted Reality"],

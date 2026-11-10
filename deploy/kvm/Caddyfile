@@ -35,6 +35,57 @@ admin.greaterinfraprojects.in {
 	header X-Robots-Tag "noindex, nofollow"
 }
 
+# Self-hosted Supabase (deploy/kvm/supabase): Caddy does the gateway's routing and CORS (any origin, no cookies, as on
+# hosted Supabase). The services check the JWTs themselves. `route` keeps the order: preflights first.
+api.greaterinfraprojects.in {
+	encode zstd gzip
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options nosniff
+		-Server
+		>Access-Control-Allow-Origin "*"
+		>Access-Control-Expose-Headers "Content-Range, Content-Profile, Preference-Applied, X-Supabase-Api-Version, sb-error-code, Content-Length, Content-Type, ETag"
+	}
+	route {
+		@preflight method OPTIONS
+		handle @preflight {
+			header Access-Control-Allow-Methods "GET, POST, PUT, PATCH, DELETE, OPTIONS, HEAD"
+			header Access-Control-Allow-Headers "{http.request.header.Access-Control-Request-Headers}"
+			header Access-Control-Max-Age "86400"
+			respond 204
+		}
+		# The data API's root lists every table and function; hosted Supabase keeps it to admins.
+		respond /rest/v1/ 404
+		handle_path /auth/v1/* {
+			reverse_proxy 127.0.0.1:9999
+		}
+		handle_path /rest/v1/* {
+			reverse_proxy 127.0.0.1:3100
+		}
+		handle /realtime/v1/api/* {
+			uri strip_prefix /realtime/v1
+			reverse_proxy 127.0.0.1:4000 {
+				header_up Host realtime-dev.supabase-realtime
+			}
+		}
+		handle /realtime/v1/* {
+			uri replace /realtime/v1/ /socket/ 1
+			reverse_proxy 127.0.0.1:4000 {
+				header_up Host realtime-dev.supabase-realtime
+			}
+		}
+		handle_path /storage/v1/* {
+			reverse_proxy 127.0.0.1:5000 {
+				header_up X-Forwarded-Prefix /storage/v1
+			}
+		}
+		handle_path /functions/v1/* {
+			reverse_proxy 127.0.0.1:9000
+		}
+		respond 404
+	}
+}
+
 greaterinfraprojects.in {
 	redir https://www.greaterinfraprojects.in{uri} permanent
 }
