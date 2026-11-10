@@ -263,7 +263,7 @@ export function MediaSection({ draft, issues, update }: SectionProps) {
         aspect="4 / 3"
         value={m.cover}
         onChange={set("cover")}
-        description="Used on listing cards and the homepage."
+        description="The picture on the project's card on the Projects page, and at the top of its page when Hero image is empty. Use a real site photo: artist's impressions and stock photos are skipped."
       />
     </Labeled>
   )

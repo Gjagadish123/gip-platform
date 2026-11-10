@@ -9,9 +9,10 @@
 # repository secret (VITE_GOOGLE_MAPS_API_KEY, or the older NEXT_PUBLIC_GOOGLE_MAPS_API_KEY) and the vector map id a
 # repository variable (VITE_GOOGLE_MAP_ID). Never put the Supabase secret key here.
 #
-# The website is a build-time copy of the live data, so a schedule keeps it current: every 10 minutes the check job
-# fingerprints what the website reads (.github/scripts/site-data-version.mjs) and compares it with the deployed
-# site/data-version.txt; only a difference (an admin edit, a plot status change) builds and deploys.
+# The website is a build-time copy of the live data. To keep it current the database asks for a run when projects or
+# plots change (supabase/migrations/20261112120000_site_rebuild.sql: workflow_dispatch with only_if_changed), and the
+# schedule is a backup. Both make the check job fingerprint what the website reads (.github/scripts/site-data-version.mjs)
+# and compare it with the deployed site/data-version.txt; only a difference builds and deploys.
 name: Deploy previews to GitHub Pages
 
 on:
@@ -19,6 +20,11 @@ on:
     branches: [main]
     paths: ["admin/**", "website/**", "layouts/**", ".github/workflows/deploy-admin-pages.yml", ".github/scripts/**"]
   workflow_dispatch:
+    inputs:
+      only_if_changed:
+        description: "Build only if the published data changed (how the database asks)"
+        type: boolean
+        default: false
   schedule:
     # Off the hour (GitHub delays or drops scheduled runs at busy minutes like :00).
     - cron: "7-59/10 * * * *"
@@ -51,7 +57,7 @@ jobs:
         run: |
           version=$(node .github/scripts/site-data-version.mjs)
           echo "version=$version" >> "$GITHUB_OUTPUT"
-          if [ "${{ github.event_name }}" != "schedule" ]; then
+          if [ "${{ github.event_name }}" != "schedule" ] && [ "${{ inputs.only_if_changed }}" != "true" ]; then
             echo "build=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
