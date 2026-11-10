@@ -1,0 +1,21 @@
+# The website on the KVM server (/etc/systemd/system/gip-website.service): Next.js on 127.0.0.1:3000, behind Caddy.
+# It reads the published projects and plots from Supabase as visitors arrive (cached for about a minute), so admin
+# changes show on their own; only code changes need gip-deploy.
+[Unit]
+Description=GIP website (Next.js)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=gip
+WorkingDirectory=/home/gip/site/current/website
+Environment=NODE_ENV=production NEXT_TELEMETRY_DISABLED=1
+ExecStart=/usr/bin/node node_modules/next/dist/bin/next start -H 127.0.0.1 -p 3000
+Restart=always
+RestartSec=3
+NoNewPrivileges=true
+ProtectSystem=full
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

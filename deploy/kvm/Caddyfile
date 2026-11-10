@@ -1,0 +1,15 @@
+# Caddy on the KVM server (/etc/caddy/Caddyfile). Until a domain points here the site is plain HTTP on the server's
+# address; then replace ":80" with the domain and Caddy fetches and renews its HTTPS certificate on its own (and add
+# the Strict-Transport-Security line). X-Robots-Tag keeps this copy out of search engines until it is the real site.
+:80 {
+	encode zstd gzip
+	reverse_proxy 127.0.0.1:3000
+	header {
+		X-Robots-Tag "noindex, nofollow"
+		X-Content-Type-Options nosniff
+		X-Frame-Options DENY
+		Referrer-Policy strict-origin-when-cross-origin
+		Permissions-Policy "camera=(), microphone=(), geolocation=()"
+		-Server
+	}
+}
