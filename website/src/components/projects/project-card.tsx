@@ -83,9 +83,13 @@ export function ProjectCard({ card, priority }: { card: ProjectCardData; priorit
   );
 }
 
-/** The card's one link; its ::after covers the card so the whole card is the click target. */
+/**
+ * The card's one link; its ::after covers the card so the whole card is the click target. The button's 1 px press
+ * nudge is cancelled here: a translated link becomes the containing block of its ::after, so the cover would shrink
+ * to the button mid-press and a click that started on the picture would be lost.
+ */
 function CardLink({ card, className, children }: { card: ProjectCardData; className?: string; children: ReactNode }) {
-  const cover = cn("after:absolute after:inset-0 after:rounded-2xl after:content-['']", className);
+  const cover = cn("after:absolute after:inset-0 after:rounded-2xl after:content-[''] active:translate-none!", className);
   return isExternal(card.href!) ? (
     <a href={card.href} target="_blank" rel="noreferrer" aria-label={`Visit the ${card.name} website (opens in a new tab)`} className={cover}>
       {children}
