@@ -1,15 +1,29 @@
-# Caddy on the KVM server (/etc/caddy/Caddyfile). Until a domain points here the site is plain HTTP on the server's
-# address; then replace ":80" with the domain and Caddy fetches and renews its HTTPS certificate on its own (and add
-# the Strict-Transport-Security line). X-Robots-Tag keeps this copy out of search engines until it is the real site.
-:80 {
-	encode zstd gzip
-	reverse_proxy 127.0.0.1:3000
+# Caddy on the KVM server (/etc/caddy/Caddyfile). A named site gets its HTTPS certificate (and renewals) on its own
+# once its DNS points here. The website is plain HTTP on the server's address until the main domain moves here:
+# then replace ":80" with "greaterinfraprojects.in, www.greaterinfraprojects.in", add the HSTS line and drop
+# X-Robots-Tag. The admin is never indexed.
+
+(headers) {
 	header {
-		X-Robots-Tag "noindex, nofollow"
 		X-Content-Type-Options nosniff
 		X-Frame-Options DENY
 		Referrer-Policy strict-origin-when-cross-origin
 		Permissions-Policy "camera=(), microphone=(), geolocation=()"
 		-Server
 	}
+}
+
+admin.greaterinfraprojects.in {
+	encode zstd gzip
+	reverse_proxy 127.0.0.1:3001
+	import headers
+	header Strict-Transport-Security "max-age=31536000"
+	header X-Robots-Tag "noindex, nofollow"
+}
+
+:80 {
+	encode zstd gzip
+	reverse_proxy 127.0.0.1:3000
+	import headers
+	header X-Robots-Tag "noindex, nofollow"
 }

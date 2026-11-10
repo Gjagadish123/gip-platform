@@ -1,0 +1,20 @@
+# The admin on the KVM server (/etc/systemd/system/gip-admin.service): Next.js on 127.0.0.1:3001, behind Caddy at
+# admin.greaterinfraprojects.in. It signs in and writes to Supabase from the browser; gip-deploy builds it.
+[Unit]
+Description=GIP admin (Next.js)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=gip
+WorkingDirectory=/home/gip/site/current/admin
+Environment=NODE_ENV=production NEXT_TELEMETRY_DISABLED=1
+ExecStart=/usr/bin/node node_modules/next/dist/bin/next start -H 127.0.0.1 -p 3001
+Restart=always
+RestartSec=3
+NoNewPrivileges=true
+ProtectSystem=full
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
