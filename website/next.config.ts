@@ -11,6 +11,13 @@ const nextConfig: NextConfig = {
   partialPrefetching: !pages,
   ...(pages && { output: "export", basePath, trailingSlash: true }),
   env: { NEXT_PUBLIC_BASE_PATH: basePath },
+  // The old website's other pages (its project pages are app/property/[slug]).
+  ...(!pages && {
+    redirects: async () => [
+      { source: "/properties", destination: "/projects", permanent: true },
+      { source: "/gallery", destination: "/projects", permanent: true },
+    ],
+  }),
   images: {
     // Project photos and PDFs live in the client's Supabase storage; the old site hosts the location graphic.
     remotePatterns: [

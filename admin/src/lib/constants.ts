@@ -11,7 +11,7 @@ import type {
 /* ---------- demo clock (never read the real clock in render / module scope: cacheComponents) ---------- */
 
 /** Shown after a save that reaches the public website: its pages are rebuilt from the data every 10 minutes. */
-export const WEBSITE_UPDATE_NOTE = 'The website shows it within about 5 minutes; the live layouts at once.';
+export const WEBSITE_UPDATE_NOTE = 'The website shows it within about a minute; the live layouts at once.';
 
 export const DEMO_TODAY = '2026-10-14';
 export const DEMO_NOW = '2026-10-14T11:30:00+05:30';
@@ -201,5 +201,5 @@ export const NEW_PROJECT_IDS = Array.from({ length: 40 }, (_, i) => `new-project
 export const LAYOUTS_URL = process.env.NEXT_PUBLIC_LAYOUTS_URL || 'https://gjagadish123.github.io/gip-platform/layouts/';
 export const liveLayoutUrl = (projectId: string) => `${LAYOUTS_URL}?project=${encodeURIComponent(projectId)}`;
 
-/** Old live site, for "View on live site ↗" (only projects with publishing.legacySlug). */
+/** The public website, for "View on live site ↗" and the sidebar link. */
 export const LIVE_SITE_URL = 'https://www.greaterinfraprojects.in';

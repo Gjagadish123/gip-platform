@@ -16,9 +16,10 @@ export const hasDetailPage = (p: Project) => p.lifecycle !== 'completed' && !p.p
 export const reraNumber = (p: Project) => p.legal.approvals.find((a) => a.authority === 'RERA')?.reference;
 /** Drives the card's "Approved" badge (hard-coded on every card today). */
 export const isApproved = (p: Project) => p.legal.approvals.some((a) => a.status === 'approved' || a.status === 'registered');
-/** "View on live site ↗" target; only the 8 projects that exist on the old site have one. */
+/** "View on live site ↗" target: the project's page on the website once it is published (its card only when it has
+ * no page). */
 export const liveSiteUrl = (p: Project) =>
-  p.publishing.legacySlug ? `${LIVE_SITE_URL}/property/${encodeURIComponent(p.publishing.legacySlug)}` : null;
+  p.publishing.state !== 'published' ? null : hasDetailPage(p) ? `${LIVE_SITE_URL}/projects/${p.publishing.slug}` : `${LIVE_SITE_URL}/projects`;
 
 /* ---------- patterns ---------- */
 

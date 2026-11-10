@@ -4,7 +4,7 @@
 export const COMPANY = {
   name: 'Greater Infra Projects',
   email: 'Gip@greaterinfraprojects.in',
-  website: import.meta.env.VITE_WEBSITE_URL || 'https://gjagadish123.github.io/gip-platform/site/',
+  website: import.meta.env.VITE_WEBSITE_URL || 'https://www.greaterinfraprojects.in/',
 };
 
 // Sales offices, as printed on the client's brochure (the demo showed the same three).

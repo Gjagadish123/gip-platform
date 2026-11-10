@@ -1,4 +1,5 @@
-# The website on the KVM server (/etc/systemd/system/gip-website.service): Next.js on 127.0.0.1:3000, behind Caddy.
+# The website on the KVM server (/etc/systemd/system/gip-website.service): Next.js on 127.0.0.1:3000, behind Caddy at
+# www.greaterinfraprojects.in.
 # It reads the published projects and plots from Supabase as visitors arrive (cached for about a minute), so admin
 # changes show on their own; only code changes need gip-deploy.
 [Unit]

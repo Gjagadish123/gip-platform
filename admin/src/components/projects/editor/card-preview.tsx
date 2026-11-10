@@ -21,7 +21,7 @@ export function CardPreview({ project, className }: { project: Project; classNam
     ? "Completed: the card is not clickable"
     : external
       ? `Opens ${external.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "")} in a new tab`
-      : `Opens /property/${project.publishing.slug || "…"}`
+      : `Opens /projects/${project.publishing.slug || "…"}`
 
   return (
     <figure className={cn("w-full max-w-[360px]", className)}>

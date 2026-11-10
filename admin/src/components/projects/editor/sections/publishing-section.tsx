@@ -84,12 +84,8 @@ export function PublishingSection({ draft, issues, update }: SectionProps) {
           />
         </FieldRow>
 
-        {pub.legacySlug && live && (
-          <FieldRow
-            className="sm:col-span-6"
-            label="Current live URL"
-            description="The old website only answers on this address. It is replaced when the new site launches."
-          >
+        {live && (
+          <FieldRow className="sm:col-span-6" label="Live page" description="Where this project is on the website now.">
             <a
               href={live}
               target="_blank"

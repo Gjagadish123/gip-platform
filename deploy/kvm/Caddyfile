@@ -1,7 +1,6 @@
-# Caddy on the KVM server (/etc/caddy/Caddyfile). A named site gets its HTTPS certificate (and renewals) on its own
-# once its DNS points here. The website is plain HTTP on the server's address until the main domain moves here:
-# then replace ":80" with "greaterinfraprojects.in, www.greaterinfraprojects.in", add the HSTS line and drop
-# X-Robots-Tag. The admin is never indexed.
+# Caddy on the KVM server (/etc/caddy/Caddyfile). Each named site gets its HTTPS certificate (and renewals) on its own
+# while its DNS points here. The website's address is www (SITE_URL); the bare domain and the server's address forward
+# to it. The admin is never indexed.
 
 (headers) {
 	header {
@@ -9,21 +8,28 @@
 		X-Frame-Options DENY
 		Referrer-Policy strict-origin-when-cross-origin
 		Permissions-Policy "camera=(), microphone=(), geolocation=()"
+		Strict-Transport-Security "max-age=31536000"
 		-Server
 	}
+}
+
+www.greaterinfraprojects.in {
+	encode zstd gzip
+	reverse_proxy 127.0.0.1:3000
+	import headers
 }
 
 admin.greaterinfraprojects.in {
 	encode zstd gzip
 	reverse_proxy 127.0.0.1:3001
 	import headers
-	header Strict-Transport-Security "max-age=31536000"
 	header X-Robots-Tag "noindex, nofollow"
 }
 
-:80 {
-	encode zstd gzip
-	reverse_proxy 127.0.0.1:3000
-	import headers
-	header X-Robots-Tag "noindex, nofollow"
+greaterinfraprojects.in {
+	redir https://www.greaterinfraprojects.in{uri} permanent
+}
+
+http://189.72.149.6 {
+	redir https://www.greaterinfraprojects.in{uri} permanent
 }

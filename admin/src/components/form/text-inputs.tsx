@@ -154,7 +154,7 @@ export function SlugInput({
     <div className="flex flex-col gap-1.5">
       <InputGroup className="h-9">
         <InputGroupAddon>
-          <InputGroupText>/property/</InputGroupText>
+          <InputGroupText>/projects/</InputGroupText>
         </InputGroupAddon>
         <InputGroupInput
           id={baseId}
@@ -178,7 +178,7 @@ export function SlugInput({
         )}
       </InputGroup>
       <p id={`${baseId}-preview`} className="truncate text-xs text-muted-foreground">
-        {COMPANY.website.replace(/^https?:\/\/(www\.)?/, "")}/property/<span className="text-foreground">{value || generated || "…"}</span>
+        {COMPANY.website.replace(/^https?:\/\/(www\.)?/, "")}/projects/<span className="text-foreground">{value || generated || "…"}</span>
       </p>
       {error && (
         <FieldMessage id={`${baseId}-error`} kind="error">
@@ -186,7 +186,7 @@ export function SlugInput({
         </FieldMessage>
       )}
       {!error && warn && (
-        <FieldMessage kind="warning">Changing the address breaks links to /property/{originalSlug}.</FieldMessage>
+        <FieldMessage kind="warning">Changing the address breaks links to /projects/{originalSlug}.</FieldMessage>
       )}
     </div>
   )
