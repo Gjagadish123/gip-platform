@@ -11,7 +11,7 @@ import type {
 /* ---------- demo clock (never read the real clock in render / module scope: cacheComponents) ---------- */
 
 /** Shown after a save that reaches the public website: its pages are rebuilt from the data every 10 minutes. */
-export const WEBSITE_UPDATE_NOTE = 'The website shows it within about a minute; the live layouts at once.';
+export const WEBSITE_UPDATE_NOTE = 'The website and the live layouts show it at once.';
 
 export const DEMO_TODAY = '2026-10-14';
 export const DEMO_NOW = '2026-10-14T11:30:00+05:30';
