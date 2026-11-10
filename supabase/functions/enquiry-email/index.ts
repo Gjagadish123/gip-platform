@@ -6,12 +6,12 @@
 //
 // Secrets (Dashboard > Edge Functions > Secrets):
 //   SMTP_USER, SMTP_PASS  a Hostinger mailbox and its password (sent over port 465: Edge Functions may not use 25/587)
-//   ENQUIRY_MAIL_TO       optional, default gip@greaterinfraprojects.in
+//   ENQUIRY_MAIL_TO       optional, default admin@greaterinfraprojects.in
 //   SMTP_HOST             optional, default smtp.hostinger.com
 import { createClient } from "npm:@supabase/supabase-js@2.49.8";
 import nodemailer from "npm:nodemailer@6.9.16";
 
-const MAIL_TO = Deno.env.get("ENQUIRY_MAIL_TO") || "gip@greaterinfraprojects.in";
+const MAIL_TO = Deno.env.get("ENQUIRY_MAIL_TO") || "admin@greaterinfraprojects.in";
 const SMTP_HOST = Deno.env.get("SMTP_HOST") || "smtp.hostinger.com";
 const FORMS: Record<string, string> = { enquiry: "Enquiry", site_visit: "Site visit request", plot: "Plot enquiry" };
 const SOURCES: Record<string, string> = { website: "Website", live_layout: "Live layouts" };
