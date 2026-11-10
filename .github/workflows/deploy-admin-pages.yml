@@ -1,19 +1,16 @@
-# GitHub Pages now serves only the live layouts app: https://gjagadish123.github.io/gip-platform/layouts/
-# (?project=<id> opens one). The admin and the website run on their own server (deploy/kvm):
+# The admin, the website and the live layouts all run on their own server now (deploy/kvm):
 #   admin   → https://admin.greaterinfraprojects.in
 #   website → https://www.greaterinfraprojects.in
-# Every other Pages address (the old admin at /gip-platform/, the old website preview at /gip-platform/site/) answers
-# with a page that forwards to the same path there. The layouts app reads plot statuses from Supabase in the browser
-# and follows them live, so it only rebuilds when its code changes. The Supabase URL and publishable key are public by
-# design; the Google Maps browser key is a repository secret (VITE_GOOGLE_MAPS_API_KEY, or the older
-# NEXT_PUBLIC_GOOGLE_MAPS_API_KEY) and the vector map id a repository variable (VITE_GOOGLE_MAP_ID). Never put the
-# Supabase secret key here.
-name: Deploy live layouts to GitHub Pages
+#   layouts → https://www.greaterinfraprojects.in/layouts/
+# GitHub Pages only keeps the old preview addresses working: every path answers with a page that forwards to the same
+# place on the new hosts (/layouts/... and /site/layouts/... to the layouts, /site/... to the website, the rest, the old
+# admin, to the admin), keeping ?project=…&plot=… and #hash.
+name: GitHub Pages forwarding
 
 on:
   push:
     branches: [main]
-    paths: ["layouts/**", ".github/workflows/deploy-admin-pages.yml", ".github/scripts/pages-csp.mjs"]
+    paths: [".github/workflows/deploy-admin-pages.yml"]
   workflow_dispatch:
 
 permissions:
@@ -29,50 +26,21 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: layouts/package-lock.json
-
-      - name: Build live layouts (/gip-platform/layouts/)
-        working-directory: layouts
+      - name: Forwarding pages
         run: |
-          npm ci
-          npx vite build
-        env:
-          VITE_BASE: /gip-platform/layouts/
-          VITE_SUPABASE_URL: https://jjskgxbshmjsfrowlzsj.supabase.co
-          VITE_SUPABASE_PUBLISHABLE_KEY: sb_publishable_cJWKoNVL9CRIxkrwRHLxsw_aVvCxAjU
-          VITE_GOOGLE_MAPS_API_KEY: ${{ secrets.VITE_GOOGLE_MAPS_API_KEY || secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
-          VITE_GOOGLE_MAP_ID: ${{ vars.VITE_GOOGLE_MAP_ID }}
-          VITE_WEBSITE_URL: https://www.greaterinfraprojects.in/
-
-      - name: Assemble the Pages tree
-        run: |
-          mkdir -p out/layouts
-          cp -R layouts/dist/. out/layouts/
+          mkdir -p out
           touch out/.nojekyll
-          # Every other address forwards to the same path on the new hosts (404.html answers for any missing path):
-          # /site/layouts/... to the layouts here, /site/... to the website, the rest (the old admin) to the admin.
           cat > out/index.html <<'EOF'
           <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex">
           <title>Greater Infra Projects</title>
           <script>var p = location.pathname.replace(/^\/gip-platform/, ""), q = location.search + location.hash;
-          location.replace(/^\/site\/layouts(\/|$)/.test(p) ? "/gip-platform/layouts/" + q
+          location.replace(/^(\/site)?\/layouts(\/|$)/.test(p) ? "https://www.greaterinfraprojects.in/layouts/" + q
             : /^\/site(\/|$)/.test(p) ? "https://www.greaterinfraprojects.in" + (p.slice(5) || "/") + q
             : "https://admin.greaterinfraprojects.in" + p + q);</script>
-          </head><body><p>The admin is now at <a href="https://admin.greaterinfraprojects.in">admin.greaterinfraprojects.in</a>
-          and the website at <a href="https://www.greaterinfraprojects.in">www.greaterinfraprojects.in</a>.</p></body></html>
+          </head><body><p>Greater Infra Projects has moved: the website is at <a href="https://www.greaterinfraprojects.in">www.greaterinfraprojects.in</a>
+          and the admin at <a href="https://admin.greaterinfraprojects.in">admin.greaterinfraprojects.in</a>.</p></body></html>
           EOF
           cp out/index.html out/404.html
-
-      # Pages sends HSTS and Cache-Control itself but no custom headers, so the CSP goes into every page.
-      - name: Content-Security-Policy
-        run: node .github/scripts/pages-csp.mjs out
-        env:
-          NEXT_PUBLIC_SUPABASE_URL: https://jjskgxbshmjsfrowlzsj.supabase.co
 
       - uses: actions/upload-pages-artifact@v3
         with:

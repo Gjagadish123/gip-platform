@@ -15,8 +15,17 @@
 
 www.greaterinfraprojects.in {
 	encode zstd gzip
-	reverse_proxy 127.0.0.1:3000
 	import headers
+	# The live layouts app (static, built with VITE_BASE=/layouts/).
+	redir /layouts /layouts/ permanent
+	handle_path /layouts/* {
+		root * /var/www/gip-layouts
+		try_files {path} /index.html
+		file_server
+	}
+	handle {
+		reverse_proxy 127.0.0.1:3000
+	}
 }
 
 admin.greaterinfraprojects.in {

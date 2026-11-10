@@ -197,8 +197,8 @@ export const PAGE_CONTENT_SECTIONS: SectionId[] = ['vision', 'masterplan', 'page
  *  one of these instead of a random id. 40 per browser, then random ids (fine on any server deploy). */
 export const NEW_PROJECT_IDS = Array.from({ length: 40 }, (_, i) => `new-project-${i + 1}`);
 
-/** The live layouts app (gip-platform/layouts, NEXT_PUBLIC_LAYOUTS_URL), for "Live layout ↗" on the mapped projects. */
-export const LAYOUTS_URL = process.env.NEXT_PUBLIC_LAYOUTS_URL || 'https://gjagadish123.github.io/gip-platform/layouts/';
+/** The live layouts app (www…/layouts/, NEXT_PUBLIC_LAYOUTS_URL), for "Live layout ↗" on the mapped projects. */
+export const LAYOUTS_URL = process.env.NEXT_PUBLIC_LAYOUTS_URL || 'https://www.greaterinfraprojects.in/layouts/';
 export const liveLayoutUrl = (projectId: string) => `${LAYOUTS_URL}?project=${encodeURIComponent(projectId)}`;
 
 /** The public website, for "View on live site ↗" and the sidebar link. */
