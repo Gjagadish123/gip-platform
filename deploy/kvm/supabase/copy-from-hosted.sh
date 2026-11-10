@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # One-off move from the hosted Supabase project (jjskgxbshmjsfrowlzsj) into this server's Supabase (run as root, with
-# admin edits paused). Reads the hosted Session pooler connection string from /root/.old-db-url (`gip-secret old-db`)
-# and deletes it at the end.
+# admin edits paused). Reads the hosted connection string from /root/.old-db-url (`gip-secret db` asks for the
+# database password) and deletes it at the end.
 #   1. data of public + private and the admin logins (auth.users, auth.identities), loaded with triggers off
 #   2. every Storage file, re-uploaded through this server's Storage API so files and their records match
 #   3. stored file links (project content) rewritten to https://api.greaterinfraprojects.in
@@ -10,7 +10,7 @@
 set -euo pipefail
 cd /opt/supabase
 set -a; . ./.env; set +a
-[ -s /root/.old-db-url ] || { echo "missing /root/.old-db-url (run: gip-secret old-db)"; exit 1; }
+[ -s /root/.old-db-url ] || { echo "missing /root/.old-db-url (run: gip-secret db)"; exit 1; }
 URL=$(cat /root/.old-db-url)
 PG=(docker run --rm --network host -e PGCONNECT_TIMEOUT=20 supabase/postgres:17.6.1.136)
 NEWDB=(docker exec -i supabase-db psql -U supabase_admin -d postgres -v ON_ERROR_STOP=1 -X -q)
