@@ -1,5 +1,6 @@
 "use client";
 
+import { House } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
@@ -101,10 +102,10 @@ function ProjectBar({ nav }: { nav: ProjectNav }) {
 }
 
 /**
- * Fixed bar, 64 px on phones and 80 on desktop, carrying only the logo, Book a site visit (from 640 px) and Menu, which
- * opens the full-screen menu. Over the home hero it is transparent with the white logo and a white hairline button (the
- * hero keeps the one teal action); elsewhere a white blurred bar on a hairline. It slides away while the page scrolls down past 120 px and returns on any scroll up
- * or when focus enters it (it never moves under reduced motion). Project pages add their section bar, which stays.
+ * Fixed bar, 64 px on phones and 80 on desktop, always on screen (the client's call, 11 Nov 2026): the logo, Home on
+ * project pages, Book a site visit (from 640 px) and Menu, which opens the full-screen menu. Over the home hero it is
+ * transparent with the white logo and a white hairline button (the hero keeps the one teal action); elsewhere a white
+ * blurred bar on a hairline. Project pages add their section bar under it.
  */
 export function SiteHeader() {
   const pathname = usePathname();
@@ -113,31 +114,12 @@ export function SiteHeader() {
   // to the route, so arriving on Home by a client navigation re-reads #hero after the new page commits.
   const readDark = useCallback(() => DARK_HERO.has(pathname) && readOverHero(), [pathname]);
   const dark = useSyncExternalStore(subscribeScrollResize, readDark, () => DARK_HERO.has(pathname));
-  const [hidden, setHidden] = useState(false);
-
-  useEffect(() => {
-    let last = window.scrollY;
-    const onScroll = () => {
-      const y = window.scrollY;
-      if (Math.abs(y - last) < 6) return; // trackpad jitter
-      setHidden(y > 120 && y > last);
-      last = y;
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  const onProject = pathname.startsWith("/projects/");
 
   return (
-    <header
-      onFocus={() => setHidden(false)}
-      className={cn(
-        // right-scroll-bar-position: while a dialog locks the page scroll, Radix keeps this bar clear of the removed
-        // scrollbar, so it does not jump sideways as the menu or the enquiry drawer opens and closes.
-        "right-scroll-bar-position fixed inset-x-0 top-0 z-40 transition-transform duration-500 ease-(--ease-out)",
-        // A project page keeps its section bar on screen: only the main bar slides away.
-        hidden && (page.nav ? "motion-safe:-translate-y-16 motion-safe:lg:-translate-y-20" : "motion-safe:-translate-y-full"),
-      )}
-    >
+    // right-scroll-bar-position: while a dialog locks the page scroll, Radix keeps this bar clear of the removed
+    // scrollbar, so it does not jump sideways as the menu or the enquiry drawer opens and closes.
+    <header className="right-scroll-bar-position fixed inset-x-0 top-0 z-40">
       <div
         className={cn(
           "border-b transition-[border-color,background-color] duration-500",
@@ -153,6 +135,17 @@ export function SiteHeader() {
           </Link>
 
           <div className="flex items-center gap-3">
+            {onProject ? (
+              <Link
+                href="/"
+                prefetch={false}
+                aria-label="Home"
+                title="Home"
+                className="inline-flex size-11 items-center justify-center rounded-md border border-line-strong bg-white text-navy transition-colors hover:bg-mist sm:size-10"
+              >
+                <House aria-hidden className="size-[18px]" />
+              </Link>
+            ) : null}
             <EnquireButton size="sm" variant={dark ? "outline-light" : "primary"} interest={page.interest} className="hidden sm:inline-flex">
               Book a site visit
             </EnquireButton>

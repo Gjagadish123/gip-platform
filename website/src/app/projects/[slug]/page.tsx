@@ -13,13 +13,12 @@ import { Highlights } from "@/components/project/highlights";
 import { FilmBand } from "@/components/project/interlude";
 import { LiveLayoutBand } from "@/components/project/live-layout";
 import { Location } from "@/components/project/location";
-import { MasterPlan } from "@/components/project/master-plan";
 import { PageSectionBlock } from "@/components/project/page-section";
 import { realHero } from "@/components/projects/cards";
 import { PageEnquiryContext } from "@/components/site/enquiry-provider";
 import { AREA_UNIT_LABEL, getProjectType, LIFECYCLE_LABEL, LIVE_LAYOUT_IDS, liveLayoutUrl } from "@/lib/constants";
 import { formatDate, formatLandArea, formatNumber } from "@/lib/format";
-import { getPlan, getProject, getProjects, getUnits, hasDetailPage, summarize } from "@/lib/projects";
+import { getProject, getProjects, getUnits, hasDetailPage, summarize } from "@/lib/projects";
 import { breadcrumbJsonLd, JsonLd, ORGANIZATION_ID, pageMeta, SITE_URL } from "@/lib/seo";
 
 type Params = { params: Promise<{ slug: string }> };
@@ -71,8 +70,7 @@ export default function ProjectPage({ params }: Params) {
 
 /**
  * One page for every ongoing project, every word and picture from the admin. A section shows only when the admin has
- * content for it: hero, live layout (the mapped projects), highlights, page sections, amenities, master plan, the film
- * band, location, gallery, approvals, FAQ, enquiry.
+ * content for it: hero, live layout (the mapped projects), highlights, page sections, amenities, the film band, location, gallery, approvals, FAQ, enquiry.
  */
 async function ProjectContent({ params }: Params) {
   const { slug } = await params;
@@ -81,7 +79,6 @@ async function ProjectContent({ params }: Params) {
 
   const units = await getUnits(project.id);
   const summary = summarize(units);
-  const landUse = getPlan(project.id)?.landUse;
   const type = getProjectType(project.typeId);
   const { hmda, rera } = approvalFacts(project);
   const photos = sitePhotos(project);
@@ -93,7 +90,6 @@ async function ProjectContent({ params }: Params) {
   const place = firstPlace(loc.short);
   const area = project.landArea ? formatLandArea(project.landArea) : undefined;
   const brochure = m.brochure?.url;
-  const planImage = m.masterPlan?.kind === "image" ? m.masterPlan : undefined;
   const layoutPdf = m.masterPlan?.kind === "pdf" ? m.masterPlan.url : undefined;
   const liveLayout = LIVE_LAYOUT_IDS.includes(project.id) ? liveLayoutUrl(project.id) : undefined;
 
@@ -119,7 +115,6 @@ async function ProjectContent({ params }: Params) {
   const intro = (project.heroIntro ?? []).map((p) => p.trim()).filter(Boolean);
   const sections = (project.sections ?? []).filter((s) => s.title || s.text || s.images.length || s.points.length);
   const amenities = project.amenities.visible ? project.amenities.items.filter((a) => a.name.trim()) : [];
-  const showPlan = !!(planImage || layoutPdf || landUse);
   const faq = (project.faq ?? []).filter((f) => f.q.trim() && f.a.trim());
   const approvals = legal.approvals.filter((a) => PERMITS.has(a.authority));
   const documents = legal.documents;
@@ -198,7 +193,6 @@ async function ProjectContent({ params }: Params) {
             ...(liveLayout ? [{ href: "#live-layout", label: "Live layout" }] : []),
             ...(stats.length || project.highlights.length ? [{ href: "#highlights", label: "Highlights" }] : []),
             ...(amenities.length ? [{ href: "#amenities", label: "Amenities" }] : []),
-            ...(showPlan ? [{ href: "#plan", label: "Plan" }] : []),
             { href: "#location", label: "Location" },
             ...(slides.length ? [{ href: "#gallery", label: "Gallery" }] : []),
             ...(approvals.length || documents.length ? [{ href: "#approvals", label: "Approvals" }] : []),
@@ -219,21 +213,12 @@ async function ProjectContent({ params }: Params) {
         facts={facts}
         media={media}
       />
-      {liveLayout ? <LiveLayoutBand name={project.name} href={liveLayout} summary={summary} /> : null}
+      {liveLayout ? <LiveLayoutBand projectId={project.id} name={project.name} href={liveLayout} summary={summary} /> : null}
       <Highlights stats={stats} points={project.highlights} />
       {sections.map((s) => (
         <PageSectionBlock key={s.id} section={s} interest={interest} />
       ))}
       {amenities.length ? <Amenities title={project.amenities.title} description={project.amenities.description} items={amenities} /> : null}
-      {showPlan ? (
-        <MasterPlan
-          title={project.masterPlan.title}
-          description={project.masterPlan.description}
-          image={planImage}
-          landUse={landUse}
-          pdf={layoutPdf}
-        />
-      ) : null}
       {project.cta.title.trim() ? (
         <FilmBand title={project.cta.title} description={project.cta.description} interest={interest} media={media} />
       ) : null}
