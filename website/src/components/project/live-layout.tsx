@@ -40,7 +40,7 @@ export function LiveLayoutBand({
           </p>
           <Button asChild variant="teal" size="lg" className="mt-8 h-14 gap-3 rounded-full pr-6 pl-2 text-ui">
             <a href={href}>
-              <span aria-hidden className="inline-flex size-10 items-center justify-center rounded-full bg-navy-deep text-teal">
+              <span aria-hidden className="inline-flex size-10 items-center justify-center rounded-full bg-white/15 text-white">
                 <MapIcon className="size-5" />
               </span>
               Live Layout

@@ -108,27 +108,32 @@ export const RECENT_PROJECTS = {
   items: [
     {
       name: "GLOBAL CITY VI",
+      slug: "global-city-vi", // its page: /projects/<slug>
       location: "Rudraram / Shankarapally, Sangareddy District, Hyderabad",
       image: `${STORAGE}/GLOBAL%20CITY%20VI/WhatsApp%20Image%202026-03-06%20at%204.13.29%20PM.jpeg`,
     },
     {
       name: "Global City RRR",
+      slug: "global-city-rrr", // its page: /projects/<slug>
       location: "Peddapur, Sangareddy District, Hyderabad",
       image: `${STORAGE}/GLOBAL%20CITY%20RRR/WhatsApp%20Image%202026-03-06%20at%204.14.59%20PM.jpeg`,
     },
     {
       name: "KOMPALLY COUNTY III",
+      slug: "kompally-county-iii", // its page: /projects/<slug>
       location: "Near Gundlapochampally, Medchal–Malkajgiri District, Hyderabad",
       image: `${STORAGE}/KOMPALLY%20COUNTY%20III/WhatsApp%20Image%202026-03-07%20at%203.31.42%20PM.jpeg`,
       impression: true, // a villa render, not a photograph
     },
     {
       name: "GLOBAL NATURE VIEW CITY",
+      slug: "global-nature-view-city", // its page: /projects/<slug>
       location: "Yacharam, Nagarjuna Sagar Road, Hyderabad",
       image: `${STORAGE}/GLOBAL%20NATURE%20VIEW%20CITY/WhatsApp%20Image%202026-03-06%20at%204.14.44%20PM%20(1).jpeg`,
     },
     {
       name: "GODAVARI GREEN FARMS",
+      slug: "godavari-green-farms", // its page: /projects/<slug>
       location: "Near Shamirpet & Mediciti Hospital Road, Medchal–Malkajgiri District, Hyderabad",
       image: `${STORAGE}/GODAVARI%20GREEN%20FARMS/WhatsApp%20Image%202026-03-06%20at%204.13.53%20PM%20(1).jpeg`,
       trimTop: true, // the photo carries a thin black band along its top edge

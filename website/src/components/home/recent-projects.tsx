@@ -10,7 +10,6 @@ import { DESKTOP, gsap, MOTION_OK, useGSAP } from "@/components/motion/gsap";
 import { Magnetic } from "@/components/motion/magnetic";
 import { Backdrop } from "@/components/site/backdrop";
 import { Container } from "@/components/site/container";
-import { useEnquiry } from "@/components/site/enquiry-provider";
 import { ImpressionChip } from "@/components/site/plate";
 import { SectionChip } from "@/components/site/typography";
 import { Arrow, Button } from "@/components/ui/button";
@@ -23,15 +22,12 @@ type Item = (typeof RECENT_PROJECTS.items)[number];
 const TRAVEL = 0.9;
 
 function Card({ item, index }: { item: Item; index: number }) {
-  const { openEnquiry } = useEnquiry();
   return (
-    // flex: a button would centre a shorter card vertically
-    <button
-      type="button"
-      onClick={() => openEnquiry({ interest: "other" })}
-      data-cursor="Enquire"
+    <Link
+      href={`/projects/${item.slug}`}
+      data-cursor="View"
       className="group/card flex w-full flex-col text-left outline-offset-4"
-      aria-label={`Enquire about ${item.name}`}
+      aria-label={`View ${item.name}`}
     >
       <span
         className={cn(
@@ -56,7 +52,7 @@ function Card({ item, index }: { item: Item; index: number }) {
         {"impression" in item ? <ImpressionChip /> : null}
         {/* Keyboard focus, hover without the context cursor and, always, a touch screen name the action. */}
         <span className="absolute right-4 bottom-4 inline-flex h-10 translate-y-2 items-center gap-2 rounded-md bg-white px-3.5 text-small font-medium text-navy opacity-0 shadow-raise transition-[opacity,translate] duration-500 ease-(--ease-out) group-focus-visible/card:translate-y-0 group-focus-visible/card:opacity-100 pointer-coarse:translate-y-0 pointer-coarse:opacity-100 motion-reduce:group-hover/card:translate-y-0 motion-reduce:group-hover/card:opacity-100">
-          Enquire <ArrowUpRight aria-hidden className="size-4" />
+          View project <ArrowUpRight aria-hidden className="size-4" />
         </span>
       </span>
       <span className="mt-5 grid grid-cols-[2.5rem_1fr] items-baseline">
@@ -66,13 +62,13 @@ function Card({ item, index }: { item: Item; index: number }) {
         <span className="text-h3 text-navy">{item.name}</span>
         <span className="col-start-2 mt-1 text-small text-muted">{item.location}</span>
       </span>
-    </button>
+    </Link>
   );
 }
 
 /**
- * Our recent projects, as on the live home: the five layouts with their site photographs; every card opens the enquiry
- * drawer. Desktop: a horizontal gallery. A 300vh runway holds a sticky white stage
+ * Our recent projects, as on the live home: the five layouts with their site photographs; every card opens its
+ * project page. Desktop: a horizontal gallery. A 300vh runway holds a sticky white stage
  * (kicker, title, Start exploring along the top) and the track of tall cards slides left as the page scrolls, every
  * second card set lower; each photograph lags its frame (it sits centred when its card is mid-screen) and a hairline
  * along the bottom fills teal with the travel. The last card arrives at 90 % of the runway and holds. Tabbing (not
