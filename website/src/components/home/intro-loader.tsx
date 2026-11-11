@@ -31,7 +31,7 @@ const FROM = [
 
 /**
  * The page loader, first visit of a session only, upgraded from the live site's animated logo. On navy-deep the roof
- * mark is first drawn in teal outline, then its six pieces fly in and fill white, and the wordmark rises letter by
+ * mark is first drawn in a white outline (one colour only, the client's call), then its six pieces fly in and fill white, and the wordmark rises letter by
  * letter while a teal counter and hairline run to 100 (and the hero poster and fonts are ready). Then the wordmark steps
  * away, the white roof dissolves into a window onto the hero film, and the screen pushes through it: the roof grows
  * until the film fills the screen and the hero's own entrance plays. Scroll is held and the page behind is inert
@@ -91,7 +91,7 @@ export function IntroLoader() {
         const zoom = { s: 1 };
         const count = { v: 0 };
         const tl = gsap.timeline({ defaults: { ease: "expo.out" }, onComplete: open });
-        // The teal outline draws on its own first; the white pieces fly in once it is nearly done.
+        // The white outline draws on its own first; the white pieces fly in once it is nearly done.
         tl.from(q("[data-outline] path"), { drawSVG: "0%", duration: 1, ease: "power2.inOut", stagger: 0.06 }, 0)
           .from(
             q("[data-piece]"),
@@ -176,7 +176,7 @@ export function IntroLoader() {
               <path key={p.d} data-piece d={p.d} fillRule={p.evenOdd ? "evenodd" : "nonzero"} />
             ))}
           </g>
-          <g data-outline fill="none" stroke="#2cc4b6" strokeWidth={2.2} strokeLinejoin="round">
+          <g data-outline fill="none" stroke="white" strokeWidth={2.2} strokeLinejoin="round">
             {MARK.map((p) => (
               <path key={p.d} d={p.d} />
             ))}
