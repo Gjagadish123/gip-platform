@@ -87,6 +87,9 @@ api.greaterinfraprojects.in {
 }
 
 greaterinfraprojects.in {
+	# Browsers that kept the old website (it lived on this address) drop it on their first visit here.
+	header Clear-Site-Data "\"cache\""
+	header Cache-Control no-store
 	redir https://www.greaterinfraprojects.in{uri} permanent
 }
 
