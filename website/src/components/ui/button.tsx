@@ -12,12 +12,12 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          "bg-brand text-white shadow-[0_1px_2px_rgb(1_34_63/0.22),inset_0_1px_0_rgb(255_255_255/0.1)] hover:bg-navy-deep",
+          "bg-brand text-white shadow-[0_1px_2px_rgb(16_47_79/0.22),inset_0_1px_0_rgb(255_255_255/0.1)] hover:bg-navy-deep",
         secondary: "border-line-strong bg-white text-navy hover:border-navy/35 hover:bg-mist",
         light: "bg-white text-brand hover:bg-mist",
         // The one primary action on navy surfaces (hero, closes): the logo's own blue (the client didn't want teal buttons,
         // 11 Nov 2026). The name stays so every caller keeps working.
-        teal: "bg-[#255899] text-white shadow-[0_1px_2px_rgb(1_20_38/0.3),inset_0_1px_0_rgb(255_255_255/0.18)] hover:bg-[#2d68b0]",
+        teal: "bg-[#255899] text-white shadow-[0_1px_2px_rgb(10_31_53/0.3),inset_0_1px_0_rgb(255_255_255/0.18)] hover:bg-[#2d68b0]",
         "outline-light": "border-white/30 bg-transparent text-white hover:border-white/60 hover:bg-white/8",
         ghost: "text-navy hover:bg-mist",
         link: "h-auto rounded-none border-0 px-0 text-navy link-draw",

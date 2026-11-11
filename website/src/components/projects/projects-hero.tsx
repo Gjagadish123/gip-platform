@@ -20,7 +20,7 @@ const HEADLINE = ["Plotted", "layouts", "across", "Hyderabad’s", "growth", "co
 // stay bright. Stops are in rem from the edges the copy is anchored to (the foot, the container's left edge), so the
 // ground under the text is the same on a short laptop and a tall monitor. Kept as light as the copy allows (the client
 // found the old hero too dark).
-const N = (a: number) => `rgb(1 34 63 / ${a})`;
+const N = (a: number) => `rgb(16 47 79 / ${a})`;
 const EDGE = "max(2rem, 50% - 40rem)"; // the container's content edge
 const SHADE_TOP = `linear-gradient(to bottom, ${N(0.7)}, transparent 11rem)`; // under the transparent header only
 const SHADE_FOOT = `linear-gradient(to top, ${N(0.9)}, ${N(0.64)} 14rem, ${N(0.25)} 30rem, transparent 44rem)`;
@@ -178,7 +178,7 @@ export function ProjectsHero({ selling, delivered }: { selling: number; delivere
                 >
                   {/* The live dot hangs in its own indent, so both label lines start on the same edge. */}
                   <dt className={cn("relative order-2 text-small text-on-navy-2 sm:pb-px", r.live && "pl-3.5")}>
-                    {r.live ? <span aria-hidden className="absolute top-2 left-0 size-1.5 rounded-full bg-[#3ccf7e]" /> : null}
+                    {r.live ? <span aria-hidden className="absolute top-2 left-0 size-1.5 rounded-full bg-white" /> : null}
                     <span className="sm:block">{r.label[0]}</span>{" "}
                     <span className="sm:block">{r.label[1]}</span>
                   </dt>

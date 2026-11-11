@@ -25,7 +25,7 @@ export function About() {
     <Choreo
       as="section"
       aria-labelledby="about-title"
-      className="relative isolate z-10 rounded-t-[28px] bg-white py-28 shadow-[0_-40px_80px_-40px_rgb(1_20_38/0.55)] motion-safe:-mt-[100svh] lg:rounded-t-[44px] lg:py-44"
+      className="relative isolate z-10 rounded-t-[28px] bg-white py-28 shadow-[0_-40px_80px_-40px_rgb(10_31_53/0.55)] motion-safe:-mt-[100svh] lg:rounded-t-[44px] lg:py-44"
     >
       <Backdrop className="rounded-t-[28px] lg:rounded-t-[44px]" />
       <Container>

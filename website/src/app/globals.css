@@ -22,11 +22,11 @@
   --color-muted: var(--muted); /* secondary copy, meta */
   --color-line: var(--line);
   --color-line-strong: var(--line-strong);
-  --color-mist: var(--mist); /* the cool teal-white alternate surface */
+  --color-mist: var(--mist); /* the blue-white alternate surface */
   --color-mist-2: var(--mist-2);
-  --color-teal: var(--teal); /* teal: the secondary colour (accents, rules, indexes, CTAs on navy) */
-  --color-teal-deep: var(--teal-deep); /* teal for small text and marks on white / mist */
-  --color-teal-soft: var(--teal-soft); /* a teal tint for quiet fills */
+  --color-teal: var(--teal); /* accents, rules, indexes: logo blue on white, white on navy */
+  --color-teal-deep: var(--teal-deep); /* logo blue for small text and marks on white / mist */
+  --color-teal-soft: var(--teal-soft); /* a logo-blue tint for quiet fills */
   --color-go: var(--go); /* "Available", "Ongoing" */
   --color-go-soft: var(--go-soft);
   --color-on-navy: var(--on-navy);
@@ -53,8 +53,8 @@
 
   /* Plot status (counts and swatches on the project page). */
   --color-status-available: var(--go);
-  --color-status-sold: #334155;
-  --color-status-mortgaged: #b45309;
+  --color-status-sold: #19426b;
+  --color-status-mortgaged: #263c70;
   --color-status-registered: var(--navy);
 
   --radius-sm: 6px;
@@ -65,8 +65,8 @@
   --radius-3xl: 24px;
   --radius-4xl: 32px;
 
-  --shadow-raise: 0 1px 2px rgb(1 34 63 / 0.06), 0 8px 24px -12px rgb(1 34 63 / 0.18);
-  --shadow-overlay: 0 1px 2px rgb(1 34 63 / 0.08), 0 24px 56px -20px rgb(1 34 63 / 0.35);
+  --shadow-raise: 0 1px 2px rgb(16 47 79 / 0.06), 0 8px 24px -12px rgb(16 47 79 / 0.18);
+  --shadow-overlay: 0 1px 2px rgb(16 47 79 / 0.08), 0 24px 56px -20px rgb(16 47 79 / 0.35);
 
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
@@ -95,24 +95,26 @@
   --radius: 10px;
 
   --canvas: #ffffff;
-  --brand: #033967;
-  --navy: #033967; /* GIP navy, 12.1:1 on white */
-  --navy-deep: #01223f;
-  --navy-soft: #1d5a92; /* 6.9:1 on white */
+  /* Only the logo's colours and white (client, 11 Nov 2026): logo navy #19426B, logo blue #255899, their shades. */
+  --brand: #19426b;
+  --navy: #19426b; /* logo navy, 10.6:1 on white */
+  --navy-deep: #102f4f; /* a deeper shade of the logo navy */
+  --navy-soft: #255899; /* logo blue, 7.2:1 on white */
   --text: #3a4b5e; /* 8.9:1 on white */
   --muted: #5f6f82; /* 5.2:1 on white */
-  --line: #dbe7e6; /* hairlines with a teal cast */
-  --line-strong: #c2d4d3;
-  --mist: #f4faf9; /* fresh teal-white */
-  --mist-2: #e4f3f0;
-  --teal: #2cc4b6; /* 7.4:1 on navy-deep, 5.4:1 on navy, 7.4:1 under navy-deep text; decorative only on white */
-  --teal-deep: #0d7068; /* 5.9:1 on white, 5.4:1 on mist */
-  --teal-soft: #d5f4ef;
-  --go: #13804a; /* 5.0:1 on white */
-  --go-soft: #e3f4ea;
+  --line: #dbe3ed; /* hairlines, a logo-blue tint */
+  --line-strong: #c2cfde;
+  --mist: #f4f7fb; /* blue-white alternate surface */
+  --mist-2: #e5edf6;
+  /* "teal" keeps its name so every caller works: logo blue on white, white on navy (.on-navy below). */
+  --teal: #255899;
+  --teal-deep: #255899; /* 7.2:1 on white, 6.6:1 on mist */
+  --teal-soft: #dfe8f4;
+  --go: #255899; /* "Available", "Ongoing" */
+  --go-soft: #e5edf6;
   --on-navy: #ffffff;
   --on-navy-2: #b8c8da; /* 8.8:1 on navy-deep */
-  --scrim: rgb(1 20 38 / 0.55);
+  --scrim: rgb(10 31 53 / 0.55);
   --destructive: #c62828;
 
   --background: var(--canvas);
@@ -128,6 +130,7 @@
   --line: rgb(255 255 255 / 0.14);
   --line-strong: rgb(255 255 255 / 0.28);
   --foreground: var(--on-navy);
+  --teal: #ffffff;
 }
 
 /* ---------- type: Inter on the greaterinfraprojects.in scale (H1/H2 ~48 px at 500, H3 24 px bold, body 16–18) ---------- */
@@ -320,7 +323,7 @@
   z-index: 1;
   padding: 0.3125rem 0.5rem;
   border-radius: 6px;
-  background: rgb(1 20 38 / 0.62);
+  background: rgb(10 31 53 / 0.62);
   backdrop-filter: blur(6px);
   color: #ffffff;
   font-family: var(--font-sans);
@@ -392,7 +395,7 @@
   }
   ::selection {
     background: #c8ece7;
-    color: #033967;
+    color: #19426b;
   }
   :focus-visible {
     outline: 2px solid var(--navy);

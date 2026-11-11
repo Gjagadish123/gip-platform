@@ -36,7 +36,7 @@ export function StatusChip({
   tone?: "go" | "go-navy" | "plain";
   className?: string;
 }) {
-  const dot = tone === "go" ? "bg-go" : tone === "go-navy" ? "bg-[#3ccf7e]" : "bg-navy/50";
+  const dot = tone === "go" ? "bg-go" : tone === "go-navy" ? "bg-white" : "bg-navy/50";
   return (
     <span
       className={cn(

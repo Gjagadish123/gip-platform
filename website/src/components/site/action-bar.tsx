@@ -38,7 +38,7 @@ export function ActionBar() {
     <>
       <div
         className={cn(
-          "on-navy fixed inset-x-0 bottom-0 z-30 bg-navy-deep shadow-[0_-8px_24px_-12px_rgb(1_20_38/0.5)] transition-transform duration-500 ease-(--ease-out) lg:hidden",
+          "on-navy fixed inset-x-0 bottom-0 z-30 bg-navy-deep shadow-[0_-8px_24px_-12px_rgb(10_31_53/0.5)] transition-transform duration-500 ease-(--ease-out) lg:hidden",
           open && "translate-y-full",
         )}
         style={{ paddingBottom: "env(safe-area-inset-bottom)" }}

@@ -169,7 +169,7 @@ export function IntroLoader() {
             </g>
           </mask>
         </defs>
-        <rect {...BIG} fill="#01223f" mask="url(#intro-window)" />
+        <rect {...BIG} fill="#102f4f" mask="url(#intro-window)" />
         <g transform={PLACE}>
           <g data-mark fill="white">
             {MARK.map((p) => (

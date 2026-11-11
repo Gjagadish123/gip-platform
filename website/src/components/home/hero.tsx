@@ -115,7 +115,7 @@ export function Hero() {
         {/* Desktop: a local ground under the line and actions, which sit over the brightest part of the film. */}
         <span
           aria-hidden
-          className="pointer-events-none absolute inset-0 hidden bg-[radial-gradient(38%_34%_at_82%_52%,rgb(1_20_38/0.6),transparent)] lg:block"
+          className="pointer-events-none absolute inset-0 hidden bg-[radial-gradient(38%_34%_at_82%_52%,rgb(10_31_53/0.6),transparent)] lg:block"
         />
         <span data-shade aria-hidden className="pointer-events-none absolute inset-0 bg-navy-deep opacity-0" />
         {/* On the stage itself, so the render stays labelled through the whole scroll sequence. */}

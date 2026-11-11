@@ -24,7 +24,7 @@ import { cn } from "@/lib/utils";
 
 // Boxed controls: 48 px, 10 px radius, a hairline that turns navy with a soft navy halo on focus.
 const control =
-  "h-12 w-full min-w-0 rounded-md border border-line-strong bg-white px-4 text-base text-navy transition-[border-color,box-shadow] duration-300 ease-(--ease-out) placeholder:text-muted/80 hover:border-navy/35 focus:border-navy focus:shadow-[0_0_0_4px_rgb(3_57_103/0.1)] focus-visible:outline-none aria-[invalid=true]:border-destructive aria-[invalid=true]:shadow-[0_0_0_4px_rgb(198_40_40/0.1)]";
+  "h-12 w-full min-w-0 rounded-md border border-line-strong bg-white px-4 text-base text-navy transition-[border-color,box-shadow] duration-300 ease-(--ease-out) placeholder:text-muted/80 hover:border-navy/35 focus:border-navy focus:shadow-[0_0_0_4px_rgb(25_66_107/0.1)] focus-visible:outline-none aria-[invalid=true]:border-destructive aria-[invalid=true]:shadow-[0_0_0_4px_rgb(198_40_40/0.1)]";
 const link = "inline-flex items-center gap-1 font-medium text-navy underline decoration-navy/30 underline-offset-4 hover:decoration-navy";
 
 type Errors = Partial<Record<"name" | "phone" | "email", string>>;
