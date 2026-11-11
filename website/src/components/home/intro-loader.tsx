@@ -32,7 +32,7 @@ const FROM = [
 /**
  * The page loader, first visit of a session only, upgraded from the live site's animated logo. On navy-deep the roof
  * mark is first drawn in a white outline (one colour only, the client's call), then its six pieces fly in and fill white, and the wordmark rises letter by
- * letter while a teal counter and hairline run to 100 (and the hero poster and fonts are ready). Then the wordmark steps
+ * letter while a white counter and hairline run to 100 (and the hero poster and fonts are ready). Then the wordmark steps
  * away, the white roof dissolves into a window onto the hero film, and the screen pushes through it: the roof grows
  * until the film fills the screen and the hero's own entrance plays. Scroll is held and the page behind is inert
  * meanwhile. Reduced motion and repeat visits: no loader. Without script it fades by itself after 4.5 s.
@@ -194,12 +194,12 @@ export function IntroLoader() {
         className="absolute inset-x-0 bottom-0 px-5 pb-[calc(env(safe-area-inset-bottom)+1.5rem)] sm:px-8 lg:px-12 lg:pb-10"
       >
         <div className="flex items-end justify-end">
-          <span data-count className="text-label text-teal tabular-nums">
+          <span data-count className="text-label text-white/80 tabular-nums">
             000
           </span>
         </div>
         <span className="mt-3 block h-px bg-white/12">
-          <span data-progress className="block h-full origin-left scale-x-0 bg-teal" />
+          <span data-progress className="block h-full origin-left scale-x-0 bg-white" />
         </span>
       </div>
     </div>
