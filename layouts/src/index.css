@@ -126,6 +126,16 @@
   flex-direction: column;
   align-items: center;
   cursor: pointer;
+  /* layoutBadges moves the card off its slot, but the slot's box stays: only the card and the dot take taps, or a
+     neighbour's empty slot steals taps meant for the card drawn over it (phones, where the cards sit close) */
+  pointer-events: none;
+}
+gmp-advanced-marker:has(.gc-badge) {
+  pointer-events: none !important; /* Google's wrapper is as big as the slot too */
+}
+.gc-badge__body,
+.gc-badge__dot {
+  pointer-events: auto;
 }
 /* the cards stay put: they fade in once and jump (never slide) to a clear spot when the map settles */
 .gc-badge__rise {
