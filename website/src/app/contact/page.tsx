@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 
 const TITLE = "Contact — Ameerpet, Hyderabad";
 const DESCRIPTION =
-  "Send an enquiry, email us, or visit Vasavi MPM Grand, Metro Junction, Ameerpet. Wed–Mon 10:00–18:00 IST.";
+  "Send an enquiry, email us, or visit Vasavi MPM Grand, Metro Junction, Ameerpet. Wed–Mon 10:00 AM–7:00 PM IST.";
 const PATH = "/contact";
 
 export const metadata: Metadata = pageMeta({ title: TITLE, description: DESCRIPTION, path: PATH });

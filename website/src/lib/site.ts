@@ -24,7 +24,7 @@ export const TAGLINE = "Premium Open Plots & Real Estate Development in Hyderaba
 export const OFFICE = {
   line1: "Flat No. 1314, 12th Floor, Vasavi MPM Grand",
   line2: "Metro Junction, Ameerpet, Hyderabad, Telangana 500073",
-  hours: "Wed – Mon, 10:00 – 18:00 IST",
+  hours: "Wed – Mon, 10:00 AM – 7:00 PM IST",
   pin: { lat: 17.4373, lng: 78.4487 },
   directionsUrl:
     "https://www.google.com/maps/dir//Vasavi+MPM+Grand,+Metro+Junction,+Ameerpet,+Hyderabad,+Telangana+500073",

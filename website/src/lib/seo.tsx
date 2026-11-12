@@ -79,7 +79,7 @@ export function organizationJsonLd() {
         "@type": "OpeningHoursSpecification",
         dayOfWeek: ["Wednesday", "Thursday", "Friday", "Saturday", "Sunday", "Monday"], // closed on Tuesdays
         opens: "10:00",
-        closes: "18:00",
+        closes: "19:00", // schema.org wants 24-hour time
       },
     ],
     contactPoint: [
