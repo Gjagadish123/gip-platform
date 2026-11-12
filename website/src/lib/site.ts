@@ -23,11 +23,11 @@ export const TAGLINE = "Premium Open Plots & Real Estate Development in Hyderaba
 
 export const OFFICE = {
   line1: "Flat No. 1314, 12th Floor, Vasavi MPM Grand",
-  line2: "Metro Junction, Ameerpet, Hyderabad, Telangana 500016",
+  line2: "Metro Junction, Ameerpet, Hyderabad, Telangana 500073",
   hours: "Wed – Mon, 10:00 – 18:00 IST",
   pin: { lat: 17.4373, lng: 78.4487 },
   directionsUrl:
-    "https://www.google.com/maps/dir//Vasavi+MPM+Grand,+Metro+Junction,+Ameerpet,+Hyderabad,+Telangana+500016",
+    "https://www.google.com/maps/dir//Vasavi+MPM+Grand,+Metro+Junction,+Ameerpet,+Hyderabad,+Telangana+500073",
 } as const;
 
 export const PRINCIPLES = [
@@ -228,6 +228,6 @@ export const THANK_YOU =
   "Thank you for considering Greater Infra Projects for your real estate needs. We look forward to hearing from you and assisting you on your real estate journey.";
 
 export const DISCLAIMER =
-  "Images marked “Artist’s impression” are indicative and not a representation of the final development. Plot availability is updated by Greater Infra Projects and is correct as of the date shown. TS RERA P01100009270 (Global City VI).";
+  "Images marked “Artist’s impression” are indicative and not a representation of the final development. Plot availability is updated by Greater Infra Projects and is correct as of the date shown.";
 
 export const RERA_PORTAL = "https://rera.telangana.gov.in/";

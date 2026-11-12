@@ -70,7 +70,7 @@ export function organizationJsonLd() {
       streetAddress: OFFICE.line1,
       addressLocality: "Ameerpet, Hyderabad",
       addressRegion: "Telangana",
-      postalCode: "500016",
+      postalCode: "500073",
       addressCountry: "IN",
     },
     geo: { "@type": "GeoCoordinates", latitude: OFFICE.pin.lat, longitude: OFFICE.pin.lng },

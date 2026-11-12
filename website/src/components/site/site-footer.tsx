@@ -18,9 +18,9 @@ const EXPLORE = [
   { href: "/contact", label: "Contact" },
 ];
 const PROJECTS = [
-  { href: "/projects/global-city-vi", label: "Global City VI" },
-  { href: LAYOUTS_URL, label: "Live layouts" },
-  { href: "/projects#delivered", label: "Delivered layouts" },
+  { href: "/projects#current", label: "Ongoing" },
+  { href: LAYOUTS_URL, label: "Live Layouts" },
+  { href: "/projects#delivered", label: "Delivered" },
 ];
 
 const link = "text-ui text-text transition-colors hover:text-navy";
@@ -106,9 +106,8 @@ export function SiteFooter() {
           <p>
             © {COPYRIGHT_YEAR} {COMPANY.name}. All rights reserved.
           </p>
-          <p className="flex flex-wrap items-center gap-x-5 gap-y-2">
+          <p>
             <DisclaimerDialog />
-            <span>TS RERA P01100009270 · Global City VI</span>
           </p>
         </Container>
       </div>

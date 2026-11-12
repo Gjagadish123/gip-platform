@@ -133,6 +133,18 @@
   --teal: #ffffff;
 }
 
+/* A white panel inside a navy surface (the header's dropdowns over the home hero): the light tokens again. */
+.on-light {
+  color: var(--text);
+  --navy: var(--brand);
+  --text: #3a4b5e;
+  --muted: #5f6f82;
+  --line: #dbe3ed;
+  --line-strong: #c2cfde;
+  --teal: #255899;
+  --foreground: var(--text);
+}
+
 /* ---------- type: Inter on the greaterinfraprojects.in scale (H1/H2 ~48 px at 500, H3 24 px bold, body 16–18) ---------- */
 
 /* Page H1 and the home hero line: 40 → 56 px. */

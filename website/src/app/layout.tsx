@@ -5,6 +5,7 @@ import { EnquirySheet } from "@/components/site/enquiry-sheet";
 import { Providers } from "@/components/site/providers";
 import { SiteFooter } from "@/components/site/site-footer";
 import { SiteHeader } from "@/components/site/site-header";
+import { getSiteNav } from "@/lib/nav";
 import { IS_PREVIEW, JsonLd, OG_DEFAULTS, organizationJsonLd, SITE_NAME, SITE_URL } from "@/lib/seo";
 
 import { sans } from "./fonts";
@@ -51,7 +52,8 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const nav = await getSiteNav(); // cached with the project data ("site-data")
   return (
     <html lang="en-IN" className={`${sans.variable} h-full antialiased`} data-scroll-behavior="smooth">
       <body className="flex min-h-full flex-col bg-canvas text-text">
@@ -63,7 +65,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           Skip to content
         </a>
         <Providers>
-          <SiteHeader />
+          <SiteHeader nav={nav} />
           <main id="main" className="flex-1">
             {children}
           </main>
