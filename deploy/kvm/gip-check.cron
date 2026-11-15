@@ -1,0 +1,3 @@
+# The website watchdog (/etc/cron.d/gip-check): every 5 minutes check that every public page answers 200; on a
+# failure restart the website once and log to /var/log/gip-check.log (see gip-check.sh).
+*/5 * * * * root /usr/local/bin/gip-check --watch >/dev/null 2>&1

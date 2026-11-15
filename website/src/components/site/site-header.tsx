@@ -4,7 +4,7 @@ import { ChevronDown, House, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NavigationMenu } from "radix-ui";
-import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { Suspense, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 
 import { COMPANY } from "@/lib/constants";
 import type { NavLink, SiteNav } from "@/lib/nav";
@@ -124,8 +124,7 @@ const item = "flex min-h-11 w-full items-center rounded-md px-3 text-left text-u
 const allLink = "mt-1 flex min-h-11 items-center border-t border-line px-3 pt-1 text-small font-semibold text-navy-soft hover:text-navy";
 
 /** Desktop (lg+): the pages and the three project dropdowns in the bar itself. Hover or click opens a dropdown. */
-function DesktopNav({ nav, dark, value, setValue }: { nav: SiteNav; dark: boolean; value: string; setValue: (v: string) => void }) {
-  const pathname = usePathname();
+function DesktopNav({ nav, dark, value, setValue, pathname }: { nav: SiteNav; dark: boolean; value: string; setValue: (v: string) => void; pathname: string }) {
   const top = cn(
     "inline-flex h-10 items-center gap-1 rounded-md px-2.5 text-ui font-medium whitespace-nowrap transition-colors xl:px-3.5",
     dark ? "text-white hover:bg-white/12 data-[state=open]:bg-white/12" : "text-navy hover:bg-mist data-[state=open]:bg-mist",
@@ -263,13 +262,27 @@ function MobileNav({ nav, open, setOpen, dark }: { nav: SiteNav; open: boolean; 
  * pages add their section bar under it.
  */
 export function SiteHeader({ nav }: { nav: SiteNav }) {
-  const pathname = usePathname();
+  // The URL is read only inside this boundary. Outside it, Next refuses to re-render a /projects/[slug] page once an admin
+  // edit expires its cache, and every project page answered 500 (15 Nov 2026). The fallback is the same bar without the
+  // URL (white, no Home-page state); prerendered pages never show it.
+  return (
+    <Suspense fallback={<HeaderBar nav={nav} pathname="" />}>
+      <HeaderWithPath nav={nav} />
+    </Suspense>
+  );
+}
+
+function HeaderWithPath({ nav }: { nav: SiteNav }) {
+  return <HeaderBar nav={nav} pathname={usePathname()} />;
+}
+
+function HeaderBar({ nav, pathname }: { nav: SiteNav; pathname: string }) {
   const { page } = useEnquiry();
   // Server render assumes the hero on Home (its first paint), so the logo never flashes navy on navy. The reader is tied
   // to the route, so arriving on Home by a client navigation re-reads #hero after the new page commits.
   const readDark = useCallback(() => DARK_HERO.has(pathname) && readOverHero(), [pathname]);
   const heroDark = useSyncExternalStore(subscribeScrollResize, readDark, () => DARK_HERO.has(pathname));
-  const onProject = pathname.startsWith("/projects/");
+  const onProject = !!page.nav || pathname.startsWith("/projects/");
   const [menu, setMenu] = useState(false); // the phone / tablet panel
   const [drop, setDrop] = useState(""); // the open desktop dropdown
   const [scrolling, setScrolling] = useState(false);
@@ -330,7 +343,7 @@ export function SiteHeader({ nav }: { nav: SiteNav }) {
             <Logo variant={dark ? "white" : "navy"} width={120} className="w-[96px] lg:w-[116px]" />
           </Link>
 
-          <DesktopNav nav={nav} dark={dark} value={drop} setValue={setDrop} />
+          <DesktopNav nav={nav} dark={dark} value={drop} setValue={setDrop} pathname={pathname} />
 
           <div className="flex items-center gap-3">
             {onProject ? (

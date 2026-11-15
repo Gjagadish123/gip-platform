@@ -3,6 +3,8 @@
 # run as root).
 # Builds GitHub main into its own release folder as the gip user, then points both services at it, so a running site is
 # never half-built and a failed build changes nothing. Keeps the newest three releases.
+# After the switch, gip-check --revalidate must pass (every page 200, also after an admin-style data refresh); if it
+# does not, the previous release goes back live and the deploy fails.
 # Settings the builds read: /home/gip/site/env.production (website and admin: public values only) and
 # /home/gip/site/env.layouts (the layouts app, with the Google Maps browser key). The layouts are static files, copied to
 # /var/www/gip-layouts for Caddy.
@@ -28,10 +30,25 @@ sudo -u gip -H bash -euo pipefail -c "
   npm run build
 "
 
+prev=$(readlink -f "$BASE/current" || true)
 ln -sfn "$rel" "$BASE/current"
 mkdir -p /var/www && rm -rf /var/www/gip-layouts.new && cp -r "$rel/layouts/dist" /var/www/gip-layouts.new
 rm -rf /var/www/gip-layouts.old && { [ ! -d /var/www/gip-layouts ] || mv /var/www/gip-layouts /var/www/gip-layouts.old; }
-mv /var/www/gip-layouts.new /var/www/gip-layouts && rm -rf /var/www/gip-layouts.old
+mv /var/www/gip-layouts.new /var/www/gip-layouts
 systemctl restart gip-website gip-admin
+
+if ! gip-check --revalidate; then
+  if [ -n "$prev" ] && [ "$prev" != "$rel" ]; then
+    ln -sfn "$prev" "$BASE/current"
+    [ ! -d /var/www/gip-layouts.old ] || { rm -rf /var/www/gip-layouts && mv /var/www/gip-layouts.old /var/www/gip-layouts; }
+    systemctl restart gip-website gip-admin
+    gip-check --revalidate || true
+    echo "DEPLOY FAILED: $sha broke pages; rolled back to $(basename "$prev")" >&2
+  else
+    echo "DEPLOY FAILED: $sha broke pages (no earlier release to roll back to)" >&2
+  fi
+  exit 1
+fi
+rm -rf /var/www/gip-layouts.old
 ls -1dt "$BASE"/releases/* | tail -n +4 | xargs -r rm -rf
 echo "deployed $sha"
