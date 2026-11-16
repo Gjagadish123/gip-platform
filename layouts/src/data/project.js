@@ -3,7 +3,7 @@
 
 export const COMPANY = {
   name: 'Greater Infra Projects',
-  email: 'Gip@greaterinfraprojects.in',
+  email: 'sales@greaterinfraprojects.in',
   website: import.meta.env.VITE_WEBSITE_URL || 'https://www.greaterinfraprojects.in/',
 };
 

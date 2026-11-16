@@ -25,6 +25,6 @@ SECRET_KEY_BASE=$(openssl rand -hex 32)
 REALTIME_DB_ENC_KEY=$(openssl rand -hex 8)
 SMTP_USER=admin@greaterinfraprojects.in
 SMTP_PASS=
-ENQUIRY_MAIL_TO=admin@greaterinfraprojects.in
+ENQUIRY_MAIL_TO=sales@greaterinfraprojects.in
 EOF
 echo "wrote /opt/supabase/.env"

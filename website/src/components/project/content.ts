@@ -16,8 +16,12 @@ export function approvalFacts(project: Project) {
 export const sitePhotos = (project: Project): Asset[] =>
   project.media.gallery.filter((a) => a.kind === "image" && !a.impression && a.source !== "generated");
 
-/** "2026-03-06" from "WhatsApp Image 2026-03-06 at 4.13.29 PM.jpeg": the only date the site photos carry. */
-export const photoDate = (a: Asset) => /\d{4}-\d{2}-\d{2}/.exec(a.name ?? "")?.[0];
+/** When the photo was uploaded (the database stamps it); else the date in a WhatsApp file name ("…2026-03-06 at…"). */
+export const photoDate = (a: Asset) => a.uploadedAt || /\d{4}-\d{2}-\d{2}/.exec(a.name ?? "")?.[0];
+
+/** The newest of those dates: the gallery's "last updated". */
+export const galleryUpdated = (photos: Asset[]) =>
+  photos.map(photoDate).filter((d): d is string => !!d).sort().at(-1);
 
 export const mapsEmbed = (pin: { lat: number; lng: number }) =>
   `https://maps.google.com/maps?q=${pin.lat},${pin.lng}&z=14&output=embed`;

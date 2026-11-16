@@ -38,6 +38,7 @@ export interface Asset {
   height?: number;
   source?: 'upload' | 'external' | 'generated'; // 'generated' = an illustrative render
   impression?: boolean;        // a render, not a photograph: the website labels it "Artist's impression"
+  uploadedAt?: string;         // gallery photos: when it was uploaded (ISO; the database stamps it on save)
 }
 
 /** One registry for all sections (lucide mapping in constants.ts ICONS). */

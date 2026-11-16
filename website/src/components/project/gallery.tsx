@@ -10,6 +10,7 @@ import { Section } from "@/components/site/section";
 import { Lede } from "@/components/site/typography";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
+import { formatDate } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 import { Segmented } from "./parts";
@@ -30,7 +31,9 @@ const keyOf = (s: Slide) => (typeof s.src === "string" ? s.src : s.src.src);
  * Site gallery: a filter over photos and impressions, a grid whose first tile is large, and a lightbox with previous /
  * next buttons, arrow keys and a counter. Impressions keep their chip everywhere.
  */
-export function Gallery({ slides }: { slides: Slide[] }) {
+/** `updated`: the newest photo's upload date, so the line moves on with every upload. */
+export function Gallery({ slides, updated }: { slides: Slide[]; updated?: string }) {
+  const when = updated ? `, last updated ${formatDate(updated)}` : "";
   const uid = useId();
   const [filter, setFilter] = useState<Filter>("all");
   const [open, setOpen] = useState<number | null>(null);
@@ -58,8 +61,8 @@ export function Gallery({ slides }: { slides: Slide[] }) {
         </h2>
         <Lede className="mt-4 max-w-[52ch]">
           {mixed
-            ? <>Photographs from the site, March 2026, then artist&rsquo;s impressions, each one marked.</>
-            : "Photographs from the site, March 2026."}
+            ? <>Photographs from the site{when}, then artist&rsquo;s impressions, each one marked.</>
+            : `Photographs from the site${when}.`}
         </Lede>
 
         {mixed ? <Segmented

@@ -22,7 +22,7 @@ export const COMPANY = {
   name: 'Greater Infra Projects',
   phone: '+91 97001 23900',
   phoneE164: '+919700123900',
-  email: 'Gip@greaterinfraprojects.in',
+  email: 'sales@greaterinfraprojects.in',
   office: 'Ameerpet, Hyderabad',
   website: 'https://www.greaterinfraprojects.in',
 } as const;

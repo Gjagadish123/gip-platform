@@ -4,7 +4,7 @@ import { Suspense } from "react";
 
 import { Amenities } from "@/components/project/amenities";
 import { Approvals } from "@/components/project/approvals";
-import { approvalFacts, firstPlace, nearbyGroups, photoDate, sitePhotos } from "@/components/project/content";
+import { approvalFacts, firstPlace, galleryUpdated, nearbyGroups, photoDate, sitePhotos } from "@/components/project/content";
 import { Enquire } from "@/components/project/enquire";
 import { Faq } from "@/components/project/faq";
 import { Gallery, type Slide } from "@/components/project/gallery";
@@ -223,7 +223,7 @@ async function ProjectContent({ params }: Params) {
         <FilmBand title={project.cta.title} description={project.cta.description} interest={interest} media={media} />
       ) : null}
       <Location name={project.name} pin={pin} address={address} nearby={nearbyGroups(project)} image={m.locationImage} />
-      {slides.length ? <Gallery slides={slides} /> : null}
+      {slides.length ? <Gallery slides={slides} updated={galleryUpdated(photos)} /> : null}
       <Approvals
         title={legal.title}
         description={legal.description}

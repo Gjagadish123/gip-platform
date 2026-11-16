@@ -12,7 +12,7 @@ export const COMPANY = {
   name: 'Greater Infra Projects',
   shortName: 'GIP',
   legalName: 'Greater Infra Projects',
-  email: 'Gip@greaterinfraprojects.in',
+  email: 'sales@greaterinfraprojects.in',
   office: 'Ameerpet, Hyderabad, Telangana',
   city: 'Hyderabad',
   website: 'https://www.greaterinfraprojects.in',
