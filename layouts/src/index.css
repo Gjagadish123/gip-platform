@@ -277,6 +277,13 @@ gmp-advanced-marker:has(.gc-badge) {
   background: #02192e;
   box-shadow: 0 0 0 2px #fff, 0 1px 4px rgba(0, 0, 0, 0.5);
 }
+/* an ongoing project: the logo blue, and its label says Ongoing in gold */
+.gc-past.is-ongoing .gc-past__dot {
+  background: #255899;
+}
+.gc-past.is-ongoing .gc-past__label span {
+  color: #f2c14e;
+}
 .gc-past__label {
   position: absolute;
   top: 50%;

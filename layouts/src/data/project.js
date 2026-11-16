@@ -29,7 +29,8 @@ export const OFFICES = [
   },
 ];
 
-// The client's other projects, from their Google Maps links (2026-11-04): a small dot and name on the map, no layout.
+// The client's COMPLETED projects, from their Google Maps links (2026-11-04): a small dot and name on the map, no layout.
+// Ongoing projects are not listed here: they come from the admin (published, ongoing, with a Location pin).
 // Sri Yadadri Gardens is left out: its link was Global City's. Add it when the right link comes.
 export const PAST_PROJECTS = [
   { name: 'True Pride', at: { lat: 17.3712055, lng: 78.6947499 } },
@@ -43,6 +44,4 @@ export const PAST_PROJECTS = [
   { name: 'Kompally County I', at: { lat: 17.6168971, lng: 78.5165149 } },
   { name: 'Global Highway City', at: { lat: 17.624327, lng: 77.968699 } },
   { name: 'Keesara County', at: { lat: 17.503789, lng: 78.692817 } },
-  { name: 'Kompally County III', at: { lat: 17.6222628, lng: 78.4509696 } },
-  { name: 'Global City Nature View', at: { lat: 17.0201712, lng: 78.6801104 }, ongoing: true },
 ];

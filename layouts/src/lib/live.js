@@ -81,6 +81,21 @@ async function fetchUnits(id, full) {
   if (error) throw error;
   return data.map(rowToUnit).sort((a, b) => byNumber(a.n, b.n));
 }
+/**
+ * Every published ONGOING project without a layout here that has a map pin in the admin (Location): a dot marked
+ * Ongoing on the map (client, 16 Nov 2026: all current ongoing projects on the live layouts). Comes from the admin, so a
+ * new ongoing project shows once it is published with a pin.
+ */
+export async function fetchOngoingPins() {
+  if (!BACKEND) return [];
+  const { data, error } = await (await db()).from('projects').select('id, name, public_content').eq('publish_state', 'published').eq('lifecycle', 'ongoing');
+  if (error) throw error;
+  return data
+    .filter((p) => !isProjectId(p.id))
+    .map((p) => ({ id: p.id, name: p.name.split(/\s+[–-]\s+/)[0], at: p.public_content?.location?.pin, ongoing: true }))
+    .filter((p) => Number.isFinite(p.at?.lat) && Number.isFinite(p.at?.lng));
+}
+
 async function fetchProjects() {
   const { data, error } = await (await db()).from('projects').select(PROJECT_COLS).eq('publish_state', 'published').in('id', PROJECT_IDS);
   if (error) throw error;

@@ -16,6 +16,7 @@ import { MAP_ID } from '../lib/googleMaps.js';
 import { badgeElement, layoutBadges } from './badge.js';
 import { easeInOutCubic, haversineKm, lerp, lerpAngle } from '../lib/geo.js';
 import { PAST_PROJECTS } from '../data/project.js';
+import { fetchOngoingPins } from '../lib/live.js';
 
 const VIEWS = {
   plan: { tilt: 0, heading: 0, zoom: 17.35 },
@@ -90,22 +91,33 @@ export class GoogleRenderer {
     this._addPast();
   }
 
-  /** The client's other projects (PAST_PROJECTS): a small dot each, never a card; tapping one shows its name. */
+  /**
+   * The client's other projects: a small dot each, never a card; tapping one shows its name. Completed ones from
+   * PAST_PROJECTS; the ongoing ones from the admin (fetchOngoingPins), in the logo blue and marked Ongoing.
+   */
   _addPast() {
     this.past = [];
     if (!this.gm.AdvancedMarkerElement) return; // The raster fallback goes without them
-    for (const p of PAST_PROJECTS) {
-      const kind = p.ongoing ? 'Ongoing' : 'Completed';
-      const el = document.createElement('div');
-      el.className = 'gc-past';
-      el.innerHTML = '<span class="gc-past__dot"></span><span class="gc-past__label"><b></b><span></span></span>';
-      el.querySelector('b').textContent = p.name;
-      el.querySelector('.gc-past__label span').textContent = kind;
-      // above the cards' leader lines (a line passes behind a name, not through it); names never overlap a card
-      const marker = new this.gm.AdvancedMarkerElement({ map: this.map, position: p.at, content: el, title: `${p.name}, ${kind.toLowerCase()} project`, gmpClickable: true, zIndex: 6 });
-      marker.addListener('gmp-click', () => el.classList.toggle('is-open'));
-      this.past.push({ marker, dot: el, label: el.querySelector('.gc-past__label') });
-    }
+    PAST_PROJECTS.forEach((p) => this._addDot(p));
+    fetchOngoingPins()
+      .then((list) => {
+        if (this.disposed) return;
+        list.forEach((p) => this._addDot(p));
+        this._queueBadgeLayout(); // place the new names
+      })
+      .catch(() => {}); // offline: the completed dots and the layouts still show
+  }
+  _addDot(p) {
+    const kind = p.ongoing ? 'Ongoing' : 'Completed';
+    const el = document.createElement('div');
+    el.className = p.ongoing ? 'gc-past is-ongoing' : 'gc-past';
+    el.innerHTML = '<span class="gc-past__dot"></span><span class="gc-past__label"><b></b><span></span></span>';
+    el.querySelector('b').textContent = p.name;
+    el.querySelector('.gc-past__label span').textContent = kind;
+    // above the cards' leader lines (a line passes behind a name, not through it); names never overlap a card
+    const marker = new this.gm.AdvancedMarkerElement({ map: this.map, position: p.at, content: el, title: `${p.name}, ${kind.toLowerCase()} project`, gmpClickable: true, zIndex: 6 });
+    marker.addListener('gmp-click', () => el.classList.toggle('is-open'));
+    this.past.push({ marker, dot: el, label: el.querySelector('.gc-past__label') });
   }
   /** each name shows only where it is clear of the cards, every dot, the controls and the names already placed */
   _layoutPast(scope) {
